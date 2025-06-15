@@ -100,7 +100,7 @@ bool Direct3D_Initialize(HWND hWnd)
 void Direct3D_Finalize()
 {
     releaseBackBuffer();
-    
+
     SAFE_RELEASE(g_pSwapChain);
     SAFE_RELEASE(g_pDeviceContext);
     SAFE_RELEASE(g_pDevice);
@@ -135,6 +135,16 @@ void Direct3D_Present()
     // スワップチェーンの表示
     // 貯まった描画コマンドをグラフィックに転送
     g_pSwapChain->Present(1, 0);
+}
+
+unsigned int Direct3D_GetBackBufferWidth()
+{
+    return g_BackBufferDesc.Width;
+}
+
+unsigned int Direct3D_GetBackBufferHeight()
+{
+    return g_BackBufferDesc.Height;
 }
 
 bool configureBackBuffer()

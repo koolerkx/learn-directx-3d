@@ -19,4 +19,7 @@ void Direct3D_Finalize(); // Direct3Dの終了処理
 void Direct3D_Clear(); // バックバッファのクリア
 void Direct3D_Present(); // バックバッファの表示
 
+unsigned int Direct3D_GetBackBufferWidth();
+unsigned int Direct3D_GetBackBufferHeight();
+
 #endif // DIRECT3D_H
