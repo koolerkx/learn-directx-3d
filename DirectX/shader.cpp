@@ -126,11 +126,16 @@ bool Shader_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
         hal::dout << "Shader_Initialize() : ピクセルシェーダーの作成に失敗しました" << std::endl;
         return false;
     }
-
+    
+    // サンプラーステート設定
     D3D11_SAMPLER_DESC sampler_desc{};
-    sampler_desc.Filter = D3D11_FILTER_ANISOTROPIC;
-    sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-    sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+
+    // フィルタリング
+    sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+
+    // UV参照外の取り扱い（UVアドレッシングモード）
+    sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
     sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampler_desc.MipLODBias = 0;
     sampler_desc.MaxAnisotropy = 8;

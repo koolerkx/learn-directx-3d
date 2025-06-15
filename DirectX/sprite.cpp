@@ -100,11 +100,15 @@ void Sprite_Draw(float dx, float dy, float dw, float dh)
 	v[2].color = { 0.0f, 0.0f, 1.0f, 0.5f };
 	v[3].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-	v[0].uv = { 0.0f, 0.0f };
-	v[1].uv = { 1.0f, 0.0f };
-	v[2].uv = { 0.0f, 1.0f };
-	v[3].uv = { 1.0f, 1.0f };
+	static float a = 0.0f;  // 静的変数で、擬似アニメーション効果
 
+	v[0].uv = { 0.0f - a, 0.0f - a };
+	v[1].uv = { 4.0f - a, 0.0f - a };
+	v[2].uv = { 0.0f - a, 4.0f - a };
+	v[3].uv = { 4.0f - a, 4.0f - a };
+
+	a += 0.001f;
+	
 	// 頂点バッファのロックを解除
 	g_pContext->Unmap(g_pVertexBuffer, 0);
 
