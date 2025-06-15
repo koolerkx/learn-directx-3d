@@ -33,8 +33,10 @@ int APIENTRY WinMain(
         DispatchMessage(&msg);
         
         Direct3D_Clear();
-
-        Sprite_Draw();
+        
+        for (int i = 0; i < 4; i++) {
+            Sprite_Draw(32.0f + i * 384, 32.0f);
+        }
 
         Direct3D_Present();
     }

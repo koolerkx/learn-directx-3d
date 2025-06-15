@@ -70,7 +70,7 @@ void Sprite_Finalize(void)
 	SAFE_RELEASE(g_pVertexBuffer);
 }
 
-void Sprite_Draw(void)
+void Sprite_Draw(float dx, float dy)
 {
 	// シェーダーを描画パイプラインに設定
 	Shader_Begin();
@@ -86,16 +86,14 @@ void Sprite_Draw(void)
 	const float SCREEN_WIDTH = (float)Direct3D_GetBackBufferWidth();
 	const float SCREEN_HEIGHT = (float)Direct3D_GetBackBufferHeight();
 
-	float x = 32.0f;
-	float y = 32.0f;
-	float w = 512;
-	float h = 512;
+	float w = 256;
+	float h = 256;
 
 	// 画面の左上から右下に向かう線分を描画する -> 時計回り
-	v[0].position = { x, y, 0.0f };	// LT
-	v[1].position = { x + w, y, 0.0f };	// RT
-	v[2].position = { x, y + h, 0.0f };	// LB
-	v[3].position = { x + w, y + h, 0.0f };	// RB
+	v[0].position = { dx, dy, 0.0f };	// LT
+	v[1].position = { dx + w, dy, 0.0f };	// RT
+	v[2].position = { dx, dy + h, 0.0f };	// LB
+	v[3].position = { dx + w, dy + h, 0.0f };	// RB
 
 	v[0].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	v[1].color = { 1.0f, 1.0f, 1.0f, 1.0f };
