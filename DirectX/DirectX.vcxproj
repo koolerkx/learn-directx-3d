@@ -195,6 +195,7 @@
     <Image Include="knight_1.png" />
     <Image Include="knight_2.png" />
     <Image Include="knight_3.png" />
+    <Image Include="knight_3_summer.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
