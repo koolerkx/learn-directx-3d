@@ -6,6 +6,7 @@
 #include "direct3d.h"
 #include "sprite.h"
 #include "shader.h"
+#include "texture.h"
 
 int APIENTRY WinMain(
     _In_ HINSTANCE hInstance,
@@ -20,6 +21,12 @@ int APIENTRY WinMain(
     Direct3D_Initialize(hWnd);
     Shader_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Sprite_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
+    Texture_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
+
+    // テクスチャ読み込み
+    int texid_knight_winter = Texture_Load(L"knight_3.png");
+    int texid_knight_summer = Texture_Load(L"knight_3_summer.png");
+
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
@@ -42,19 +49,19 @@ int APIENTRY WinMain(
         {
             // ゲームの処理 
             Direct3D_Clear();
-            for (int i = 0; i < 4; i++)
-            {
-                Sprite_Draw(x, 32.0f, 128.0f, 128.0f);
+            
+            Texture_SetTexture(texid_knight_winter);
+            Sprite_Draw(x, 0.0f, 256.0f, 256.0f);
 
-                Sprite_Draw(x, 265.0f, 512.0f, 512.0f);
-
-                // x += 0.3f;
-            }
+            Texture_SetTexture(texid_knight_summer);
+            Sprite_Draw(x, 256.0f, 256.0f, 256.0f);
+            
             Direct3D_Present();
         }
     }
     while (msg.message != WM_QUIT);
 
+    Texture_Finalize();
     Sprite_Finalize();
     Shader_Finalize();
     Direct3D_Finalize();

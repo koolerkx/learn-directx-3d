@@ -161,6 +161,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug_ostream.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="game_window.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="sprite.h" />
+    <ClInclude Include="texture.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="DirectXTex_Debug.lib" />

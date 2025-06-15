@@ -50,18 +50,6 @@ void Sprite_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	g_pDevice->CreateBuffer(&bd, NULL, &g_pVertexBuffer);
-
-	// テクスチャの読み込み
-	TexMetadata metadata;
-	ScratchImage image;
-
-	//LoadFromWICFile(L"knight.png", WIC_FLAGS_NONE, &metadata, image);
-	LoadFromWICFile(L"knight_3.png", WIC_FLAGS_NONE, &metadata, image);
-	HRESULT hr = CreateShaderResourceView(g_pDevice, image.GetImages(), image.GetImageCount(), metadata, &g_pTexture);
-
-	if (FAILED(hr)) {
-		MessageBox(nullptr, "テクスチャの初期化に失敗しました", "エラー", MB_OK);
-	}
 }
 
 void Sprite_Finalize(void)
@@ -86,9 +74,6 @@ void Sprite_Draw(float dx, float dy, float dw, float dh)
 	const float SCREEN_WIDTH = (float)Direct3D_GetBackBufferWidth();
 	const float SCREEN_HEIGHT = (float)Direct3D_GetBackBufferHeight();
 	
-	float w = 512;
-	float h = 512;
-
 	// 画面の左上から右下に向かう線分を描画する -> 時計回り
 	v[0].position = { dx, dy, 0.0f };	// LT
 	v[1].position = { dx + dw, dy, 0.0f };	// RT
@@ -100,14 +85,10 @@ void Sprite_Draw(float dx, float dy, float dw, float dh)
 	v[2].color = { 0.0f, 0.0f, 1.0f, 0.5f };
 	v[3].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-	static float a = 0.0f;  // 静的変数で、擬似アニメーション効果
-
-	v[0].uv = { 0.0f - a, 0.0f - a };
-	v[1].uv = { 4.0f - a, 0.0f - a };
-	v[2].uv = { 0.0f - a, 4.0f - a };
-	v[3].uv = { 4.0f - a, 4.0f - a };
-
-	a += 0.001f;
+	v[0].uv = { 0.0f, 0.0f };
+	v[1].uv = { 1.0f, 0.0f };
+	v[2].uv = { 0.0f, 1.0f };
+	v[3].uv = { 1.0f, 1.0f };
 	
 	// 頂点バッファのロックを解除
 	g_pContext->Unmap(g_pVertexBuffer, 0);
@@ -122,9 +103,6 @@ void Sprite_Draw(float dx, float dy, float dw, float dh)
 
 	// プリミティブトポロジ設定
 	g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	// テクスチャ設定
-	g_pContext->PSSetShaderResources(0, 1, &g_pTexture);
 
 	// ポリゴン描画命令発行
 	g_pContext->Draw(NUM_VERTEX, 0);
