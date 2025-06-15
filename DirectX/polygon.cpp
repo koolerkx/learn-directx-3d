@@ -13,7 +13,7 @@ using namespace DirectX;
 #include "debug_ostream.h"
 
 
-static constexpr int NUM_VERTEX = 12; // 頂点数
+static constexpr int NUM_VERTEX = 4; // 頂点数
 
 
 static ID3D11Buffer* g_pVertexBuffer = nullptr; // 頂点バッファ
@@ -74,37 +74,23 @@ void Polygon_Draw(void)
     // 頂点情報を書き込み
     const float SCREEN_WIDTH = (float)Direct3D_GetBackBufferWidth();
     const float SCREEN_HEIGHT = (float)Direct3D_GetBackBufferHeight();
-
+    
+    float x = 32.0f;
+    float y = 32.0f;
+    float w = 256;
+    float h = 256;
 
     // 画面の左上から右下に向かう線分を描画する -> 時計回り
-    v[0].position = {0.1f * SCREEN_WIDTH, 0.1f * SCREEN_HEIGHT, 0.0f}; // LT
-    v[0].color = {1.0f, 0.0f, 0.0f, 1.0f};
-    v[1].position = {0.2f * SCREEN_WIDTH, 0.1f * SCREEN_HEIGHT, 0.0f}; // RT
-    v[1].color = {0.0f, 1.0f, 0.0f, 1.0f};
-    v[2].position = {0.15f * SCREEN_WIDTH, 0.2f * SCREEN_HEIGHT, 0.0f}; // LB
-    v[2].color = {0.0f, 0.0f, 1.0f, 1.0f};
+    v[0].position = { x, y, 0.0f };	// LT
+    v[1].position = { x + w, y, 0.0f };	// RT
+    v[2].position = { x, y + h, 0.0f };	// LB
+    v[3].position = { x + w, y + h, 0.0f };	// RB
 
-    v[3].position = {0.2f * SCREEN_WIDTH, 0.1f * SCREEN_HEIGHT, 0.0f}; // RT
-    v[3].color = {0.0f, 1.0f, 0.0f, 1.0f};
-    v[4].position = {0.25f * SCREEN_WIDTH, 0.2f * SCREEN_HEIGHT, 0.0f}; // RB
-    v[4].color = {1.0f, 0.0f, 0.0f, 1.0f};
-    v[5].position = {0.15f * SCREEN_WIDTH, 0.2f * SCREEN_HEIGHT, 0.0f}; // LB
-    v[5].color = {0.0f, 0.0f, 1.0f, 1.0f};
-
-
-    v[6].position = {0.7f * SCREEN_WIDTH, 0.7f * SCREEN_HEIGHT, 0.0f}; // LT
-    v[6].color = {1.0f, 0.0f, 0.0f, 1.0f};
-    v[7].position = {0.8f * SCREEN_WIDTH, 0.7f * SCREEN_HEIGHT, 0.0f}; // RT
-    v[7].color = {0.0f, 1.0f, 0.0f, 1.0f};
-    v[8].position = {0.75f * SCREEN_WIDTH, 0.8f * SCREEN_HEIGHT, 0.0f}; // LB
-    v[8].color = {0.0f, 0.0f, 1.0f, 1.0f};
-
-    v[9].position = {0.8f * SCREEN_WIDTH, 0.7f * SCREEN_HEIGHT, 0.0f}; // RT
-    v[9].color = {0.0f, 1.0f, 0.0f, 1.0f};
-    v[10].position = {0.85f * SCREEN_WIDTH, 0.8f * SCREEN_HEIGHT, 0.0f}; // RB
-    v[10].color = {1.0f, 0.0f, 0.0f, 1.0f};
-    v[11].position = {0.75f * SCREEN_WIDTH, 0.8f * SCREEN_HEIGHT, 0.0f}; // LB
-    v[11].color = {0.0f, 0.0f, 1.0f, 1.0f};
+    v[0].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    v[1].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    v[2].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    v[3].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    
     // 頂点バッファのロックを解除
     g_pContext->Unmap(g_pVertexBuffer, 0);
 
@@ -117,7 +103,7 @@ void Polygon_Draw(void)
     Shader_SetMatrix(XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f));
 
     // プリミティブトポロジ設定
-    g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
     // ポリゴン描画命令発行
     g_pContext->Draw(NUM_VERTEX, 0);
