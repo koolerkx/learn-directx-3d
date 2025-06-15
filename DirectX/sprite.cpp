@@ -95,10 +95,10 @@ void Sprite_Draw(float dx, float dy)
 	v[2].position = { dx, dy + h, 0.0f };	// LB
 	v[3].position = { dx + w, dy + h, 0.0f };	// RB
 
-	v[0].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	v[1].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	v[2].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	v[3].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	v[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
+	v[1].color = { 0.0f, 1.0f, 0.0f, 0.5f };
+	v[2].color = { 0.0f, 0.0f, 1.0f, 0.5f };
+	v[3].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 
 	v[0].uv = { 0.0f, 0.0f };
 	v[1].uv = { 1.0f, 0.0f };
