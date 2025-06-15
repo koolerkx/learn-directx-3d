@@ -21,6 +21,7 @@
 static ID3D11Device* g_pDevice = nullptr;
 static ID3D11DeviceContext* g_pDeviceContext = nullptr;
 static IDXGISwapChain* g_pSwapChain = nullptr;
+static ID3D11BlendState* g_pBlendStateMultiply = nullptr;
 
 /* バックバッファ関連 */
 static ID3D11RenderTargetView* g_pRenderTargetView = nullptr;
@@ -101,13 +102,44 @@ bool Direct3D_Initialize(HWND hWnd)
         return false;
     }
 
+    // RGB A -> 好きに使っていい値、基本は透明の表現に使う
+    // αテスト、αブレンド
+    // ブレンドステート設定
+    D3D11_BLEND_DESC bd = {};
+    bd.AlphaToCoverageEnable = FALSE;
+    bd.IndependentBlendEnable = FALSE;
+    bd.RenderTarget[0].BlendEnable = TRUE; // αブレンドするしない
+
+    // src ... ソース（今から描く絵（色）） dest　...　すでに絵描かれた絵（色）
+
+    // RGB
+    bd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    bd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD; // 演算子
+    // SrcRGB * SrcBlend + DestRGB * (1 - DestBlend)
+
+    // A
+    bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+    bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    // SrcBlendAlpha * 1 + DestBlendAlpha * 0
+
+    bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+    g_pDevice->CreateBlendState(&bd, &g_pBlendStateMultiply);
+
+    // HACK: 3Dの場合、関数化のほうがいい
+    float blend_factor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+    g_pDeviceContext->OMSetBlendState(g_pBlendStateMultiply, blend_factor, 0xffffffff);
+
     return true;
 }
 
 void Direct3D_Finalize()
 {
     releaseBackBuffer();
-
+    
+    SAFE_RELEASE(g_pBlendStateMultiply);
     SAFE_RELEASE(g_pSwapChain);
     SAFE_RELEASE(g_pDeviceContext);
     SAFE_RELEASE(g_pDevice);
