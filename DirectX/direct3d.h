@@ -9,6 +9,7 @@
 #define DIRECT3D_H
 
 #include <Windows.h>
+#include <d3d11.h>
 
 // セーフリリースマクロ
 #define SAFE_RELEASE(o) if (o) { (o)->Release(); o = NULL; }
@@ -21,5 +22,8 @@ void Direct3D_Present(); // バックバッファの表示
 
 unsigned int Direct3D_GetBackBufferWidth();
 unsigned int Direct3D_GetBackBufferHeight();
+
+ID3D11Device* Direct3D_GetDevice();
+ID3D11DeviceContext* Direct3D_GetContext();
 
 #endif // DIRECT3D_H

@@ -13,7 +13,7 @@ using namespace DirectX;
 #include "debug_ostream.h"
 
 
-static constexpr int NUM_VERTEX = 2; // 頂点数
+static constexpr int NUM_VERTEX = 12; // 頂点数
 
 
 static ID3D11Buffer* g_pVertexBuffer = nullptr; // 頂点バッファ
@@ -75,8 +75,19 @@ void Polygon_Draw(void)
     const float SCREEN_HEIGHT = (float)Direct3D_GetBackBufferHeight();
 
     // 画面の左上から右下に向かう線分を描画する
-    v[0].position = {0.0f, 0.0f, 0.0f};
-    v[1].position = {SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f};
+    v[0].position = { 0.1f * SCREEN_WIDTH, 0.1f * SCREEN_HEIGHT, 0.0f };	// LT
+    v[1].position = { 0.2f * SCREEN_WIDTH, 0.1f * SCREEN_HEIGHT, 0.0f };	// RT
+    v[2].position = { 0.15f * SCREEN_WIDTH, 0.2f * SCREEN_HEIGHT, 0.0f };	// LB
+    v[3].position = { 0.2f * SCREEN_WIDTH, 0.1f * SCREEN_HEIGHT, 0.0f };	// RT
+    v[4].position = { 0.25f * SCREEN_WIDTH, 0.2f * SCREEN_HEIGHT, 0.0f };	// RB
+    v[5].position = { 0.15f * SCREEN_WIDTH, 0.2f * SCREEN_HEIGHT, 0.0f };	// LB
+
+    v[6].position = { 0.7f * SCREEN_WIDTH, 0.7f * SCREEN_HEIGHT, 0.0f };	// LT
+    v[7].position = { 0.8f * SCREEN_WIDTH, 0.7f * SCREEN_HEIGHT, 0.0f };	// RT
+    v[8].position = { 0.75f * SCREEN_WIDTH, 0.8f * SCREEN_HEIGHT, 0.0f };	// LB
+    v[9].position = { 0.8f * SCREEN_WIDTH, 0.7f * SCREEN_HEIGHT, 0.0f };	// RT
+    v[10].position = { 0.85f * SCREEN_WIDTH, 0.8f * SCREEN_HEIGHT, 0.0f };	// RB
+    v[11].position = { 0.75f * SCREEN_WIDTH, 0.8f * SCREEN_HEIGHT, 0.0f };	// LB
 
     // 頂点バッファのロックを解除
     g_pContext->Unmap(g_pVertexBuffer, 0);
@@ -90,8 +101,8 @@ void Polygon_Draw(void)
     Shader_SetMatrix(XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f));
 
     // プリミティブトポロジ設定
-    g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-
+    g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    
     // ポリゴン描画命令発行
     g_pContext->Draw(NUM_VERTEX, 0);
 }

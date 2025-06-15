@@ -5,7 +5,6 @@
  * @date 2025/06/06
  */
 
-#include <d3d11.h>
 #include "direct3d.h"
 #include "debug_ostream.h"
 
@@ -22,6 +21,8 @@ static ID3D11RenderTargetView* g_pRenderTargetView = nullptr;
 static ID3D11Texture2D* g_pDepthStencilBuffer = nullptr;
 static ID3D11DepthStencilView* g_pDepthStencilView = nullptr;
 static D3D11_TEXTURE2D_DESC g_BackBufferDesc{};
+
+static D3D11_VIEWPORT g_Viewport{};
 
 static bool configureBackBuffer(); // バックバッファの設定・生成
 static void releaseBackBuffer(); // バックバッファの解放
@@ -128,6 +129,9 @@ void Direct3D_Clear()
     float clear_color[4] = {0.2f, 0.4f, 0.8f, 1.0f};
     g_pDeviceContext->ClearRenderTargetView(g_pRenderTargetView, clear_color);
     g_pDeviceContext->ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+    // レンダーターゲットビューとデプスステンシルビューの設定 
+    g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetView, g_pDepthStencilView);
 }
 
 void Direct3D_Present()
@@ -146,6 +150,17 @@ unsigned int Direct3D_GetBackBufferHeight()
 {
     return g_BackBufferDesc.Height;
 }
+
+ID3D11Device* Direct3D_GetDevice()
+{
+    return g_pDevice;
+}
+
+ID3D11DeviceContext* Direct3D_GetContext()
+{
+    return g_pDeviceContext;
+}
+
 
 bool configureBackBuffer()
 {
@@ -211,6 +226,16 @@ bool configureBackBuffer()
         hal::dout << "デプスステンシルビューの生成に失敗しました" << std::endl;
         return false;
     }
+
+    // ビューポートの設定 
+    g_Viewport.TopLeftX = 0.0f;
+    g_Viewport.TopLeftY = 0.0f;
+    g_Viewport.Width = static_cast<FLOAT>(g_BackBufferDesc.Width);
+    g_Viewport.Height = static_cast<FLOAT>(g_BackBufferDesc.Height);
+    g_Viewport.MinDepth = 0.0f;
+    g_Viewport.MaxDepth = 1.0f;
+    g_pDeviceContext->RSSetViewports(1, &g_Viewport); // ビューポートの設定
+
 
     return true;
 }
