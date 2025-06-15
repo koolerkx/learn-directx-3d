@@ -13,6 +13,8 @@ int APIENTRY WinMain(
     _In_ LPSTR,
     _In_ int nCmdShow)
 {
+    CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    
     HWND hWnd = GameWindow_Create(hInstance);
 
     Direct3D_Initialize(hWnd);

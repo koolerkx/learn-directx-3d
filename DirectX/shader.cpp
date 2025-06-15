@@ -17,6 +17,7 @@ static ID3D11VertexShader* g_pVertexShader = nullptr;
 static ID3D11InputLayout* g_pInputLayout = nullptr;
 static ID3D11Buffer* g_pVSConstantBuffer = nullptr;
 static ID3D11PixelShader* g_pPixelShader = nullptr;
+static ID3D11SamplerState* g_pSamplerState = nullptr;
 
 // 注意！初期化で外部から設定されるもの。Release不要。
 static ID3D11Device* g_pDevice = nullptr;
@@ -74,6 +75,7 @@ bool Shader_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     D3D11_INPUT_ELEMENT_DESC layout[] = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
     UINT num_elements = ARRAYSIZE(layout); // 配列の要素数を取得
@@ -125,11 +127,25 @@ bool Shader_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
         return false;
     }
 
+    D3D11_SAMPLER_DESC sampler_desc{};
+    sampler_desc.Filter = D3D11_FILTER_ANISOTROPIC;
+    sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sampler_desc.MipLODBias = 0;
+    sampler_desc.MaxAnisotropy = 8;
+    sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+    sampler_desc.MinLOD = 0;
+    sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    g_pDevice->CreateSamplerState(&sampler_desc, &g_pSamplerState);
+
     return true;
 }
 
 void Shader_Finalize()
 {
+    SAFE_RELEASE(g_pSamplerState);
     SAFE_RELEASE(g_pPixelShader);
     SAFE_RELEASE(g_pVSConstantBuffer);
     SAFE_RELEASE(g_pInputLayout);
@@ -159,4 +175,7 @@ void Shader_Begin()
 
     // 定数バッファを描画パイプラインに設定
     g_pContext->VSSetConstantBuffers(0, 1, &g_pVSConstantBuffer);
+
+    // サンプラーステートを描画パイプラインに設定
+    g_pContext->PSSetSamplers(0, 1, &g_pSamplerState);
 }

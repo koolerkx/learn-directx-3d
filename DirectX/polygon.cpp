@@ -7,6 +7,7 @@
 
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include "DirectXTex.h"
 using namespace DirectX;
 #include "direct3d.h"
 #include "shader.h"
@@ -17,6 +18,7 @@ static constexpr int NUM_VERTEX = 4; // 頂点数
 
 
 static ID3D11Buffer* g_pVertexBuffer = nullptr; // 頂点バッファ
+static ID3D11ShaderResourceView* g_pTexture = nullptr;	// テクスチャバッファ
 
 // 注意！初期化で外部から設定されるもの。Release不要。
 static ID3D11Device* g_pDevice = nullptr;
@@ -26,8 +28,9 @@ static ID3D11DeviceContext* g_pContext = nullptr;
 // 頂点構造体
 struct Vertex
 {
-    XMFLOAT3 position; // 頂点座標
-    XMFLOAT4 color;
+    XMFLOAT3 position;	// 頂点座標
+    XMFLOAT4 color;		// 色
+    XMFLOAT2 uv;	// テクスチャー
 };
 
 
@@ -52,10 +55,23 @@ void Polygon_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
     g_pDevice->CreateBuffer(&bd, NULL, &g_pVertexBuffer);
+
+    // テクスチャの読み込み
+    TexMetadata metadata;
+    ScratchImage image;
+
+    //LoadFromWICFile(L"knight.png", WIC_FLAGS_NONE, &metadata, image);
+    LoadFromWICFile(L"knight_3.png", WIC_FLAGS_NONE, &metadata, image);
+    HRESULT hr = CreateShaderResourceView(g_pDevice, image.GetImages(), image.GetImageCount(), metadata, &g_pTexture);
+
+    if (FAILED(hr)) {
+        MessageBox(nullptr, "テクスチャの初期化に失敗しました", "エラー", MB_OK);
+    }
 }
 
 void Polygon_Finalize(void)
 {
+    SAFE_RELEASE(g_pTexture);
     SAFE_RELEASE(g_pVertexBuffer);
 }
 
@@ -77,8 +93,8 @@ void Polygon_Draw(void)
     
     float x = 32.0f;
     float y = 32.0f;
-    float w = 256;
-    float h = 256;
+    float w = 512;
+    float h = 512;
 
     // 画面の左上から右下に向かう線分を描画する -> 時計回り
     v[0].position = { x, y, 0.0f };	// LT
@@ -90,6 +106,11 @@ void Polygon_Draw(void)
     v[1].color = { 1.0f, 1.0f, 1.0f, 1.0f };
     v[2].color = { 1.0f, 1.0f, 1.0f, 1.0f };
     v[3].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+    v[0].uv = { 0.0f, 0.0f };
+    v[1].uv = { 1.0f, 0.0f };
+    v[2].uv = { 0.0f, 1.0f };
+    v[3].uv = { 1.0f, 1.0f };
     
     // 頂点バッファのロックを解除
     g_pContext->Unmap(g_pVertexBuffer, 0);
@@ -104,6 +125,9 @@ void Polygon_Draw(void)
 
     // プリミティブトポロジ設定
     g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+    // テクスチャ設定
+    g_pContext->PSSetShaderResources(0, 1, &g_pTexture);
 
     // ポリゴン描画命令発行
     g_pContext->Draw(NUM_VERTEX, 0);
