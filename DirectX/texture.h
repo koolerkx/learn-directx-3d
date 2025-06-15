@@ -30,7 +30,7 @@ void Texture_AllRelease();
 */
 void Texture_SetTexture(int texid);
 
-unsigned int Texture_Width(int texid);
-unsigned int Texture_Height(int texid);
+int Texture_Width(int texid);
+int Texture_Height(int texid);
 
 #endif

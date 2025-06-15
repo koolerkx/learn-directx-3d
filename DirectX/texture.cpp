@@ -31,7 +31,7 @@ struct Texture
 };
 
 static Texture g_Textures[TEXTURE_MAX]{};
-static unsigned int g_SetTextureIndex = -1;
+static int g_SetTextureIndex = -1;
 
 /**
 * @pre Direct3D_Initialize() Shader_Initialize() の後で使う 
@@ -84,8 +84,8 @@ int Texture_Load(const wchar_t* pFilename)
         }
 
         g_Textures[i].filename = pFilename;
-        g_Textures[i].height = metadata.width;
-        g_Textures[i].height = metadata.height;
+        g_Textures[i].height = static_cast<unsigned int>(metadata.width);
+        g_Textures[i].height = static_cast<unsigned int>(metadata.height);
         hr = CreateShaderResourceView(
             g_pDevice,
             image.GetImages(),
@@ -120,14 +120,14 @@ void Texture_SetTexture(int texid)
     g_pContext->PSSetShaderResources(0, 1, &g_Textures[texid].pTexture);
 }
 
-unsigned int Texture_Width(int texid)
+int Texture_Width(int texid)
 {
     if (texid < 0) return -1;
 
     return g_Textures[texid].width;
 }
 
-unsigned int Texture_Height(int texid)
+int Texture_Height(int texid)
 {
     if (texid < 0) return -1;
 
