@@ -85,9 +85,9 @@ void Sprite_Draw(float dx, float dy)
 	// 頂点情報を書き込み
 	const float SCREEN_WIDTH = (float)Direct3D_GetBackBufferWidth();
 	const float SCREEN_HEIGHT = (float)Direct3D_GetBackBufferHeight();
-
-	float w = 256;
-	float h = 256;
+	
+	float w = 512;
+	float h = 512;
 
 	// 画面の左上から右下に向かう線分を描画する -> 時計回り
 	v[0].position = { dx, dy, 0.0f };	// LT
