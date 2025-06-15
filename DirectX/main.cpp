@@ -44,7 +44,9 @@ int APIENTRY WinMain(
             Direct3D_Clear();
             for (int i = 0; i < 4; i++)
             {
-                Sprite_Draw(x, 32.0f);
+                Sprite_Draw(x, 32.0f, 128.0f, 128.0f);
+
+                Sprite_Draw(x, 265.0f, 512.0f, 512.0f);
 
                 x += 0.3f;
             }
