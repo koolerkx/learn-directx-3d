@@ -5,7 +5,13 @@
  * @date 2025/06/10
  */
 
-float4 main() : SV_TARGET
+struct PS_INPUT
 {
-    return float4(1.0f, 1.0f, 1.0f, 1.0f);
+    float4 posH : SV_POSITION;
+    float4 color : COLOR0;
+};
+
+float4 main(PS_INPUT ps_in) : SV_TARGET
+{
+    return ps_in.color;
 }
