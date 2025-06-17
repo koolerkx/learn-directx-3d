@@ -10,7 +10,7 @@
 #include "direct3d.h"
 #include "DirectXTex.h"
 using namespace DirectX;
-#include <string>;
+#include <string>
 
 static constexpr int TEXTURE_MAX = 256; ///< 最大管理数
 
@@ -84,7 +84,7 @@ int Texture_Load(const wchar_t* pFilename)
         }
 
         g_Textures[i].filename = pFilename;
-        g_Textures[i].height = static_cast<unsigned int>(metadata.width);
+        g_Textures[i].width = static_cast<unsigned int>(metadata.width);
         g_Textures[i].height = static_cast<unsigned int>(metadata.height);
         hr = CreateShaderResourceView(
             g_pDevice,

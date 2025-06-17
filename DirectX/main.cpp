@@ -8,6 +8,8 @@
 #include "shader.h"
 #include "texture.h"
 
+#include "DirectXMath.h"
+
 int APIENTRY WinMain(
     _In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE,
@@ -25,7 +27,8 @@ int APIENTRY WinMain(
 
     // テクスチャ読み込み
     int texid_knight_winter = Texture_Load(L"knight_3.png");
-    int texid_knight_summer = Texture_Load(L"knight_3_summer.png");
+    // int texid_knight_summer = Texture_Load(L"knight_3_summer.png");
+    int texid_kokosozai = Texture_Load(L"kokosozai.png");
 
 
     ShowWindow(hWnd, nCmdShow);
@@ -34,8 +37,6 @@ int APIENTRY WinMain(
 
     // ゲームループ＆メッセージループ
     MSG msg;
-
-    float x = 0.0f;
 
     do
     {
@@ -50,12 +51,15 @@ int APIENTRY WinMain(
             // ゲームの処理 
             Direct3D_Clear();
             
-            Texture_SetTexture(texid_knight_winter);
-            Sprite_Draw(x, 0.0f, 256.0f, 256.0f);
+            Sprite_Begin();
 
-            Texture_SetTexture(texid_knight_summer);
-            Sprite_Draw(x, 256.0f, 256.0f, 256.0f);
+            DirectX::XMFLOAT4 color = {1.0f , 1.0f, 1.0f, 1.0f};
             
+            Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, color);
+            Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, 256, 256, color);
+            Sprite_Draw(texid_kokosozai, 32.0f, 32.0f, 32.0f, 64.0f, 32.0f, 32.0f, color);
+            Sprite_Draw(texid_kokosozai, 32.0f, 32.0f, 32.0f, 32.0f * 2, 32.0f, 32.0f, 256.0f, 256.0f, color);
+
             Direct3D_Present();
         }
     }

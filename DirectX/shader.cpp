@@ -131,7 +131,7 @@ bool Shader_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     D3D11_SAMPLER_DESC sampler_desc{};
 
     // フィルタリング
-    sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 
     // UV参照外の取り扱い（UVアドレッシングモード）
     sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
