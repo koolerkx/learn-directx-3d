@@ -9,6 +9,7 @@
 #include "texture.h"
 
 #include "DirectXMath.h"
+#include "sprite_anim.h"
 
 int APIENTRY WinMain(
     _In_ HINSTANCE hInstance,
@@ -24,6 +25,7 @@ int APIENTRY WinMain(
     Shader_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Sprite_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Texture_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
+    SpriteAnim_Initialize();
 
     // テクスチャ読み込み
     int texid_knight_winter = Texture_Load(L"knight_3.png");
@@ -53,10 +55,13 @@ int APIENTRY WinMain(
             
             Sprite_Begin();
 
+            SpriteAnim_Draw();
+            SpriteAnim_Update();
+
             DirectX::XMFLOAT4 color = {1.0f , 1.0f, 1.0f, 1.0f};
             
             Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, color);
-            Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, 256, 256, color);
+            Sprite_Draw(texid_knight_winter, 512.0f, 32.0f, 256, 256, color);
             Sprite_Draw(texid_kokosozai, 32.0f, 32.0f, 32.0f, 64.0f, 32.0f, 32.0f, color);
             Sprite_Draw(texid_kokosozai, 32.0f, 32.0f, 32.0f, 32.0f * 2, 32.0f, 32.0f, 256.0f, 256.0f, color);
 
@@ -65,6 +70,7 @@ int APIENTRY WinMain(
     }
     while (msg.message != WM_QUIT);
 
+    SpriteAnim_Finalize();
     Texture_Finalize();
     Sprite_Finalize();
     Shader_Finalize();

@@ -165,6 +165,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="sprtie_anim.cpp" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="game_window.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="sprite.h" />
+    <ClInclude Include="sprite_anim.h" />
     <ClInclude Include="texture.h" />
   </ItemGroup>
   <ItemGroup>
