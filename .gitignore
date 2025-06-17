@@ -11,6 +11,7 @@
 *.sln.docstates
 
 *.cso
+DirectX/kokosozai.png
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
