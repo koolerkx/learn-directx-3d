@@ -69,173 +69,35 @@ void Sprite_Begin()
     // 頂点情報を書き込み
     SCREEN_WIDTH = static_cast<float>(Direct3D_GetBackBufferWidth());
     SCREEN_HEIGHT = static_cast<float>(Direct3D_GetBackBufferHeight());
-    
+
     // 頂点シェーダーに変換行列を設定
     Shader_SetMatrix(XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f));
 }
 
-void Sprite_Draw(int texid, float dx, float dy, const XMFLOAT4& color)
+void Sprite_Draw(int texid, float display_x, float display_y, const XMFLOAT4& color)
 {
-    // テクスチャ設定
-    Texture_SetTexture(texid);
+    float IMAGE_WIDTH = static_cast<float>(Texture_Width(texid));
+    float IMAGE_HEIGHT = static_cast<float>(Texture_Height(texid));
 
-    // シェーダーを描画パイプラインに設定
-    Shader_Begin();
-
-    // 頂点バッファをロックする
-    D3D11_MAPPED_SUBRESOURCE msr;
-    g_pContext->Map(g_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
-
-    // 頂点バッファへの仮想ポインタを取得
-    Vertex* v = static_cast<Vertex*>(msr.pData);
-
-    const int IMAGE_WIDTH = Texture_Width(texid);
-    const int IMAGE_HEIGHT = Texture_Height(texid);
-
-    // 画面の左上から右下に向かう線分を描画する -> 時計回り
-    v[0].position = {dx, dy, 0.0f}; // LT
-    v[1].position = {dx + IMAGE_WIDTH, dy, 0.0f}; // RT
-    v[2].position = {dx, dy + IMAGE_HEIGHT, 0.0f}; // LB
-    v[3].position = {dx + IMAGE_WIDTH, dy + IMAGE_HEIGHT, 0.0f}; // RB
-
-    v[0].color = color;
-    v[1].color = color;
-    v[2].color = color;
-    v[3].color = color;
-
-    v[0].uv = {0.0f, 0.0f};
-    v[1].uv = {1.0f, 0.0f};
-    v[2].uv = {0.0f, 1.0f};
-    v[3].uv = {1.0f, 1.0f};
-
-    // 頂点バッファのロックを解除
-    g_pContext->Unmap(g_pVertexBuffer, 0);
-
-    // 頂点バッファを描画パイプラインに設定
-    UINT stride = sizeof(Vertex);
-    UINT offset = 0;
-    g_pContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
-
-    // 頂点シェーダーに変換行列を設定
-    Shader_SetMatrix(XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f));
-
-    // プリミティブトポロジ設定
-    g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-    // ポリゴン描画命令発行
-    g_pContext->Draw(NUM_VERTEX, 0);
+    Sprite_Draw(texid, display_x, display_y, 0.0f, 0.0f, IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_HEIGHT, color);
 }
 
-
-void Sprite_Draw(int texid, float dx, float dy, float dw, float dh, const XMFLOAT4& color)
+void Sprite_Draw(int texid, float display_x, float display_y, float display_w, float display_h, const XMFLOAT4& color)
 {
-    // テクスチャ設定
-    Texture_SetTexture(texid);
+    float IMAGE_WIDTH = static_cast<float>(Texture_Width(texid));
+    float IMAGE_HEIGHT = static_cast<float>(Texture_Height(texid));
 
-    // シェーダーを描画パイプラインに設定
-    Shader_Begin();
-
-    // 頂点バッファをロックする
-    D3D11_MAPPED_SUBRESOURCE msr;
-    g_pContext->Map(g_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
-
-    // 頂点バッファへの仮想ポインタを取得
-    Vertex* v = static_cast<Vertex*>(msr.pData);
-
-    // 画面の左上から右下に向かう線分を描画する -> 時計回り
-    v[0].position = {dx, dy, 0.0f}; // LT
-    v[1].position = {dx + dw, dy, 0.0f}; // RT
-    v[2].position = {dx, dy + dh, 0.0f}; // LB
-    v[3].position = {dx + dw, dy + dh, 0.0f}; // RB
-
-    v[0].color = color;
-    v[1].color = color;
-    v[2].color = color;
-    v[3].color = color;
-
-    v[0].uv = {0.0f, 0.0f};
-    v[1].uv = {1.0f, 0.0f};
-    v[2].uv = {0.0f, 1.0f};
-    v[3].uv = {1.0f, 1.0f};
-
-    // 頂点バッファのロックを解除
-    g_pContext->Unmap(g_pVertexBuffer, 0);
-
-    // 頂点バッファを描画パイプラインに設定
-    UINT stride = sizeof(Vertex);
-    UINT offset = 0;
-    g_pContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
-
-    // 頂点シェーダーに変換行列を設定
-    Shader_SetMatrix(XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f));
-
-    // プリミティブトポロジ設定
-    g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-    // ポリゴン描画命令発行
-    g_pContext->Draw(NUM_VERTEX, 0);
+    Sprite_Draw(texid, display_x, display_y, 0.0f, 0.0f, IMAGE_WIDTH, IMAGE_HEIGHT, display_w, display_h, color);
 }
 
-
-void Sprite_Draw(int texid, float dx, float dy, float px, float py, float pw, float ph, const XMFLOAT4& color)
+void Sprite_Draw(int texid, float display_x, float display_y, float uvcut_x, float uvcut_y, float uvcut_w,
+                 float uvcut_h, const XMFLOAT4& color)
 {
-    // テクスチャ設定
-    Texture_SetTexture(texid);
-
-    // シェーダーを描画パイプラインに設定
-    Shader_Begin();
-
-    // 頂点バッファをロックする
-    D3D11_MAPPED_SUBRESOURCE msr;
-    g_pContext->Map(g_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
-
-    // 頂点バッファへの仮想ポインタを取得
-    Vertex* v = static_cast<Vertex*>(msr.pData);
-
-    const int IMAGE_WIDTH = Texture_Width(texid);
-    const int IMAGE_HEIGHT = Texture_Height(texid);
-
-    // 画面の左上から右下に向かう線分を描画する -> 時計回り
-    v[0].position = {dx, dy, 0.0f}; // LT
-    v[1].position = {dx + pw, dy, 0.0f}; // RT
-    v[2].position = {dx, dy + ph, 0.0f}; // LB
-    v[3].position = {dx + pw, dy + ph, 0.0f}; // RB
-
-    v[0].color = color;
-    v[1].color = color;
-    v[2].color = color;
-    v[3].color = color;
-
-    float u0 = px / static_cast<float>(IMAGE_WIDTH);
-    float v0 = py / static_cast<float>(IMAGE_HEIGHT);
-    float u1 = (px + pw) / static_cast<float>(IMAGE_WIDTH);
-    float v1 = (py + ph) / static_cast<float>(IMAGE_HEIGHT);
-
-    v[0].uv = {u0, v0};
-    v[1].uv = {u1, v0};
-    v[2].uv = {u0, v1};
-    v[3].uv = {u1, v1};
-
-    // 頂点バッファのロックを解除
-    g_pContext->Unmap(g_pVertexBuffer, 0);
-
-    // 頂点バッファを描画パイプラインに設定
-    UINT stride = sizeof(Vertex);
-    UINT offset = 0;
-    g_pContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
-
-    // 頂点シェーダーに変換行列を設定
-    Shader_SetMatrix(XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f));
-
-    // プリミティブトポロジ設定
-    g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-    // ポリゴン描画命令発行
-    g_pContext->Draw(NUM_VERTEX, 0);
+    Sprite_Draw(texid, display_x, display_y, uvcut_x, uvcut_y, uvcut_w, uvcut_h, uvcut_w, uvcut_h, color);
 }
 
-
-void Sprite_Draw(int texid, float dx, float dy, float px, float py, float pw, float ph, float tw, float th,
+void Sprite_Draw(int texid, float display_x, float display_y, float uvcut_x, float uvcut_y, float uvcut_w,
+                 float uvcut_h, float display_w, float display_h,
                  const XMFLOAT4& color)
 {
     // テクスチャ設定
@@ -251,24 +113,25 @@ void Sprite_Draw(int texid, float dx, float dy, float px, float py, float pw, fl
     // 頂点バッファへの仮想ポインタを取得
     Vertex* v = static_cast<Vertex*>(msr.pData);
 
-    const int IMAGE_WIDTH = Texture_Width(texid);
-    const int IMAGE_HEIGHT = Texture_Height(texid);
-
     // 画面の左上から右下に向かう線分を描画する -> 時計回り
-    v[0].position = {dx, dy, 0.0f}; // LT
-    v[1].position = {dx + tw, dy, 0.0f}; // RT
-    v[2].position = {dx, dy + th, 0.0f}; // LB
-    v[3].position = {dx + tw, dy + th, 0.0f}; // RB
+    v[0].position = {display_x, display_y, 0.0f}; // LT
+    v[1].position = {display_x + display_w, display_y, 0.0f}; // RT
+    v[2].position = {display_x, display_y + display_h, 0.0f}; // LB
+    v[3].position = {display_x + display_w, display_y + display_h, 0.0f}; // RB
 
     v[0].color = color;
     v[1].color = color;
     v[2].color = color;
     v[3].color = color;
 
-    float u0 = px / static_cast<float>(IMAGE_WIDTH);
-    float v0 = py / static_cast<float>(IMAGE_HEIGHT);
-    float u1 = (px + pw) / static_cast<float>(IMAGE_WIDTH);
-    float v1 = (py + ph) / static_cast<float>(IMAGE_HEIGHT);
+    // UVマップ
+    const int IMAGE_WIDTH = Texture_Width(texid);
+    const int IMAGE_HEIGHT = Texture_Height(texid);
+
+    float u0 = uvcut_x / static_cast<float>(IMAGE_WIDTH);
+    float v0 = uvcut_y / static_cast<float>(IMAGE_HEIGHT);
+    float u1 = (uvcut_x + uvcut_w) / static_cast<float>(IMAGE_WIDTH);
+    float v1 = (uvcut_y + uvcut_h) / static_cast<float>(IMAGE_HEIGHT);
 
     v[0].uv = {u0, v0};
     v[1].uv = {u1, v0};

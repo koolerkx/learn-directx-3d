@@ -28,5 +28,5 @@ void SpriteAnim_Update()
 
 void SpriteAnim_Draw()
 {
-    Sprite_Draw(g_TextureId, 512.0f, 512.0f, 32 * g_PatternNum, 32 * 3, 32.0f, 32.0f, 256.0f, 256.0f);
+    Sprite_Draw(g_TextureId, 512.0f, 512.0f, 32.0f * g_PatternNum, 32 * 3, 32.0f, 32.0f, 256.0f, 256.0f);
 }

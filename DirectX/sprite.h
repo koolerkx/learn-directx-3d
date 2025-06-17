@@ -17,16 +17,57 @@ void Sprite_Finalize(void);
 
 void Sprite_Begin();
 
-/// @brief テクスチャ全表示（表示サイズ変更可）
-void Sprite_Draw(int texid, float dx, float dy, const DirectX::XMFLOAT4& color = {1.0f, 1.0f, 1.0f, 1.0f});
+/**
+ * @brief テクスチャ全表示（表示サイズ変更可）
+ * @param texid テクスチャID
+ * @param display_x 左上のX座標
+ * @param display_y 左上のY座標
+ * @param color 色
+ */
+void Sprite_Draw(int texid, float display_x, float display_y,
+                 const DirectX::XMFLOAT4& color = {1.0f, 1.0f, 1.0f, 1.0f});
 
-/// @brief テクスチャ全表示（表示サイズ変更可）
-void Sprite_Draw(int texid, float dx, float dy, float dw, float dh, const DirectX::XMFLOAT4& color = {1.0f, 1.0f, 1.0f, 1.0f});
+/**
+ * @brief テクスチャ全表示（表示サイズ変更可）
+ * @param texid テクスチャID
+ * @param display_x 左上のX座標
+ * @param display_y 左上のY座標
+ * @param display_w 表示幅
+ * @param display_h 表示高さ
+ * @param color 色
+ */
+void Sprite_Draw(int texid, float display_x, float display_y, float display_w, float display_h,
+                 const DirectX::XMFLOAT4& color = {1.0f, 1.0f, 1.0f, 1.0f});
 
-/// @brief UVカット
-void Sprite_Draw(int texid, float dx, float dy, float px, float py, float pw, float ph, const DirectX::XMFLOAT4& color = {1.0f, 1.0f, 1.0f, 1.0f});
+/**
+ * @brief UVカット
+ * @param texid テクスチャID
+ * @param display_x 左上のX座標
+ * @param display_y 左上のY座標
+ * @param uvcut_x UVカット左上X座標
+ * @param uvcut_y UVカット左上Y座標
+ * @param uvcut_w UVカットの幅
+ * @param uvcut_h UVカットの高さ
+ * @param color 色
+ */
+void Sprite_Draw(int texid, float display_x, float display_y, float uvcut_x, float uvcut_y, float uvcut_w,
+                 float uvcut_h, const DirectX::XMFLOAT4& color = {1.0f, 1.0f, 1.0f, 1.0f});
 
-/// @brief UVカット（表示サイズ変更可）
-void Sprite_Draw(int texid, float dx, float dy, float px, float py, float pw, float ph, float tw, float th, const DirectX::XMFLOAT4& color = {1.0f, 1.0f, 1.0f, 1.0f});
+/**
+ * @brief UVカット（表示サイズ変更可）
+ * @param texid テクスチャID
+ * @param display_x 左上のX座標
+ * @param display_y 左上のY座標
+ * @param uvcut_x UVカット左上X座標
+ * @param uvcut_y UVカット左上Y座標
+ * @param uvcut_w UVカットの幅
+ * @param uvcut_h UVカットの高さ
+ * @param display_w 表示幅
+ * @param display_h 表示高さ
+ * @param color 色
+ */
+void Sprite_Draw(int texid, float display_x, float display_y, float uvcut_x, float uvcut_y, float uvcut_w,
+                 float uvcut_h, float display_w, float display_h,
+                 const DirectX::XMFLOAT4& color = {1.0f, 1.0f, 1.0f, 1.0f});
 
 #endif // SPRITE_H
