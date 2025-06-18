@@ -46,6 +46,12 @@
     <ClCompile Include="system_timer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="debug_text.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader11.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game_window.h">
@@ -73,6 +79,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="system_timer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader11.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="debug_text.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -104,10 +116,14 @@
     <Image Include="kokosozai.png">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="consolab_ascii_512.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXTex.inl">
       <Filter>ヘッダー ファイル</Filter>
     </None>
+    <None Include="ascii_texture_generator.py" />
   </ItemGroup>
 </Project>
