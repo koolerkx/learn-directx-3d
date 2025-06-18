@@ -13,6 +13,7 @@
 
 #include "debug_text.h"
 #include <sstream>
+
 #include "system_timer.h"
 
 int APIENTRY WinMain(
@@ -61,6 +62,9 @@ int APIENTRY WinMain(
     double register_time = SystemTimer_GetTime();
     double fps = 0;
 
+    double prev_time = SystemTimer_GetTime();
+    const double target_frame = 1.0 / 60.0; // 60 FPS
+
     // ゲームループ＆メッセージループ
     MSG msg;
 
@@ -76,22 +80,28 @@ int APIENTRY WinMain(
         {
             double time = SystemTimer_GetTime();
             double elapsed_time = time - register_time;
+
             if (elapsed_time >= 1.0)
             {
                 fps = frame_count / elapsed_time;
                 register_time = time;
                 frame_count = 0;
             }
-            
+
+            double dt = time - prev_time;
+            if (dt < target_frame)
+                continue;
+            prev_time = time;
+
             // ゲームの処理 
             Direct3D_Clear();
             Sprite_Begin();
-            
+
             SpriteAnim_Draw();
             SpriteAnim_Update();
-            
+
             DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};
-            
+
             Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, color);
             Sprite_Draw(texid_knight_winter, 512.0f, 32.0f, 256, 256, color);
             Sprite_Draw(texid_kokosozai, 800.0f, 32.0f, 32.0f, 64.0f, 32.0f, 32.0f, color);
