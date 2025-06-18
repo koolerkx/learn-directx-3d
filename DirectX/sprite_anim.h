@@ -11,7 +11,7 @@
 void SpriteAnim_Initialize();
 void SpriteAnim_Finalize(void);
 
-void SpriteAnim_Update();
+void SpriteAnim_Update(double elapsed_time);
 void SpriteAnim_Draw();
 
 #endif

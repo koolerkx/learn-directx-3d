@@ -21,9 +21,15 @@ void SpriteAnim_Finalize(void)
 {
 }
 
-void SpriteAnim_Update()
+void SpriteAnim_Update(double elapsed_time)
 {
-    g_PatternNum = (g_PatternNum + 1) % g_PatternMax;
+    if (accumulated_time >= 0.5)
+    {
+        g_PatternNum = (g_PatternNum + 1) % g_PatternMax;
+        accumulated_time = 0;
+    }
+    
+    accumulated_time += elapsed_time;
 }
 
 void SpriteAnim_Draw()

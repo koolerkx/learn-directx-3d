@@ -59,11 +59,10 @@ int APIENTRY WinMain(
 
     // フレーム計測用
     ULONG frame_count = 0;
-    double register_time = SystemTimer_GetTime();
+    double time = SystemTimer_GetTime();
     double fps = 0;
 
     double prev_time = SystemTimer_GetTime();
-    const double target_frame = 1.0 / 60.0; // 60 FPS
 
     // ゲームループ＆メッセージループ
     MSG msg;
@@ -78,28 +77,17 @@ int APIENTRY WinMain(
         }
         else
         {
-            double time = SystemTimer_GetTime();
-            double elapsed_time = time - register_time;
-
-            if (elapsed_time >= 1.0)
-            {
-                fps = frame_count / elapsed_time;
-                register_time = time;
-                frame_count = 0;
-            }
-
-            double dt = time - prev_time;
-            if (dt < target_frame)
-                continue;
-            prev_time = time;
+            double now = SystemTimer_GetTime();
+            double elapsed_time = now - time;
+            time = now;
 
             // ゲームの処理 
             Direct3D_Clear();
             Sprite_Begin();
 
             SpriteAnim_Draw();
-            SpriteAnim_Update();
-
+            SpriteAnim_Update(elapsed_time);
+            
             DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 
             Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, color);
