@@ -50,6 +50,7 @@ bool Direct3D_Initialize(HWND hWnd)
     swap_chain_desc.SampleDesc.Count = 1;
     swap_chain_desc.SampleDesc.Quality = 0;
     swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+    // swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD; // 0: 垂直同期なし
     swap_chain_desc.OutputWindow = hWnd;
 
     /*
@@ -194,6 +195,7 @@ void Direct3D_Present()
 {
     // スワップチェーンの表示
     // 貯まった描画コマンドをグラフィックに転送
+    // 0: 垂直同期なし
     g_pSwapChain->Present(1, 0);
 }
 
