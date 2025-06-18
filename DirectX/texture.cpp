@@ -112,7 +112,7 @@ void Texture_AllRelease()
 void Texture_SetTexture(int texid)
 {
     if (texid < 0) return;
-    if (g_SetTextureIndex == texid) return; // すでに、ShaderResourcesに設定したから
+    // if (g_SetTextureIndex == texid) return; // すでに、ShaderResourcesに設定したから
 
     g_SetTextureIndex = texid;
 
