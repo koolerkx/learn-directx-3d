@@ -11,6 +11,10 @@
 #include "DirectXMath.h"
 #include "sprite_anim.h"
 
+#include "debug_text.h"
+#include <sstream>
+#include "system_timer.h"
+
 int APIENTRY WinMain(
     _In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE,
@@ -21,11 +25,27 @@ int APIENTRY WinMain(
 
     HWND hWnd = GameWindow_Create(hInstance);
 
+    SystemTimer_Initialize();
     Direct3D_Initialize(hWnd);
     Shader_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Sprite_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Texture_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     SpriteAnim_Initialize();
+
+    // デバッグテキスト
+    hal::DebugText debugText(
+        Direct3D_GetDevice(),
+        Direct3D_GetContext(),
+        L"consolab_ascii_512.png",
+        Direct3D_GetBackBufferWidth(),
+        Direct3D_GetBackBufferHeight(),
+        0.0f,
+        0.0f,
+        0,
+        0,
+        0.0f,
+        0.0f
+    );
 
     // テクスチャ読み込み
     int texid_knight_winter = Texture_Load(L"knight_3.png");
@@ -36,6 +56,10 @@ int APIENTRY WinMain(
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
 
+    // フレーム計測用
+    ULONG frame_count = 0;
+    double register_time = SystemTimer_GetTime();
+    double fps = 0;
 
     // ゲームループ＆メッセージループ
     MSG msg;
@@ -50,21 +74,41 @@ int APIENTRY WinMain(
         }
         else
         {
+            double time = SystemTimer_GetTime();
+            double elapsed_time = time - register_time;
+            if (elapsed_time >= 1.0)
+            {
+                fps = frame_count / elapsed_time;
+                register_time = time;
+                frame_count = 0;
+            }
+            
             // ゲームの処理 
             Direct3D_Clear();
-            
             Sprite_Begin();
-
+            
             SpriteAnim_Draw();
             SpriteAnim_Update();
-
-            DirectX::XMFLOAT4 color = {1.0f , 1.0f, 1.0f, 1.0f};
+            
+            DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};
             
             Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, color);
             Sprite_Draw(texid_knight_winter, 512.0f, 32.0f, 256, 256, color);
-            Sprite_Draw(texid_kokosozai, 32.0f, 32.0f, 32.0f, 64.0f, 32.0f, 32.0f, color);
-            Sprite_Draw(texid_kokosozai, 32.0f, 32.0f, 32.0f, 32.0f * 2, 32.0f, 32.0f, 256.0f, 256.0f, color);
+            Sprite_Draw(texid_kokosozai, 800.0f, 32.0f, 32.0f, 64.0f, 32.0f, 32.0f, color);
+            Sprite_Draw(texid_kokosozai, 864.0f, 32.0f, 32.0f, 32.0f * 2, 32.0f, 32.0f, 256.0f, 256.0f, color);
 
+#if defined(DEBUG) || defined(_DEBUG)
+            std::stringstream ss;
+            ss << fps;
+            
+            debugText.SetText("FPS:");
+            debugText.SetText(ss.str().c_str());
+
+            debugText.Draw();
+            debugText.Clear();
+            
+            frame_count++;
+#endif
             Direct3D_Present();
         }
     }
