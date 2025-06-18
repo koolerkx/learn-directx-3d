@@ -12,6 +12,6 @@ void SpriteAnim_Initialize();
 void SpriteAnim_Finalize(void);
 
 void SpriteAnim_Update(double elapsed_time);
-void SpriteAnim_Draw();
+void SpriteAnim_Draw(int playid, float dx, float dy, float dw, float dh);
 
 #endif

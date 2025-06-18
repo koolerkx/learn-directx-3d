@@ -84,16 +84,17 @@ int APIENTRY WinMain(
             // ゲームの処理 
             Direct3D_Clear();
             Sprite_Begin();
-
-            SpriteAnim_Draw();
+            
+            SpriteAnim_Draw(0, 32, 32, 256, 256);
+            SpriteAnim_Draw(1, 512, 32, 256, 256);
             SpriteAnim_Update(elapsed_time);
             
-            DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};
-
-            Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, color);
-            Sprite_Draw(texid_knight_winter, 512.0f, 32.0f, 256, 256, color);
-            Sprite_Draw(texid_kokosozai, 800.0f, 32.0f, 32.0f, 64.0f, 32.0f, 32.0f, color);
-            Sprite_Draw(texid_kokosozai, 864.0f, 32.0f, 32.0f, 32.0f * 2, 32.0f, 32.0f, 256.0f, 256.0f, color);
+            // DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};
+            //
+            // Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, color);
+            // Sprite_Draw(texid_knight_winter, 512.0f, 32.0f, 256, 256, color);
+            // Sprite_Draw(texid_kokosozai, 800.0f, 32.0f, 32.0f, 64.0f, 32.0f, 32.0f, color);
+            // Sprite_Draw(texid_kokosozai, 864.0f, 32.0f, 32.0f, 32.0f * 2, 32.0f, 32.0f, 256.0f, 256.0f, color);
 
 #if defined(DEBUG) || defined(_DEBUG)
             std::stringstream ss;
