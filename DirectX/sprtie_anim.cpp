@@ -14,10 +14,11 @@ using namespace DirectX;
 
 struct AnimPatternData
 {
-    int m_TextureId{1}; // テクスチャID
+    int m_TextureId{1}; ///> テクスチャID @retval -1 登録されていない 
     int m_PatternMax{0}; // パターン数
     XMUINT2 m_StartPosition{0, 0}; // アニメーションのスタート座標
     XMUINT2 m_PatternSize{0, 0}; // 1パターンサイズ
+    double m_seconds_per_pattern = 0.1;
     bool m_IsLooped{false}; // ループするか
 };
 
@@ -35,33 +36,16 @@ static AnimPlayData g_AnimPlay[ANIM_PLAY_MAX];
 
 void SpriteAnim_Initialize()
 {
-    // g_AnimPattern[0].m_TextureId = Texture_Load(L"kokosozai.png");;
-    // g_AnimPattern[0].m_PatternMax = 13;
-    // g_AnimPattern[0].m_StartPosition = {0, 96};
-    // g_AnimPattern[0].m_PatternSize = {32, 32};
-    //
-    // g_AnimPlay[0].m_PatternId = 0;
+    // アニメーションパターン管理情報を初期化（すべて利用していない）状況にする
+    for (AnimPatternData& data : g_AnimPattern)
+    {
+        data.m_TextureId = -1;
+    }
 
-    g_AnimPattern[0].m_TextureId = Texture_Load(L"kokosozai.png");
-    g_AnimPattern[0].m_PatternMax = 13;
-    g_AnimPattern[0].m_PatternSize = {32, 32};
-    g_AnimPattern[0].m_StartPosition = {0, 0 * 32};
-    g_AnimPattern[0].m_IsLooped = true;
-    g_AnimPlay[0].m_PatternId = 0;
-
-    g_AnimPattern[1].m_TextureId = Texture_Load(L"kokosozai.png");
-    g_AnimPattern[1].m_PatternMax = 13;
-    g_AnimPattern[1].m_PatternSize = {32, 32};
-    g_AnimPattern[1].m_StartPosition = {0, 32};
-    g_AnimPattern[1].m_IsLooped = true;
-    g_AnimPlay[1].m_PatternId = 1;
-
-    g_AnimPattern[2].m_TextureId = Texture_Load(L"kokosozai.png");
-    g_AnimPattern[2].m_PatternMax = 4;
-    g_AnimPattern[2].m_PatternSize = {32, 32};
-    g_AnimPattern[2].m_StartPosition = {2 * 32, 5 * 32};
-    g_AnimPattern[2].m_IsLooped = false;
-    g_AnimPlay[2].m_PatternId = 2;
+    for (AnimPlayData &data: g_AnimPlay)
+    {
+        data.m_PatternId = -1;
+    }
 }
 
 void SpriteAnim_Finalize(void)
@@ -70,13 +54,15 @@ void SpriteAnim_Finalize(void)
 
 void SpriteAnim_Update(double elapsed_time)
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < ANIM_PLAY_MAX; i++)
     {
-        if (g_AnimPlay[i].m_accumulated_time >= 0.1)
-        {
-            const int pattern_id = g_AnimPlay[i].m_PatternId;
-            AnimPatternData* pPatternData = &g_AnimPattern[pattern_id];
+        if (g_AnimPlay[i].m_PatternId < 0) continue; // データが入ってない
 
+        const int pattern_id = g_AnimPlay[i].m_PatternId;
+        AnimPatternData* pPatternData = &g_AnimPattern[pattern_id];
+
+        if (g_AnimPlay[i].m_accumulated_time >= pPatternData->m_seconds_per_pattern)
+        {
             g_AnimPlay[i].m_PatternNum++;
 
             if (g_AnimPlay[i].m_PatternNum >= pPatternData->m_PatternMax)
@@ -91,7 +77,7 @@ void SpriteAnim_Update(double elapsed_time)
                 }
             }
 
-            g_AnimPlay[i].m_accumulated_time -= 0.1;
+            g_AnimPlay[i].m_accumulated_time -= pPatternData->m_seconds_per_pattern;
         }
         g_AnimPlay[i].m_accumulated_time += elapsed_time;
     }
@@ -106,10 +92,46 @@ void SpriteAnim_Draw(int playid, float dx, float dy, float dw, float dh)
     Sprite_Draw(
         pPatternData->m_TextureId,
         dx, dy,
-        pPatternData->m_StartPosition.x + pattern_num * pPatternData->m_PatternSize.x,
-        pPatternData->m_StartPosition.y,
-        pPatternData->m_PatternSize.x,
-        pPatternData->m_PatternSize.y,
+        static_cast<float>(pPatternData->m_StartPosition.x + pattern_num * pPatternData->m_PatternSize.x),
+        static_cast<float>(pPatternData->m_StartPosition.y),
+        static_cast<float>(pPatternData->m_PatternSize.x),
+        static_cast<float>(pPatternData->m_PatternSize.y),
         dw, dh
     );
+}
+
+int SpriteAnim_RegisterPattern(int textureId, int patternMax, double m_seconds_per_pattern,
+                               DirectX::XMUINT2 patternSize,
+                               DirectX::XMUINT2 patternStartPosition, bool isLoop)
+{
+    for (int i = 0; i < ANIM_PATTERN_MAX; i++)
+    {
+        if (g_AnimPattern[i].m_TextureId >= 0) continue;
+
+        g_AnimPattern[i].m_TextureId = textureId;
+        g_AnimPattern[i].m_PatternMax = patternMax;
+        g_AnimPattern[i].m_seconds_per_pattern = m_seconds_per_pattern;
+        g_AnimPattern[i].m_PatternSize = patternSize;
+        g_AnimPattern[i].m_StartPosition = patternStartPosition;
+        g_AnimPattern[i].m_IsLooped = isLoop;
+
+        return i;
+    }
+
+    return -1;
+}
+
+int SpriteAnim_CreatePlayer(int anim_pattern_id)
+{
+    for (int i = 0; i < ANIM_PLAY_MAX; i++)
+    {
+        if (g_AnimPlay[i].m_PatternId >= 0) continue;
+
+        g_AnimPlay[i].m_PatternId = anim_pattern_id;
+        g_AnimPlay[i].m_accumulated_time = 0;
+        g_AnimPlay[i].m_PatternNum = 0;
+
+        return i;
+    }
+    return -1;
 }

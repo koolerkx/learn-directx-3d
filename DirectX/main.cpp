@@ -14,6 +14,7 @@
 #include "debug_text.h"
 #include <sstream>
 
+#include "debug_ostream.h"
 #include "system_timer.h"
 
 int APIENTRY WinMain(
@@ -53,6 +54,29 @@ int APIENTRY WinMain(
     // int texid_knight_summer = Texture_Load(L"knight_3_summer.png");
     int texid_kokosozai = Texture_Load(L"kokosozai.png");
 
+    int r1 = SpriteAnim_RegisterPattern(texid_kokosozai, 13, 0.1,
+                                             {32, 32}, {0, 32 * 0});
+    int pidr1 = SpriteAnim_CreatePlayer(r1);
+
+    int r2 = SpriteAnim_RegisterPattern(texid_kokosozai, 13, 0.5,
+                                             {32, 32}, {0, 32 * 1});
+    int pidr2 = SpriteAnim_CreatePlayer(r2);
+
+    int r3 = SpriteAnim_RegisterPattern(texid_kokosozai, 6, 0.2,
+                                             {32, 32}, {0, 32 * 2});
+    int pidr3 = SpriteAnim_CreatePlayer(r3);
+
+    int r4 = SpriteAnim_RegisterPattern(texid_kokosozai, 8, 0.2,
+                                             {32, 32}, {0, 32 * 3});
+    int pidr4 = SpriteAnim_CreatePlayer(r4);
+
+    int r5 = SpriteAnim_RegisterPattern(texid_kokosozai, 15, 0.2,
+                                             {32, 32}, {0, 32 * 4});
+    int pidr5 = SpriteAnim_CreatePlayer(r5);
+
+    int r6 = SpriteAnim_RegisterPattern(texid_kokosozai, 4, 0.2,
+                                             {32, 32}, {32 * 2, 32 * 5}, false);
+    int pidr6 = SpriteAnim_CreatePlayer(r6);
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
@@ -89,7 +113,7 @@ int APIENTRY WinMain(
             }
 
             elapsed_time = current_time - exec_last_time;
-            if (elapsed_time >= (1.0 / 60.0))  // 1/60秒ごとに実行
+            if (elapsed_time >= (1.0 / 60.0)) // 1/60秒ごとに実行
             // if (true)
             {
                 exec_last_time = current_time; // 処理した時刻を保存
@@ -98,9 +122,14 @@ int APIENTRY WinMain(
                 Direct3D_Clear();
                 Sprite_Begin();
 
-                SpriteAnim_Draw(0, 32, 32, 256, 256);
-                SpriteAnim_Draw(1, 512, 32, 256, 256);
-                SpriteAnim_Draw(2, 32, 512, 256, 256);
+                Sprite_Draw(texid_knight_winter, 0, 0, 128, 128);
+
+                SpriteAnim_Draw(pidr1, (32 + 128) * 1 , 32, 128, 128);
+                SpriteAnim_Draw(pidr2, (32 + 128) * 2, 32, 128, 128);
+                SpriteAnim_Draw(pidr3, (32 + 128) * 3, 32, 128, 128);
+                SpriteAnim_Draw(pidr4, (32 + 128) * 4, 32, 128, 128);
+                SpriteAnim_Draw(pidr5, (32 + 128) * 5, 32, 128, 128);
+                SpriteAnim_Draw(pidr6, (32 + 128) * 6, 32, 128, 128);
                 SpriteAnim_Update(elapsed_time);
 
                 // DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -122,7 +151,7 @@ int APIENTRY WinMain(
 
 #endif
                 Direct3D_Present();
-                
+
                 frame_count++;
             }
         }
