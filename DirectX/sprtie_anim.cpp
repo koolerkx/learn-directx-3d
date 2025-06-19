@@ -76,15 +76,17 @@ void SpriteAnim_Update(double elapsed_time)
 
 void SpriteAnim_Draw(int playid, float dx, float dy, float dw, float dh)
 {
-    int i = playid;
-
+    const int pattern_id = g_AnimPlay[playid].m_PatternId;
+    const int pattern_num = g_AnimPlay[playid].m_PatternNum;
+    AnimPatternData* pPatternData = &g_AnimPattern[pattern_id];
+    
     Sprite_Draw(
-        g_AnimPattern[g_AnimPlay[i].m_PatternId].m_TextureId,
+        pPatternData->m_TextureId,
         dx, dy,
-        g_AnimPattern[g_AnimPlay[i].m_PatternId].m_StartPosition.x + g_AnimPlay[i].m_PatternNum * g_AnimPattern[g_AnimPlay[i].m_PatternId].m_PatternSize.x,
-        g_AnimPattern[g_AnimPlay[i].m_PatternId].m_StartPosition.y,
-        g_AnimPattern[g_AnimPlay[i].m_PatternId].m_PatternSize.x,
-        g_AnimPattern[g_AnimPlay[i].m_PatternId].m_PatternSize.y,
+        pPatternData->m_StartPosition.x + pattern_num * pPatternData->m_PatternSize.x,
+        pPatternData->m_StartPosition.y,
+        pPatternData->m_PatternSize.x,
+        pPatternData->m_PatternSize.y,
         dw, dh
     );
 }
