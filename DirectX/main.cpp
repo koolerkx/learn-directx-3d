@@ -100,6 +100,7 @@ int APIENTRY WinMain(
 
                 SpriteAnim_Draw(0, 32, 32, 256, 256);
                 SpriteAnim_Draw(1, 512, 32, 256, 256);
+                SpriteAnim_Draw(2, 32, 512, 256, 256);
                 SpriteAnim_Update(elapsed_time);
 
                 // DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};

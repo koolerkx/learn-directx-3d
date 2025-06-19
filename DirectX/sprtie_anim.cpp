@@ -43,17 +43,25 @@ void SpriteAnim_Initialize()
     // g_AnimPlay[0].m_PatternId = 0;
 
     g_AnimPattern[0].m_TextureId = Texture_Load(L"kokosozai.png");
-    g_AnimPattern[0].m_PatternMax = 8;
-    g_AnimPattern[0].m_PatternSize = { 32, 32 };
-    g_AnimPattern[0].m_StartPosition = { 0, 96 };
+    g_AnimPattern[0].m_PatternMax = 13;
+    g_AnimPattern[0].m_PatternSize = {32, 32};
+    g_AnimPattern[0].m_StartPosition = {0, 0 * 32};
+    g_AnimPattern[0].m_IsLooped = true;
     g_AnimPlay[0].m_PatternId = 0;
 
     g_AnimPattern[1].m_TextureId = Texture_Load(L"kokosozai.png");
     g_AnimPattern[1].m_PatternMax = 13;
-    g_AnimPattern[1].m_PatternSize = { 32, 32 };
-    g_AnimPattern[1].m_StartPosition = { 0, 32 };
+    g_AnimPattern[1].m_PatternSize = {32, 32};
+    g_AnimPattern[1].m_StartPosition = {0, 32};
+    g_AnimPattern[1].m_IsLooped = true;
     g_AnimPlay[1].m_PatternId = 1;
 
+    g_AnimPattern[2].m_TextureId = Texture_Load(L"kokosozai.png");
+    g_AnimPattern[2].m_PatternMax = 4;
+    g_AnimPattern[2].m_PatternSize = {32, 32};
+    g_AnimPattern[2].m_StartPosition = {2 * 32, 5 * 32};
+    g_AnimPattern[2].m_IsLooped = false;
+    g_AnimPlay[2].m_PatternId = 2;
 }
 
 void SpriteAnim_Finalize(void)
@@ -62,15 +70,30 @@ void SpriteAnim_Finalize(void)
 
 void SpriteAnim_Update(double elapsed_time)
 {
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 3; i++)
     {
         if (g_AnimPlay[i].m_accumulated_time >= 0.1)
         {
-            g_AnimPlay[i].m_PatternNum = (g_AnimPlay[i].m_PatternNum + 1) % g_AnimPattern[g_AnimPlay[i].m_PatternId].m_PatternMax;
+            const int pattern_id = g_AnimPlay[i].m_PatternId;
+            AnimPatternData* pPatternData = &g_AnimPattern[pattern_id];
+
+            g_AnimPlay[i].m_PatternNum++;
+
+            if (g_AnimPlay[i].m_PatternNum >= pPatternData->m_PatternMax)
+            {
+                if (pPatternData->m_IsLooped)
+                {
+                    g_AnimPlay[i].m_PatternNum = 0;
+                }
+                else
+                {
+                    g_AnimPlay[i].m_PatternNum = pPatternData->m_PatternMax - 1;
+                }
+            }
 
             g_AnimPlay[i].m_accumulated_time -= 0.1;
         }
-    g_AnimPlay[i].m_accumulated_time += elapsed_time;
+        g_AnimPlay[i].m_accumulated_time += elapsed_time;
     }
 }
 
@@ -79,7 +102,7 @@ void SpriteAnim_Draw(int playid, float dx, float dy, float dw, float dh)
     const int pattern_id = g_AnimPlay[playid].m_PatternId;
     const int pattern_num = g_AnimPlay[playid].m_PatternNum;
     AnimPatternData* pPatternData = &g_AnimPattern[pattern_id];
-    
+
     Sprite_Draw(
         pPatternData->m_TextureId,
         dx, dy,
