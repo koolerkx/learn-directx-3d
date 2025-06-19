@@ -216,7 +216,7 @@ namespace hal
 	
 			if (*pText == '\n') {
 				m_TextLines.emplace_back(); // 行を増やす
-				// m_TextLines.back().strings.emplace_back(color); // 新しい文字列を追加
+				m_TextLines.back().strings.emplace_back(color); // 新しい文字列を追加
 			}
 			else if (*pText == '\r') {
 				// 改行コード '\r' は無視
@@ -225,7 +225,7 @@ namespace hal
 				while (m_TextLines.back().characterCount % 4 != 0) {
 					if (m_MaxCharactersPerLine && m_TextLines.back().characterCount >= m_MaxCharactersPerLine) {
 						m_TextLines.emplace_back(); // 行を増やす
-						// m_TextLines.back().strings.emplace_back(color); // 新しい文字列を追加
+						m_TextLines.back().strings.emplace_back(color); // 新しい文字列を追加
 						break;
 					}
 					m_TextLines.back().strings.back().characters += ' '; // タブはスペースに置き換え
