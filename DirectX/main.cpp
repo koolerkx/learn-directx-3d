@@ -57,12 +57,12 @@ int APIENTRY WinMain(
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
 
-    // フレーム計測用
+    // fps・実行フレーム計測用
+    double exec_last_time = SystemTimer_GetTime();
+    double fps_last_time = exec_last_time;
+    double current_time = 0.0;
     ULONG frame_count = 0;
-    double time = SystemTimer_GetTime();
     double fps = 0;
-
-    double prev_time = SystemTimer_GetTime();
 
     // ゲームループ＆メッセージループ
     MSG msg;
@@ -77,38 +77,53 @@ int APIENTRY WinMain(
         }
         else
         {
-            double now = SystemTimer_GetTime();
-            double elapsed_time = now - time;
-            time = now;
+            // fps 計測
+            current_time = SystemTimer_GetTime(); // システム時刻を取得
+            double elapsed_time = current_time - fps_last_time; // fps計測用の経過時間を計算
 
-            // ゲームの処理 
-            Direct3D_Clear();
-            Sprite_Begin();
-            
-            SpriteAnim_Draw(0, 32, 32, 256, 256);
-            SpriteAnim_Draw(1, 512, 32, 256, 256);
-            SpriteAnim_Update(elapsed_time);
-            
-            // DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};
-            //
-            // Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, color);
-            // Sprite_Draw(texid_knight_winter, 512.0f, 32.0f, 256, 256, color);
-            // Sprite_Draw(texid_kokosozai, 800.0f, 32.0f, 32.0f, 64.0f, 32.0f, 32.0f, color);
-            // Sprite_Draw(texid_kokosozai, 864.0f, 32.0f, 32.0f, 32.0f * 2, 32.0f, 32.0f, 256.0f, 256.0f, color);
+            if (elapsed_time >= 1.0) // 1秒ごとに計測
+            {
+                fps = frame_count / elapsed_time;
+                fps_last_time = current_time; // FPSを測定した時刻を保存
+                frame_count = 0; // カウントをクリア
+            }
+
+            elapsed_time = current_time - exec_last_time;
+            if (elapsed_time >= (1.0 / 60.0))  // 1/60秒ごとに実行
+            // if (true)
+            {
+                exec_last_time = current_time; // 処理した時刻を保存
+
+                // ゲームの処理 
+                Direct3D_Clear();
+                Sprite_Begin();
+
+                SpriteAnim_Draw(0, 32, 32, 256, 256);
+                SpriteAnim_Draw(1, 512, 32, 256, 256);
+                SpriteAnim_Update(elapsed_time);
+
+                // DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};
+                //
+                // Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, color);
+                // Sprite_Draw(texid_knight_winter, 512.0f, 32.0f, 256, 256, color);
+                // Sprite_Draw(texid_kokosozai, 800.0f, 32.0f, 32.0f, 64.0f, 32.0f, 32.0f, color);
+                // Sprite_Draw(texid_kokosozai, 864.0f, 32.0f, 32.0f, 32.0f * 2, 32.0f, 32.0f, 256.0f, 256.0f, color);
 
 #if defined(DEBUG) || defined(_DEBUG)
-            std::stringstream ss;
-            ss << fps;
-            
-            debugText.SetText("FPS:");
-            debugText.SetText(ss.str().c_str());
+                std::stringstream ss;
+                ss << fps;
 
-            debugText.Draw();
-            debugText.Clear();
-            
-            frame_count++;
+                debugText.SetText("FPS:");
+                debugText.SetText(ss.str().c_str());
+
+                debugText.Draw();
+                debugText.Clear();
+
 #endif
-            Direct3D_Present();
+                Direct3D_Present();
+                
+                frame_count++;
+            }
         }
     }
     while (msg.message != WM_QUIT);
