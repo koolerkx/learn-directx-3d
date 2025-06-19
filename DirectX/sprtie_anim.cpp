@@ -67,8 +67,8 @@ void SpriteAnim_Update(double elapsed_time)
         if (g_AnimPlay[i].m_accumulated_time >= 0.1)
         {
             g_AnimPlay[i].m_PatternNum = (g_AnimPlay[i].m_PatternNum + 1) % g_AnimPattern[g_AnimPlay[i].m_PatternId].m_PatternMax;
-            g_AnimPlay[i].m_accumulated_time = 0;
-            hal::dout << i << " " << g_AnimPlay[i].m_PatternNum << std::endl;
+
+            g_AnimPlay[i].m_accumulated_time -= 0.1;
         }
     g_AnimPlay[i].m_accumulated_time += elapsed_time;
     }
