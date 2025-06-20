@@ -185,10 +185,6 @@
     <ClInclude Include="WICTextureLoader11.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="DirectXTex_Debug.lib" />
-    <Library Include="DirectXTex_Release.lib" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ascii_texture_generator.py" />
     <None Include="DirectXTex.inl" />
   </ItemGroup>
