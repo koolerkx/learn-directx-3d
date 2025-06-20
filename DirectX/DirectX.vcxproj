@@ -134,7 +134,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /D /Y "$(TargetDir)*.cso" "$(ProjectDir)"</Command>
+      <Command>xcopy /D /Y "$(TargetDir)*.cso" "$(ProjectDir)assets/shader"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -201,20 +201,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="consolab_ascii_512.png" />
-    <Image Include="knight_1.png" />
-    <Image Include="knight_2.png" />
-    <Image Include="knight_3.png" />
-    <Image Include="knight_3_summer.png" />
-    <Image Include="kokosozai.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="runningman000.png" />
-    <Content Include="runningman001.png" />
-    <Content Include="runningman002.png" />
-    <Content Include="runningman003.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

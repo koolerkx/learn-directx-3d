@@ -14,7 +14,6 @@
 #include "debug_text.h"
 #include <sstream>
 
-#include "debug_ostream.h"
 #include "system_timer.h"
 
 int APIENTRY WinMain(
@@ -38,7 +37,7 @@ int APIENTRY WinMain(
     hal::DebugText debugText(
         Direct3D_GetDevice(),
         Direct3D_GetContext(),
-        L"consolab_ascii_512.png",
+        L"assets/consolab_ascii_512.png",
         Direct3D_GetBackBufferWidth(),
         Direct3D_GetBackBufferHeight(),
         0.0f,
@@ -50,10 +49,9 @@ int APIENTRY WinMain(
     );
 
     // テクスチャ読み込み
-    int texid_knight_winter = Texture_Load(L"knight_3.png");
-    // int texid_knight_summer = Texture_Load(L"knight_3_summer.png");
-    int texid_kokosozai = Texture_Load(L"kokosozai.png");
-    int texid_runningman001 = Texture_Load(L"runningman001.png");
+    int texid_knight_winter = Texture_Load(L"assets/knight_3.png");
+    int texid_kokosozai = Texture_Load(L"assets/kokosozai.png");
+    int texid_runningman001 = Texture_Load(L"assets/runningman001.png");
 
     std::vector<int> ids;
 

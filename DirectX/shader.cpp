@@ -41,7 +41,7 @@ bool Shader_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 
     // 事前コンパイル済み頂点シェーダーの読み込み
-    std::ifstream ifs_vs("shader_vertex_2d.cso", std::ios::binary);
+    std::ifstream ifs_vs("assets/shader/shader_vertex_2d.cso", std::ios::binary);
 
     if (!ifs_vs)
     {
@@ -101,7 +101,7 @@ bool Shader_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 
     // 事前コンパイル済みピクセルシェーダーの読み込み
-    std::ifstream ifs_ps("shader_pixel_2d.cso", std::ios::binary);
+    std::ifstream ifs_ps("assets/shader/shader_pixel_2d.cso", std::ios::binary);
     if (!ifs_ps)
     {
         MessageBox(nullptr, "ピクセルシェーダーの読み込みに失敗しました\n\nshader_pixel_2d.cso", "エラー", MB_OK);

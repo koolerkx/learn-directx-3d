@@ -11,11 +11,11 @@
 *.sln.docstates
 
 *.cso
-DirectX/kokosozai.png
-DirectX/runningman001.png
-DirectX/runningman002.png
-DirectX/runningman003.png
-DirectX/runningman000.png
+DirectX/assets/kokosozai.png
+DirectX/assets/runningman001.png
+DirectX/assets/runningman002.png
+DirectX/assets/runningman003.png
+DirectX/assets/runningman000.png
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
