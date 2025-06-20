@@ -12,6 +12,10 @@
 
 *.cso
 DirectX/kokosozai.png
+DirectX/runningman001.png
+DirectX/runningman002.png
+DirectX/runningman003.png
+DirectX/runningman000.png
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

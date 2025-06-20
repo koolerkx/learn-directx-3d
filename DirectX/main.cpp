@@ -53,30 +53,26 @@ int APIENTRY WinMain(
     int texid_knight_winter = Texture_Load(L"knight_3.png");
     // int texid_knight_summer = Texture_Load(L"knight_3_summer.png");
     int texid_kokosozai = Texture_Load(L"kokosozai.png");
+    int texid_runningman001 = Texture_Load(L"runningman001.png");
 
-    int r1 = SpriteAnim_RegisterPattern(texid_kokosozai, 13, 0.1,
-                                             {32, 32}, {0, 32 * 0});
-    int pidr1 = SpriteAnim_CreatePlayer(r1);
+    std::vector<int> ids;
 
-    int r2 = SpriteAnim_RegisterPattern(texid_kokosozai, 13, 0.5,
-                                             {32, 32}, {0, 32 * 1});
-    int pidr2 = SpriteAnim_CreatePlayer(r2);
+    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 13, 16, 0.1,
+                                                                        {32, 32}, {0, 32 * 0})));
+    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 13, 16, 0.5,
+                                                                        {32, 32}, {0, 32 * 1})));
+    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 6, 16, 0.2,
+                                                                        {32, 32}, {0, 32 * 2})));
+    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 8, 16, 0.2,
+                                                                        {32, 32}, {0, 32 * 3})));
+    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 15, 16, 0.2,
+                                                                        {32, 32}, {0, 32 * 4})));
+    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 4, 16, 0.2,
+                                                                        {32, 32}, {32 * 2, 32 * 5}, false)));
 
-    int r3 = SpriteAnim_RegisterPattern(texid_kokosozai, 6, 0.2,
-                                             {32, 32}, {0, 32 * 2});
-    int pidr3 = SpriteAnim_CreatePlayer(r3);
-
-    int r4 = SpriteAnim_RegisterPattern(texid_kokosozai, 8, 0.2,
-                                             {32, 32}, {0, 32 * 3});
-    int pidr4 = SpriteAnim_CreatePlayer(r4);
-
-    int r5 = SpriteAnim_RegisterPattern(texid_kokosozai, 15, 0.2,
-                                             {32, 32}, {0, 32 * 4});
-    int pidr5 = SpriteAnim_CreatePlayer(r5);
-
-    int r6 = SpriteAnim_RegisterPattern(texid_kokosozai, 4, 0.2,
-                                             {32, 32}, {32 * 2, 32 * 5}, false);
-    int pidr6 = SpriteAnim_CreatePlayer(r6);
+    int patternIdRun = SpriteAnim_RegisterPattern(texid_runningman001, 10, 5, 0.1,
+                                                  {140, 200}, {0, 0}, true);
+    int playIdRun = SpriteAnim_CreatePlayer(patternIdRun);
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
@@ -124,12 +120,12 @@ int APIENTRY WinMain(
 
                 Sprite_Draw(texid_knight_winter, 0, 0, 128, 128);
 
-                SpriteAnim_Draw(pidr1, (32 + 128) * 1 , 32, 128, 128);
-                SpriteAnim_Draw(pidr2, (32 + 128) * 2, 32, 128, 128);
-                SpriteAnim_Draw(pidr3, (32 + 128) * 3, 32, 128, 128);
-                SpriteAnim_Draw(pidr4, (32 + 128) * 4, 32, 128, 128);
-                SpriteAnim_Draw(pidr5, (32 + 128) * 5, 32, 128, 128);
-                SpriteAnim_Draw(pidr6, (32 + 128) * 6, 32, 128, 128);
+                for (int i = 0; i < ids.size(); i++)
+                {
+                    SpriteAnim_Draw(ids[i], static_cast<float>((32 + 128) * i), 32.0f, 128.0f, 128.0f);
+                }
+                SpriteAnim_Draw(playIdRun, 0, static_cast<float>(32 + 128 + 32), 140.0f, 200.0f);
+
                 SpriteAnim_Update(elapsed_time);
 
                 // DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};

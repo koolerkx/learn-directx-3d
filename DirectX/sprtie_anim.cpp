@@ -16,6 +16,7 @@ struct AnimPatternData
 {
     int m_TextureId{1}; ///> テクスチャID @retval -1 登録されていない 
     int m_PatternMax{0}; // パターン数
+    int m_HPatternMax{0}; // 一列（横）のパターン最大数
     XMUINT2 m_StartPosition{0, 0}; // アニメーションのスタート座標
     XMUINT2 m_PatternSize{0, 0}; // 1パターンサイズ
     double m_seconds_per_pattern = 0.1;
@@ -92,15 +93,15 @@ void SpriteAnim_Draw(int playid, float dx, float dy, float dw, float dh)
     Sprite_Draw(
         pPatternData->m_TextureId,
         dx, dy,
-        static_cast<float>(pPatternData->m_StartPosition.x + pattern_num * pPatternData->m_PatternSize.x),
-        static_cast<float>(pPatternData->m_StartPosition.y),
+        static_cast<float>(pPatternData->m_StartPosition.x + pPatternData->m_PatternSize.x * (pattern_num % pPatternData->m_HPatternMax)),
+        static_cast<float>(pPatternData->m_StartPosition.y + pPatternData->m_PatternSize.y * (pattern_num / pPatternData->m_HPatternMax)),
         static_cast<float>(pPatternData->m_PatternSize.x),
         static_cast<float>(pPatternData->m_PatternSize.y),
         dw, dh
     );
 }
 
-int SpriteAnim_RegisterPattern(int textureId, int patternMax, double m_seconds_per_pattern,
+int SpriteAnim_RegisterPattern(int textureId, int patternMax, int m_HPatternMax, double m_seconds_per_pattern,
                                DirectX::XMUINT2 patternSize,
                                DirectX::XMUINT2 patternStartPosition, bool isLoop)
 {
@@ -110,6 +111,7 @@ int SpriteAnim_RegisterPattern(int textureId, int patternMax, double m_seconds_p
 
         g_AnimPattern[i].m_TextureId = textureId;
         g_AnimPattern[i].m_PatternMax = patternMax;
+        g_AnimPattern[i].m_HPatternMax = m_HPatternMax;
         g_AnimPattern[i].m_seconds_per_pattern = m_seconds_per_pattern;
         g_AnimPattern[i].m_PatternSize = patternSize;
         g_AnimPattern[i].m_StartPosition = patternStartPosition;

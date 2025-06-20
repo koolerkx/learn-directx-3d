@@ -20,6 +20,7 @@ void SpriteAnim_Draw(int playid, float dx, float dy, float dw, float dh);
  * 
  * @param textureId 管理番号
  * @param patternMax パターンの画像数
+ * @param m_HPatternMax 一列（横）のパターン最大数
  * @param m_seconds_per_pattern 再生速度、１フレームかかる時間
  * @param patternSize パターン一個のサイズ
  * @param patternStartPosition 最初のパターンの左上座標
@@ -31,6 +32,7 @@ void SpriteAnim_Draw(int playid, float dx, float dy, float dw, float dh);
 int SpriteAnim_RegisterPattern(
     int textureId,
     int patternMax,
+    int m_HPatternMax,
     double m_seconds_per_pattern,
     DirectX::XMUINT2 patternSize,
     DirectX::XMUINT2 patternStartPosition,
