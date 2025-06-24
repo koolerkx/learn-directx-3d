@@ -164,6 +164,7 @@
     <ClCompile Include="direct3d.cpp" />
     <ClCompile Include="game_window.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="polygon.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="sprtie_anim.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="direct3d.h" />
     <ClInclude Include="DirectXTex.h" />
     <ClInclude Include="game_window.h" />
+    <ClInclude Include="polygon.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="sprite_anim.h" />
