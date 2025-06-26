@@ -55,7 +55,7 @@ bool Keyboard_IsKeyDown(Keyboard_Keys key, const Keyboard_State* pState)
     {
         unsigned int* p = (unsigned int*)pState;
         unsigned int bf = 1u << (key & 0x1f);
-        return (p[(key >> 5)] & bf) != 0;
+        return (p[(static_cast<BYTE>(key) >> 5)] & bf) != 0;
     }
     return false;
 }
@@ -67,7 +67,7 @@ bool Keyboard_IsKeyUp(Keyboard_Keys key, const Keyboard_State* pState)
     {
         unsigned int* p = (unsigned int*)pState;
         unsigned int bf = 1u << (key & 0x1f);
-        return (p[(key >> 5)] & bf) == 0;
+        return (p[(static_cast<BYTE>(key) >> 5)] & bf) == 0;
     }
     return false;
 }

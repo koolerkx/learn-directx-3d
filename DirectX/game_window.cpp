@@ -1,6 +1,8 @@
 #include "game_window.h"
 #include <algorithm>
 
+#include "keyboard.h"
+
 // ウィンドウ情報
 static constexpr char WINDOW_CLASS[] = "GameWindow"; // メインウインドウクラス名
 static constexpr char TITLE[] = "Game"; // 	タイトルバーのテクスト
@@ -72,12 +74,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_ACTIVATEAPP:
     case WM_KEYDOWN:
         // https://learn.microsoft.com/ja-jp/windows/win32/inputdev/virtual-key-codes
         if (wParam == VK_ESCAPE)
         {
             SendMessage(hWnd, WM_CLOSE, 0, 0);
         }
+    case WM_SYSKEYDOWN:
+    case WM_KEYUP:
+    case WM_SYSKEYUP:
+        Keyboard_ProcessMessage(message, wParam, lParam);
         break;
     case WM_CLOSE:
         if (MessageBox(hWnd, "本当に終了してよろしいですか？", "確認", MB_YESNO | MB_DEFBUTTON2) == IDYES)

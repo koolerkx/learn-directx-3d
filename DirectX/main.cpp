@@ -19,6 +19,10 @@
 
 #include <DirectXMath.h>
 
+#include "keyboard.h"
+#include <Xinput.h>
+#pragma comment(lib, "XInput.lib")
+
 int APIENTRY WinMain(
     _In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE,
@@ -30,6 +34,8 @@ int APIENTRY WinMain(
     HWND hWnd = GameWindow_Create(hInstance);
 
     SystemTimer_Initialize();
+    Keyboard_Initialize();
+
     Direct3D_Initialize(hWnd);
     Shader_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Sprite_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
@@ -92,6 +98,9 @@ int APIENTRY WinMain(
     // 回転
     float angle = 0.0f;
 
+    float x = 0.0f;
+    float y = 0.0f;
+
     // ゲームループ＆メッセージループ
     MSG msg;
 
@@ -129,24 +138,64 @@ int APIENTRY WinMain(
                 Sprite_Draw(texid_knight_winter, 0, 0, 128, 128);
 
 
-                angle += DirectX::XM_2PI * elapsed_time;
+                angle += static_cast<float>(DirectX::XM_2PI * elapsed_time);
                 Sprite_Draw(texid_knight_winter,
                             500 - 256 / 2, 500 - 256 / 2,
                             0, 0, 512, 512,
                             256, 256
-                            ,angle
+                            , angle
                 );
 
                 for (int i = 0; i < ids.size(); i++)
                 {
                     SpriteAnim_Draw(ids[i], static_cast<float>((32 + 128) * i), 32.0f, 128.0f, 128.0f);
                 }
-                SpriteAnim_Draw(playIdRun, 0, static_cast<float>(32 + 128 + 32), 140.0f, 200.0f);
 
                 Texture_SetTexture(texid_white);
                 Polygon_Draw();
 
+                XINPUT_STATE xs{};
+                XInputGetState(0, &xs);
+                
+                float speed = 200;
+                x += xs.Gamepad.sThumbLX / 32767.0f * speed * elapsed_time;
+                y -= xs.Gamepad.sThumbLY / 32767.0f * speed * elapsed_time;
+
+                if (Keyboard_IsKeyDown(KK_W))
+                {
+                    y -= static_cast<float>(speed * elapsed_time);
+                }
+                if (Keyboard_IsKeyDown(KK_S))
+                {
+                    y += static_cast<float>(speed * elapsed_time);
+                }
+                if (Keyboard_IsKeyDown(KK_A))
+                {
+                    x -= static_cast<float>(speed * elapsed_time);
+                }
+                if (Keyboard_IsKeyDown(KK_D))
+                {
+                    x += static_cast<float>(speed * elapsed_time);
+                }
+
+                _XINPUT_VIBRATION xv{65535, 65535}; // 振動強さ 0 to 65,535
+                if (xs.Gamepad.wButtons & XINPUT_GAMEPAD_A)
+                {
+                    xv.wLeftMotorSpeed = 65535;
+                    xv.wRightMotorSpeed = 65535;
+                    XInputSetState(0, &xv);
+                }
+                else
+                {
+                    xv.wLeftMotorSpeed = 0;
+                    xv.wRightMotorSpeed = 0;
+                    XInputSetState(0, &xv);
+                }
+
+                SpriteAnim_Draw(playIdRun, x, static_cast<float>(32 + 128 + 32) + y, 140.0f, 200.0f);
+
                 SpriteAnim_Update(elapsed_time);
+
 
                 // DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};
                 //

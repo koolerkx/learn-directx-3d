@@ -98,7 +98,8 @@ void Polygon_Draw(void)
 
     // 頂点シェーダーに変換行列を設定
     Shader_SetProjectionMatrix(XMMatrixOrthographicOffCenterLH(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f));
-
+    Shader_SetWorldMatrix(XMMatrixIdentity());
+    
     // Shader_SetColor();
     
     // プリミティブトポロジ設定
