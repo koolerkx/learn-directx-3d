@@ -2,6 +2,7 @@
 #include <algorithm>
 
 #include "keyboard.h"
+#include "mouse.h"
 
 // ウィンドウ情報
 static constexpr char WINDOW_CLASS[] = "GameWindow"; // メインウインドウクラス名
@@ -75,6 +76,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_ACTIVATEAPP:
+    // keyboard control
     case WM_KEYDOWN:
         // https://learn.microsoft.com/ja-jp/windows/win32/inputdev/virtual-key-codes
         if (wParam == VK_ESCAPE)
@@ -85,6 +87,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_KEYUP:
     case WM_SYSKEYUP:
         Keyboard_ProcessMessage(message, wParam, lParam);
+        break;
+    // mouse control
+    case WM_INPUT:
+    case WM_MOUSEMOVE:
+    case WM_LBUTTONDOWN:
+    case WM_LBUTTONUP:
+    case WM_RBUTTONDOWN:
+    case WM_RBUTTONUP:
+    case WM_MBUTTONDOWN:
+    case WM_MBUTTONUP:
+    case WM_MOUSEWHEEL:
+    case WM_XBUTTONDOWN:
+    case WM_XBUTTONUP:
+    case WM_MOUSEHOVER:
+        Mouse_ProcessMessage(message, wParam, lParam);
         break;
     case WM_CLOSE:
         if (MessageBox(hWnd, "本当に終了してよろしいですか？", "確認", MB_YESNO | MB_DEFBUTTON2) == IDYES)
