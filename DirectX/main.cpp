@@ -19,9 +19,9 @@
 
 #include <DirectXMath.h>
 
-#include "keyboard.h"
 #include <Xinput.h>
 
+#include "key_logger.h"
 #include "mouse.h"
 #pragma comment(lib, "XInput.lib")
 
@@ -36,7 +36,7 @@ int APIENTRY WinMain(
     HWND hWnd = GameWindow_Create(hInstance);
 
     SystemTimer_Initialize();
-    Keyboard_Initialize();
+    KeyLogger_Initialize();
     Mouse_Initialize(hWnd);
 
     Direct3D_Initialize(hWnd);
@@ -133,7 +133,9 @@ int APIENTRY WinMain(
             // if (true)
             {
                 exec_last_time = current_time; // 処理した時刻を保存
-
+                
+                KeyLogger_Update();
+                
                 // ゲームの処理 
                 Direct3D_Clear();
                 Sprite_Begin();
@@ -160,23 +162,23 @@ int APIENTRY WinMain(
                 XINPUT_STATE xs{};
                 XInputGetState(0, &xs);
 
-                float speed = 200;
+                float speed = 500;
                 x += static_cast<float>(xs.Gamepad.sThumbLX / 32767.0f * speed * elapsed_time);
                 y -= static_cast<float>(xs.Gamepad.sThumbLY / 32767.0f * speed * elapsed_time);
 
-                if (Keyboard_IsKeyDown(KK_W))
+                if (KeyLogger_IsPressed(KK_UP) || KeyLogger_IsTrigger(KK_W))
                 {
                     y -= static_cast<float>(speed * elapsed_time);
                 }
-                if (Keyboard_IsKeyDown(KK_S))
+                if (KeyLogger_IsPressed(KK_DOWN) || KeyLogger_IsTrigger(KK_S))
                 {
                     y += static_cast<float>(speed * elapsed_time);
                 }
-                if (Keyboard_IsKeyDown(KK_A))
+                if (KeyLogger_IsPressed(KK_LEFT) || KeyLogger_IsTrigger(KK_A))
                 {
                     x -= static_cast<float>(speed * elapsed_time);
                 }
-                if (Keyboard_IsKeyDown(KK_D))
+                if (KeyLogger_IsPressed(KK_RIGHT) || KeyLogger_IsTrigger(KK_D))
                 {
                     x += static_cast<float>(speed * elapsed_time);
                 }
@@ -235,7 +237,7 @@ int APIENTRY WinMain(
     Polygon_Finalize();
 
     Mouse_Finalize();
-
+    
     SpriteAnim_Finalize();
     Texture_Finalize();
     Sprite_Finalize();

@@ -164,6 +164,7 @@
     <ClCompile Include="direct3d.cpp" />
     <ClCompile Include="game_window.cpp" />
     <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="key_logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="polygon.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="DirectXTex.h" />
     <ClInclude Include="game_window.h" />
     <ClInclude Include="keyboard.h" />
+    <ClInclude Include="key_logger.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="shader.h" />
