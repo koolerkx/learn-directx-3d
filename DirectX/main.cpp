@@ -161,8 +161,8 @@ int APIENTRY WinMain(
                 XInputGetState(0, &xs);
 
                 float speed = 200;
-                x += xs.Gamepad.sThumbLX / 32767.0f * speed * elapsed_time;
-                y -= xs.Gamepad.sThumbLY / 32767.0f * speed * elapsed_time;
+                x += static_cast<float>(xs.Gamepad.sThumbLX / 32767.0f * speed * elapsed_time);
+                y -= static_cast<float>(xs.Gamepad.sThumbLY / 32767.0f * speed * elapsed_time);
 
                 if (Keyboard_IsKeyDown(KK_W))
                 {
@@ -197,7 +197,7 @@ int APIENTRY WinMain(
                 
                 Mouse_State ms{};
                 Mouse_GetState(&ms);
-                SpriteAnim_Draw(ids[3], ms.x - 128 / 2, ms.y - 128 / 2, 128, 128);
+                SpriteAnim_Draw(ids[3], static_cast<float>(ms.x - 128 / 2), static_cast<float>(ms.y - 128 / 2), 128, 128);
                 // Mouse_SetVisible(false);
 
                 SpriteAnim_Draw(playIdRun, x, static_cast<float>(32 + 128 + 32) + y, 140.0f, 200.0f);
