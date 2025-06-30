@@ -1,8 +1,8 @@
-## DirectX11 Template Project
+## Shooting Game
 
 * **Project Overview**
 
-  * A complete 2D game development framework built on DirectX11
+  * DirectX11 Shooting Game
   * Developed with SHIFT-JIS encoding and Japanese comments
 
 * **Language Options**
