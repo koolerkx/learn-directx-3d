@@ -90,6 +90,7 @@
                 $(ProjectDir)game_window;
                 $(ProjectDir)utils;
                 $(ProjectDir)input;
+                $(ProjectDir)game;
                 $(ProjectDir);
                 %(AdditionalIncludeDirectories)
             </AdditionalIncludeDirectories>
@@ -178,8 +179,10 @@
     <ClCompile Include="direct3d\sprtie_anim.cpp" />
     <ClCompile Include="direct3d\texture.cpp" />
     <ClCompile Include="direct3d\polygon.cpp" />
+    <ClCompile Include="game\game.cpp" />
     <ClCompile Include="game_window\game_window.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="game\player.cpp" />
     <ClCompile Include="utils\debug_ostream.cpp" />
     <ClCompile Include="utils\debug_text.cpp" />
     <ClCompile Include="utils\system_timer.cpp" />
@@ -194,7 +197,9 @@
     <ClInclude Include="direct3d\sprite.h" />
     <ClInclude Include="direct3d\sprite_anim.h" />
     <ClInclude Include="direct3d\texture.h" />
+    <ClInclude Include="game\game.h" />
     <ClInclude Include="game_window\game_window.h" />
+    <ClInclude Include="game\player.h" />
     <ClInclude Include="utils\debug_ostream.h" />
     <ClInclude Include="utils\debug_text.h" />
     <ClInclude Include="utils\DirectXTex.h" />

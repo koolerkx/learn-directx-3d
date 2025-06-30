@@ -1,37 +1,27 @@
-#include <SDKDDKVer.h>
+#include<SDKDDKVer.h>
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include "game_window.h"
-
 #include "direct3d.h"
 #include "sprite.h"
 #include "shader.h"
 #include "texture.h"
-
-#include "DirectXMath.h"
 #include "sprite_anim.h"
-
 #include "debug_text.h"
 #include <sstream>
-
-#include "polygon.h"
 #include "system_timer.h"
-
-#include <DirectXMath.h>
-
-#include <Xinput.h>
-
 #include "key_logger.h"
 #include "mouse.h"
-#pragma comment(lib, "XInput.lib")
+#include "game.h"
 
-int APIENTRY WinMain(
-    _In_ HINSTANCE hInstance,
-    _In_opt_ HINSTANCE,
-    _In_ LPSTR,
-    _In_ int nCmdShow)
+
+/*----------------------------------------------------------------------------------
+	メイン
+----------------------------------------------------------------------------------*/
+int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
+                     _In_ int nCmdShow)
 {
-    CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    (void)CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
     HWND hWnd = GameWindow_Create(hInstance);
 
@@ -45,48 +35,17 @@ int APIENTRY WinMain(
     Texture_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     SpriteAnim_Initialize();
 
-    // todo: to remove
-    Polygon_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
-    int texid_white = Texture_Load(L"assets/white.png");
-
     // デバッグテキスト
-    hal::DebugText debugText(
-        Direct3D_GetDevice(),
-        Direct3D_GetContext(),
-        L"assets/consolab_ascii_512.png",
-        Direct3D_GetBackBufferWidth(),
-        Direct3D_GetBackBufferHeight(),
-        0.0f,
-        0.0f,
-        0,
-        0,
-        0.0f,
-        0.0f
-    );
+    hal::DebugText debugText(Direct3D_GetDevice(), Direct3D_GetContext(),
+                             L"assets/consolab_ascii_512.png",
+                             Direct3D_GetBackBufferWidth(), Direct3D_GetBackBufferHeight(),
+                             0.0f, 0.0f, 0, 0, 0.0f, 16.0f);
 
-    // テクスチャ読み込み
-    int texid_knight_winter = Texture_Load(L"assets/knight_3.png");
-    int texid_kokosozai = Texture_Load(L"assets/kokosozai.png");
-    int texid_runningman001 = Texture_Load(L"assets/runningman001.png");
+    // Mouse_SetVisible(false);
+    // Mouse_SetMode(MOUSE_POSITION_MODE_RELATIVE);
 
-    std::vector<int> ids;
+    Game_Initialize();
 
-    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 13, 16, 0.1,
-                                                                        {32, 32}, {0, 32 * 0})));
-    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 13, 16, 0.5,
-                                                                        {32, 32}, {0, 32 * 1})));
-    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 6, 16, 0.2,
-                                                                        {32, 32}, {0, 32 * 2})));
-    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 8, 16, 0.2,
-                                                                        {32, 32}, {0, 32 * 3})));
-    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 15, 16, 0.2,
-                                                                        {32, 32}, {0, 32 * 4})));
-    ids.emplace_back(SpriteAnim_CreatePlayer(SpriteAnim_RegisterPattern(texid_kokosozai, 4, 16, 0.2,
-                                                                        {32, 32}, {32 * 2, 32 * 5}, false)));
-
-    int patternIdRun = SpriteAnim_RegisterPattern(texid_runningman001, 10, 5, 0.1,
-                                                  {140, 200}, {0, 0}, true);
-    int playIdRun = SpriteAnim_CreatePlayer(patternIdRun);
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
@@ -98,13 +57,8 @@ int APIENTRY WinMain(
     ULONG frame_count = 0;
     double fps = 0;
 
-    // 回転
-    float angle = 0.0f;
+    //ゲームループ&メッセージループ
 
-    float x = 0.0f;
-    float y = 0.0f;
-
-    // ゲームループ＆メッセージループ
     MSG msg;
 
     do
@@ -133,98 +87,30 @@ int APIENTRY WinMain(
             // if (true)
             {
                 exec_last_time = current_time; // 処理した時刻を保存
-                
+
+                //ゲームの更新
                 KeyLogger_Update();
-                
-                // ゲームの処理 
-                Direct3D_Clear();
-                Sprite_Begin();
 
-                Sprite_Draw(texid_knight_winter, 0, 0, 128, 128);
-
-
-                angle += static_cast<float>(DirectX::XM_2PI * elapsed_time);
-                Sprite_Draw(texid_knight_winter,
-                            500 - 256 / 2, 500 - 256 / 2,
-                            0, 0, 512, 512,
-                            256, 256
-                            , angle
-                );
-
-                for (int i = 0; i < ids.size(); i++)
-                {
-                    SpriteAnim_Draw(ids[i], static_cast<float>((32 + 128) * i), 32.0f, 128.0f, 128.0f);
-                }
-
-                Texture_SetTexture(texid_white);
-                Polygon_Draw();
-
-                XINPUT_STATE xs{};
-                XInputGetState(0, &xs);
-
-                float speed = 500;
-                x += static_cast<float>(xs.Gamepad.sThumbLX / 32767.0f * speed * elapsed_time);
-                y -= static_cast<float>(xs.Gamepad.sThumbLY / 32767.0f * speed * elapsed_time);
-
-                if (KeyLogger_IsPressed(KK_UP) || KeyLogger_IsTrigger(KK_W))
-                {
-                    y -= static_cast<float>(speed * elapsed_time);
-                }
-                if (KeyLogger_IsPressed(KK_DOWN) || KeyLogger_IsTrigger(KK_S))
-                {
-                    y += static_cast<float>(speed * elapsed_time);
-                }
-                if (KeyLogger_IsPressed(KK_LEFT) || KeyLogger_IsTrigger(KK_A))
-                {
-                    x -= static_cast<float>(speed * elapsed_time);
-                }
-                if (KeyLogger_IsPressed(KK_RIGHT) || KeyLogger_IsTrigger(KK_D))
-                {
-                    x += static_cast<float>(speed * elapsed_time);
-                }
-
-                _XINPUT_VIBRATION xv{65535, 65535}; // 振動強さ 0 to 65,535
-                if (xs.Gamepad.wButtons & XINPUT_GAMEPAD_A)
-                {
-                    xv.wLeftMotorSpeed = 65535;
-                    xv.wRightMotorSpeed = 65535;
-                    XInputSetState(0, &xv);
-                }
-                else
-                {
-                    xv.wLeftMotorSpeed = 0;
-                    xv.wRightMotorSpeed = 0;
-                    XInputSetState(0, &xv);
-                }
-                
-                Mouse_State ms{};
-                Mouse_GetState(&ms);
-                SpriteAnim_Draw(ids[3], static_cast<float>(ms.x - 128 / 2), static_cast<float>(ms.y - 128 / 2), 128, 128);
-                // Mouse_SetVisible(false);
-
-                SpriteAnim_Draw(playIdRun, x, static_cast<float>(32 + 128 + 32) + y, 140.0f, 200.0f);
+                Game_Update(elapsed_time);
 
                 SpriteAnim_Update(elapsed_time);
 
+                //ゲームの描画
+                Direct3D_Clear();
+                Sprite_Begin();
 
-                // DirectX::XMFLOAT4 color = {1.0f, 1.0f, 1.0f, 1.0f};
-                //
-                // Sprite_Draw(texid_knight_winter, 32.0f, 32.0f, color);
-                // Sprite_Draw(texid_knight_winter, 512.0f, 32.0f, 256, 256, color);
-                // Sprite_Draw(texid_kokosozai, 800.0f, 32.0f, 32.0f, 64.0f, 32.0f, 32.0f, color);
-                // Sprite_Draw(texid_kokosozai, 864.0f, 32.0f, 32.0f, 32.0f * 2, 32.0f, 32.0f, 256.0f, 256.0f, color);
+                Game_Draw();
 
 #if defined(DEBUG) || defined(_DEBUG)
                 std::stringstream ss;
-                ss << fps;
+                ss << "fps:" << fps << std::endl;
 
-                debugText.SetText("FPS:");
                 debugText.SetText(ss.str().c_str());
 
                 debugText.Draw();
                 debugText.Clear();
-
 #endif
+
                 Direct3D_Present();
 
                 frame_count++;
@@ -233,16 +119,13 @@ int APIENTRY WinMain(
     }
     while (msg.message != WM_QUIT);
 
-    // todo: to remove
-    Polygon_Finalize();
-
-    Mouse_Finalize();
-    
+    Game_Finalize();
     SpriteAnim_Finalize();
     Texture_Finalize();
     Sprite_Finalize();
     Shader_Finalize();
     Direct3D_Finalize();
+    Mouse_Finalize();
 
     return (int)msg.wParam;
 }
