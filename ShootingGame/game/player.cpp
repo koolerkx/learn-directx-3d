@@ -1,10 +1,11 @@
 #include "player.h"
 
-#include "debug_ostream.h"
+#include "color.h"
 #include "key_logger.h"
 using namespace DirectX;
 #include "texture.h"
 #include "sprite.h"
+#include "bullet.h"
 
 static XMFLOAT2 g_PlayerPosition{};
 static XMFLOAT2 g_PlayerVelocity{};
@@ -48,7 +49,7 @@ void Player_Update(double elapsed_time)
 
     direction = XMVector2Normalize(direction);
 
-    velocity += direction * 2.0f;
+    velocity += direction * 1.0f;
     position += velocity;
     velocity *= 0.9f;
     
@@ -61,12 +62,19 @@ void Player_Update(double elapsed_time)
     position += velocity * elapsed_time;
     velocity += -velocity * 4.0f * elapsed_time;
     ************************************************************/
+
+    // 弾の発射
+    if (KeyLogger_IsTrigger(KK_SPACE))
+    {
+        Bullet_Create({g_PlayerPosition.x + 16, g_PlayerPosition.y + (64.0f - 16) * 0.5f});
+    }
 }
 
 void Player_Draw()
 {
     Sprite_Draw(g_PlayerTexId,
                 g_PlayerPosition.x, g_PlayerPosition.y,
-                256.0f, 256.0f
+                32.0f, 64.0f,
+                0, Color::NAVY
     );
 }

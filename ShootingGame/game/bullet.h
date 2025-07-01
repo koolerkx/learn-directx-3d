@@ -16,6 +16,6 @@ void Bullet_Finalize(void);
 void Bullet_Update(double elapsed_time);
 void Bullet_Draw(void);
 
-void Bullet_Create(DirectX::XMFLOAT2& position);
+void Bullet_Create(const DirectX::XMFLOAT2& position);
 
 #endif
