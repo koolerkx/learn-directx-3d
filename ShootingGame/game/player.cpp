@@ -7,6 +7,9 @@ using namespace DirectX;
 #include "sprite.h"
 #include "bullet.h"
 
+constexpr XMFLOAT2 PLAYER_SIZE = {32.0f, 64.0f};
+constexpr float PLAYER_SPEED_ACCERATION = 0.1f;
+
 static XMFLOAT2 g_PlayerPosition{};
 static XMFLOAT2 g_PlayerVelocity{};
 static int g_PlayerTexId = -1;
@@ -49,7 +52,7 @@ void Player_Update(double elapsed_time)
 
     direction = XMVector2Normalize(direction);
 
-    velocity += direction * 1.0f;
+    velocity += direction * PLAYER_SPEED_ACCERATION;
     position += velocity;
     velocity *= 0.9f;
     
@@ -66,7 +69,7 @@ void Player_Update(double elapsed_time)
     // 弾の発射
     if (KeyLogger_IsTrigger(KK_SPACE))
     {
-        Bullet_Create({g_PlayerPosition.x + 16, g_PlayerPosition.y + (64.0f - 16) * 0.5f});
+        Bullet_Create({g_PlayerPosition.x + PLAYER_SIZE.x * 0.5f, g_PlayerPosition.y + (PLAYER_SIZE.y - 16.0f) * 0.5f});
     }
 }
 
@@ -74,7 +77,7 @@ void Player_Draw()
 {
     Sprite_Draw(g_PlayerTexId,
                 g_PlayerPosition.x, g_PlayerPosition.y,
-                32.0f, 64.0f,
+                PLAYER_SIZE.x, PLAYER_SIZE.y,
                 0, Color::NAVY
     );
 }

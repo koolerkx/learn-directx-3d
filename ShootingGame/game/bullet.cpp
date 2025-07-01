@@ -16,6 +16,10 @@ using namespace DirectX;
 
 #include "direct3d.h"
 
+constexpr XMFLOAT2 BULLET_SIZE = {32.0f, 16.0f};
+constexpr XMFLOAT2 BULLET_SPEED = {200.0f, 0.0f};
+constexpr double BULLET_LIFETIME = 5.0;
+
 struct Bullet
 {
     XMFLOAT2 position;
@@ -60,7 +64,7 @@ void Bullet_Update(double elapsed_time)
         // ライフサイクル管理
         bullet.lifeTime += elapsed_time;
 
-        if (bullet.lifeTime >= 5.0f)
+        if (bullet.lifeTime >= BULLET_LIFETIME)
         {
             bullet.isEnable = false;
         }
@@ -80,7 +84,7 @@ void Bullet_Draw()
 
         Sprite_Draw(g_Bullet_TexId,
                     bullet.position.x, bullet.position.y,
-                    32.0f, 16.0f, 0, Color::BLUE
+                    BULLET_SIZE.x, BULLET_SIZE.y, 0, Color::BLUE
         );
     }
 }
@@ -95,7 +99,7 @@ void Bullet_Create(const XMFLOAT2& position)
         bullet.isEnable = true;
         bullet.lifeTime = 0.0;
         bullet.position = position;
-        bullet.velocity = {200.0f, 0.0f};
+        bullet.velocity = BULLET_SPEED;
         break;
     }
 }
