@@ -47,15 +47,20 @@ void Player_Update(double elapsed_time)
     }
 
     direction = XMVector2Normalize(direction);
-    
-    velocity += direction * 100 * elapsed_time;
 
+    velocity += direction * 2.0f;
     position += velocity;
-
-    velocity *= 0.1f;
+    velocity *= 0.9f;
     
     XMStoreFloat2(&g_PlayerPosition, position);
     XMStoreFloat2(&g_PlayerVelocity, velocity);
+
+    /************************************************************
+    // physics simulation, used for any fps
+    velocity += direction * 6000000.0f / 2500.0f * elapsed_time;
+    position += velocity * elapsed_time;
+    velocity += -velocity * 4.0f * elapsed_time;
+    ************************************************************/
 }
 
 void Player_Draw()
