@@ -1,6 +1,7 @@
 #include "player.h"
 
 #include "color.h"
+#include "direct3d.h"
 #include "key_logger.h"
 using namespace DirectX;
 #include "texture.h"
@@ -8,13 +9,13 @@ using namespace DirectX;
 #include "bullet.h"
 
 constexpr XMFLOAT2 PLAYER_SIZE = {32.0f, 64.0f};
-constexpr float PLAYER_SPEED_ACCERATION = 0.1f;
+constexpr float PLAYER_SPEED_ACCERATION = 0.5f;
 
 static XMFLOAT2 g_PlayerPosition{};
 static XMFLOAT2 g_PlayerVelocity{};
 static int g_PlayerTexId = -1;
 
-void Player_Initialize(const XMFLOAT2 &position)
+void Player_Initialize(const XMFLOAT2& position)
 {
     g_PlayerPosition = position;
     g_PlayerVelocity = {0.0f, 0.0f};
@@ -31,8 +32,9 @@ void Player_Update(double elapsed_time)
     XMVECTOR position = XMLoadFloat2(&g_PlayerPosition);
     XMVECTOR velocity = XMLoadFloat2(&g_PlayerVelocity);
 
+    // 画面端に到達したら止まる
     XMVECTOR direction{};
-    
+
     if (KeyLogger_IsPressed(KK_W))
     {
         direction += {0.0f, -1.0f};
@@ -55,10 +57,19 @@ void Player_Update(double elapsed_time)
     velocity += direction * PLAYER_SPEED_ACCERATION;
     position += velocity;
     velocity *= 0.9f;
-    
-    XMStoreFloat2(&g_PlayerPosition, position);
-    XMStoreFloat2(&g_PlayerVelocity, velocity);
 
+    XMFLOAT2 positionAfter {};
+    
+    // 画面端に到達したら止まる
+    XMStoreFloat2(&positionAfter, position);
+    if (positionAfter.x < 0.0f) positionAfter.x = 0.0f;
+    if (positionAfter.x > Direct3D_GetBackBufferWidth() - PLAYER_SIZE.x) positionAfter.x = Direct3D_GetBackBufferWidth() - PLAYER_SIZE.x;
+    if (positionAfter.y < 0.0f) positionAfter.y = 0.0f;
+    if (positionAfter.y > Direct3D_GetBackBufferHeight() - PLAYER_SIZE.y) positionAfter.y = Direct3D_GetBackBufferHeight() - PLAYER_SIZE.y;
+    
+    g_PlayerPosition = positionAfter;
+    XMStoreFloat2(&g_PlayerVelocity, velocity);
+    
     /************************************************************
     // physics simulation, used for any fps
     velocity += direction * 6000000.0f / 2500.0f * elapsed_time;
