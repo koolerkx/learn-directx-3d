@@ -22,7 +22,7 @@ void Game_Finalize()
 
 void Game_Update(double elapsed_time)
 {
-    fromLastEnemySpawnTime += elapsed_time;
+    fromLastEnemySpawnTime += static_cast<float>(elapsed_time);
     if (fromLastEnemySpawnTime > ENEMY_SPAWN_INTERVAL)
     {
         fromLastEnemySpawnTime = 0;

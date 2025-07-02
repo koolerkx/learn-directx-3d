@@ -73,16 +73,16 @@ void Enemy_Update(double elapsed_time)
             XMVECTOR position = XMLoadFloat2(&enemy.position);
             XMVECTOR velocity = XMLoadFloat2(&enemy.velocity);
 
-            position += velocity * elapsed_time;
+            position += velocity * static_cast<float>(elapsed_time);
 
             XMStoreFloat2(&enemy.position, position);
             XMStoreFloat2(&enemy.velocity, velocity);
 
             break;
         case EnemyTypeID::GREEN:
-            enemy.position.x += enemy.velocity.x * elapsed_time;
-            // frequency and amplitude
-            enemy.position.y += enemy.offsetY + cos(enemy.lifeTime * 3.5f) * 20.0f;
+            enemy.position.x += enemy.velocity.x * static_cast<float>(elapsed_time);
+        // frequency and amplitude
+            enemy.position.y += enemy.offsetY + static_cast<float>(cos(enemy.lifeTime)) * 3.5f * 20.0f;
 
             break;
         default: break;
@@ -120,7 +120,7 @@ void Enemy_Create(const XMFLOAT2& position, EnemyTypeID enemyTypeId)
         enemy.isEnable = true;
         enemy.position = position;
         enemy.velocity = ENEMY_SPEED;
-        enemy.typeId = static_cast<int>(enemyTypeId);   // fixme
+        enemy.typeId = static_cast<int>(enemyTypeId); // fixme
 
         break;
     }
