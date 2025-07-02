@@ -3,6 +3,7 @@
 #include "bullet.h"
 #include "direct3d.h"
 #include "enemy.h"
+#include "helper.h"
 #include "player.h"
 
 static float fromLastEnemySpawnTime = 0;
@@ -21,18 +22,18 @@ void Game_Finalize()
 
 void Game_Update(double elapsed_time)
 {
-
     fromLastEnemySpawnTime += elapsed_time;
     if (fromLastEnemySpawnTime > ENEMY_SPAWN_INTERVAL)
     {
         fromLastEnemySpawnTime = 0;
-        
+
+        EnemyTypeID enemyTypeId = helper::random_enum<EnemyTypeID>();
         Enemy_Create({
-            static_cast<float>(Direct3D_GetBackBufferWidth()) - 100.0f,
-            static_cast<float>(Direct3D_GetBackBufferHeight()) / 2.0f
-        });
+                         static_cast<float>(Direct3D_GetBackBufferWidth()) - 100.0f,
+                         static_cast<float>(Direct3D_GetBackBufferHeight()) / 2.0f
+                     }, enemyTypeId);
     }
-    
+
     Player_Update(elapsed_time);
     Bullet_Update(elapsed_time);
     Enemy_Update(elapsed_time);

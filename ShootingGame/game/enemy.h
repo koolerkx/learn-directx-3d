@@ -16,6 +16,11 @@ void Enemy_Finalize(void);
 void Enemy_Update(double elapsed_time);
 void Enemy_Draw(void);
 
-void Enemy_Create(const DirectX::XMFLOAT2& position);
+enum class EnemyTypeID : int {
+    RED,
+    GREEN,
+    End
+};
+void Enemy_Create(const DirectX::XMFLOAT2& position, EnemyTypeID enemyTypeId);
 
 #endif
