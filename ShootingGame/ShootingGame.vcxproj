@@ -181,6 +181,7 @@
     <ClCompile Include="direct3d\polygon.cpp" />
     <ClCompile Include="game\bullet.cpp" />
     <ClCompile Include="game\enemy.cpp" />
+    <ClCompile Include="game\enemy_spawner.cpp" />
     <ClCompile Include="game\game.cpp" />
     <ClCompile Include="game_window\game_window.cpp" />
     <ClCompile Include="main.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="direct3d\texture.h" />
     <ClInclude Include="game\bullet.h" />
     <ClInclude Include="game\enemy.h" />
+    <ClInclude Include="game\enemy_spawner.h" />
     <ClInclude Include="game\game.h" />
     <ClInclude Include="game_window\game_window.h" />
     <ClInclude Include="game\player.h" />
