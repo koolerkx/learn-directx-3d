@@ -52,7 +52,7 @@ void EnemySpawner_Update(double elapsed_time)
 
         if (g_EnemySpawners[i].spawnCount == 0)
         {
-            g_EnemySpawners[i].spawnTime = g_Time - g_EnemySpawners[i].rate;
+            g_EnemySpawners[i].spawnTime = g_Time - g_EnemySpawners[i].rate - 0.00001;
         }
 
         if (g_Time - g_EnemySpawners[i].spawnTime >= g_EnemySpawners[i].rate)
