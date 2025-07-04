@@ -6,6 +6,7 @@
 #include "player.h"
 
 void hitJudgementBilletVSEnemy();
+void hitJudgementPlayerVSEnemy();
 
 void Game_Initialize()
 {
@@ -42,6 +43,7 @@ void Game_Update(double elapsed_time)
     Enemy_Update(elapsed_time);
 
     hitJudgementBilletVSEnemy();
+    hitJudgementPlayerVSEnemy();
 }
 
 void Game_Draw()
@@ -55,15 +57,29 @@ void hitJudgementBilletVSEnemy()
 {
     for (int bi = 0; bi < BULLET_MAX; bi++)
     {
-        if (!Bullet_IsEnable(bi)) continue;
-
         for (int ei = 0; ei < ENEMY_MAX; ei++)
         {
+            if (!Bullet_IsEnable(bi)) continue;
             if (!Enemy_IsEnable(ei)) continue;
 
             if (Collision_IsOverlapCircle(Bullet_GetCollision(bi), Enemy_GetCollision(ei)))
             {
                 Bullet_Destroy(bi);
+                Enemy_Destroy(ei);
+            }
+        }
+    }
+}
+
+void hitJudgementPlayerVSEnemy()
+{
+    for (int ei = 0; ei < ENEMY_MAX; ei++)
+    {
+        if (Player_IsEnable())
+        {
+            if (Collision_IsOverlapCircle(Player_GetCollision(), Enemy_GetCollision(ei)))
+            {
+                Player_Destroy();
                 Enemy_Destroy(ei);
             }
         }
