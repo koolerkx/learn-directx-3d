@@ -5,6 +5,8 @@
 #include "enemy_spawner.h"
 #include "player.h"
 
+void hitJudgementBilletVSEnemy();
+
 void Game_Initialize()
 {
     Player_Initialize({64.0f, 64.0f});
@@ -38,6 +40,8 @@ void Game_Update(double elapsed_time)
     Player_Update(elapsed_time);
     Bullet_Update(elapsed_time);
     Enemy_Update(elapsed_time);
+
+    hitJudgementBilletVSEnemy();
 }
 
 void Game_Draw()
@@ -45,4 +49,23 @@ void Game_Draw()
     Enemy_Draw();
     Bullet_Draw();
     Player_Draw();
+}
+
+void hitJudgementBilletVSEnemy()
+{
+    for (int bi = 0; bi < BULLET_MAX; bi++)
+    {
+        if (!Bullet_IsEnable(bi)) continue;
+
+        for (int ei = 0; ei < ENEMY_MAX; ei++)
+        {
+            if (!Enemy_IsEnable(ei)) continue;
+
+            if (Collision_IsOverlapCircle(Bullet_GetCollision(bi), Enemy_GetCollision(ei)))
+            {
+                Bullet_Destroy(bi);
+                Enemy_Destroy(ei);
+            }
+        }
+    }
 }

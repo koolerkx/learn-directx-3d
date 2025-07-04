@@ -9,6 +9,7 @@
 
 #include <DirectXMath.h>
 
+#include "collision.h"
 #include "color.h"
 #include "sprite.h"
 #include "texture.h"
@@ -19,6 +20,7 @@ struct EnemyType
     int texId = -1;
     // int tx, ty, tw, th; // スプライトシート UV Cut情報
     Color::COLOR color = Color::WHITE;
+    Circle collision;
 };
 
 struct Enemy
@@ -31,7 +33,6 @@ struct Enemy
     bool isEnable;
 };
 
-static constexpr unsigned int ENEMY_MAX = 256;
 static Enemy g_Enemys[ENEMY_MAX]{};
 
 static constexpr XMFLOAT2 ENEMY_SIZE = {32.0f, 48.0f};
@@ -39,8 +40,8 @@ static constexpr XMFLOAT2 ENEMY_SPEED = {-100.0f, 0.0f};
 
 static EnemyType g_EnemyType[]
 {
-    {-1, Color::RED},
-    {-1, Color::GREEN},
+    {-1, Color::RED, {{16.0f, 24.0f}, 32.0f}},
+    {-1, Color::GREEN, {{16.0f, 24.0f}, 32.0f}},
 };
 
 void Enemy_Initialize()
@@ -82,7 +83,7 @@ void Enemy_Update(double elapsed_time)
         case EnemyTypeID::GREEN:
             enemy.position.x += enemy.velocity.x * static_cast<float>(elapsed_time);
         // frequency and amplitude
-            enemy.position.y += enemy.offsetY + static_cast<float>(cos(enemy.lifeTime)) * 3.5f * 20.0f;
+            enemy.position.y += enemy.offsetY + static_cast<float>(cos(enemy.lifeTime)) * 2.0f * 3.0f;
 
             break;
         default: break;
@@ -124,4 +125,23 @@ void Enemy_Create(const XMFLOAT2& position, EnemyTypeID enemyTypeId)
 
         break;
     }
+}
+
+bool Enemy_IsEnable(int index)
+{
+    return g_Enemys[index].isEnable;
+}
+
+Circle Enemy_GetCollision(int index)
+{
+    int id = g_Enemys[index].typeId;
+    float cx = g_EnemyType[id].collision.center.x + g_Enemys[index].position.x;
+    float cy = g_EnemyType[id].collision.center.x + g_Enemys[index].position.y;
+
+    return {{cx, cy}, g_EnemyType[id].collision.radius};
+}
+
+void Enemy_Destroy(int index)
+{
+    g_Enemys[index].isEnable = false;
 }

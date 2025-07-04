@@ -9,6 +9,7 @@
 
 #include <DirectXMath.h>
 
+#include "collision.h"
 #include "color.h"
 #include "sprite.h"
 #include "texture.h"
@@ -26,9 +27,9 @@ struct Bullet
     XMFLOAT2 velocity;
     double lifeTime;
     bool isEnable;
+    Circle collision;
 };
 
-static constexpr unsigned int BULLET_MAX = 1024;
 static Bullet g_Bullets[BULLET_MAX]{};
 static int g_Bullet_TexId = -1;
 
@@ -100,6 +101,25 @@ void Bullet_Create(const XMFLOAT2& position)
         bullet.lifeTime = 0.0;
         bullet.position = position;
         bullet.velocity = BULLET_SPEED;
+        bullet.collision = {{16.0f, 8.0f}, 24.0f};
         break;
     }
+}
+
+bool Bullet_IsEnable(int index)
+{
+    return g_Bullets[index].isEnable;
+}
+
+Circle Bullet_GetCollision(int index)
+{
+    float cx = g_Bullets[index].collision.center.x + g_Bullets[index].position.x;
+    float cy = g_Bullets[index].collision.center.y + g_Bullets[index].position.y;
+
+    return {{cx, cy}, g_Bullets[index].collision.radius};
+}
+
+void Bullet_Destroy(int index)
+{
+    g_Bullets[index].isEnable = false;
 }
