@@ -4,6 +4,7 @@
 #include "direct3d.h"
 #include "enemy_spawner.h"
 #include "player.h"
+#include "effect.h"
 
 void hitJudgementBilletVSEnemy();
 void hitJudgementPlayerVSEnemy();
@@ -26,6 +27,7 @@ void Game_Initialize()
                             static_cast<float>(Direct3D_GetBackBufferHeight()) / 2.0f
                         }, EnemyTypeID::RED,
                         4.0f, 0.5, 5);
+    Effect_Initialize();
 }
 
 void Game_Finalize()
@@ -33,6 +35,7 @@ void Game_Finalize()
     Player_Finalize();
     Bullet_Finalize();
     EnemySpawner_Finalize();
+    Effect_Finalize();
 }
 
 void Game_Update(double elapsed_time)
@@ -44,6 +47,8 @@ void Game_Update(double elapsed_time)
 
     hitJudgementBilletVSEnemy();
     hitJudgementPlayerVSEnemy();
+
+    Effect_Update(elapsed_time);
 }
 
 void Game_Draw()
@@ -51,6 +56,8 @@ void Game_Draw()
     Enemy_Draw();
     Bullet_Draw();
     Player_Draw();
+
+    Effect_Draw();
 }
 
 void hitJudgementBilletVSEnemy()

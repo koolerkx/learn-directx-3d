@@ -28,6 +28,7 @@ struct AnimPlayData
     int m_PatternId{-1}; // アニメーションパターンID
     int m_PatternNum{0}; // 現在再生中のパターン番号
     double m_accumulated_time{0}; // 累積時間
+    bool m_IsStopped = false;
 };
 
 static constexpr int ANIM_PATTERN_MAX = 128;
@@ -43,9 +44,10 @@ void SpriteAnim_Initialize()
         data.m_TextureId = -1;
     }
 
-    for (AnimPlayData &data: g_AnimPlay)
+    for (AnimPlayData& data : g_AnimPlay)
     {
         data.m_PatternId = -1;
+        data.m_IsStopped = false;
     }
 }
 
@@ -75,6 +77,7 @@ void SpriteAnim_Update(double elapsed_time)
                 else
                 {
                     g_AnimPlay[i].m_PatternNum = pPatternData->m_PatternMax - 1;
+                    g_AnimPlay[i].m_IsStopped = true;
                 }
             }
 
@@ -93,8 +96,10 @@ void SpriteAnim_Draw(int playid, float dx, float dy, float dw, float dh)
     Sprite_Draw(
         pPatternData->m_TextureId,
         dx, dy,
-        static_cast<float>(pPatternData->m_StartPosition.x + pPatternData->m_PatternSize.x * (pattern_num % pPatternData->m_HPatternMax)),
-        static_cast<float>(pPatternData->m_StartPosition.y + pPatternData->m_PatternSize.y * (pattern_num / pPatternData->m_HPatternMax)),
+        static_cast<float>(pPatternData->m_StartPosition.x + pPatternData->m_PatternSize.x * (pattern_num % pPatternData
+            ->m_HPatternMax)),
+        static_cast<float>(pPatternData->m_StartPosition.y + pPatternData->m_PatternSize.y * (pattern_num / pPatternData
+            ->m_HPatternMax)),
         static_cast<float>(pPatternData->m_PatternSize.x),
         static_cast<float>(pPatternData->m_PatternSize.y),
         dw, dh
@@ -102,8 +107,8 @@ void SpriteAnim_Draw(int playid, float dx, float dy, float dw, float dh)
 }
 
 int SpriteAnim_RegisterPattern(int textureId, int patternMax, int m_HPatternMax, double m_seconds_per_pattern,
-                               DirectX::XMUINT2 patternSize,
-                               DirectX::XMUINT2 patternStartPosition, bool isLoop)
+                               XMUINT2 patternSize,
+                               XMUINT2 patternStartPosition, bool isLoop)
 {
     for (int i = 0; i < ANIM_PATTERN_MAX; i++)
     {
@@ -133,7 +138,19 @@ int SpriteAnim_CreatePlayer(int anim_pattern_id)
         g_AnimPlay[i].m_accumulated_time = 0;
         g_AnimPlay[i].m_PatternNum = 0;
 
+        g_AnimPlay[i].m_IsStopped = false;
+
         return i;
     }
     return -1;
+}
+
+bool SpriteAnim_IsStopped(int index)
+{
+    return g_AnimPlay[index].m_IsStopped;
+}
+
+void SpriteAnim_DestroyPlayer(int index)
+{
+    g_AnimPlay[index].m_PatternId = -1;
 }
