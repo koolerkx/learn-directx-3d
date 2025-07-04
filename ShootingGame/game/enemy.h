@@ -32,5 +32,6 @@ bool Enemy_IsEnable(int index);
 Circle Enemy_GetCollision(int index);
 
 void Enemy_Destroy(int index);
+void Enemy_Damage(int index, int damage = 1);
 
 #endif

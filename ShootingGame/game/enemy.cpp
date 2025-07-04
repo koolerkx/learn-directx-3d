@@ -21,6 +21,7 @@ struct EnemyType
     // int tx, ty, tw, th; // スプライトシート UV Cut情報
     Color::COLOR color = Color::WHITE;
     Circle collision;
+    int hp;
 };
 
 struct Enemy
@@ -31,6 +32,7 @@ struct Enemy
     float offsetY;
     double lifeTime;
     bool isEnable;
+    int hp;
 };
 
 static Enemy g_Enemys[ENEMY_MAX]{};
@@ -40,8 +42,8 @@ static constexpr XMFLOAT2 ENEMY_SPEED = {-100.0f, 0.0f};
 
 static EnemyType g_EnemyType[]
 {
-    {-1, Color::RED, {{16.0f, 24.0f}, 32.0f}},
-    {-1, Color::GREEN, {{16.0f, 24.0f}, 32.0f}},
+    {-1, Color::RED, {{16.0f, 24.0f}, 32.0f}, 4},
+    {-1, Color::GREEN, {{16.0f, 24.0f}, 32.0f}, 2},
 };
 
 void Enemy_Initialize()
@@ -104,10 +106,13 @@ void Enemy_Draw()
     {
         if (!enemy.isEnable) continue;
 
+        Color::COLOR color = g_EnemyType[enemy.typeId].color;
+        color.w = static_cast<float>(enemy.hp) / static_cast<float>(g_EnemyType[enemy.typeId].hp);
+
         Sprite_Draw(g_EnemyType[enemy.typeId].texId,
                     enemy.position.x, enemy.position.y,
                     ENEMY_SIZE.x, ENEMY_SIZE.y,
-                    0, g_EnemyType[enemy.typeId].color
+                    0, color
         );
     }
 }
@@ -122,6 +127,7 @@ void Enemy_Create(const XMFLOAT2& position, EnemyTypeID enemyTypeId)
         enemy.position = position;
         enemy.velocity = ENEMY_SPEED;
         enemy.typeId = static_cast<int>(enemyTypeId); // fixme
+        enemy.hp = g_EnemyType[enemy.typeId].hp;
 
         break;
     }
@@ -144,4 +150,14 @@ Circle Enemy_GetCollision(int index)
 void Enemy_Destroy(int index)
 {
     g_Enemys[index].isEnable = false;
+}
+
+void Enemy_Damage(int index, int damage)
+{
+    g_Enemys[index].hp -= damage;
+
+    if (g_Enemys[index].hp <= 0)
+    {
+        Enemy_Destroy(index);
+    }
 }

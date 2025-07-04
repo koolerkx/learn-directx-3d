@@ -65,7 +65,7 @@ void hitJudgementBilletVSEnemy()
             if (Collision_IsOverlapCircle(Bullet_GetCollision(bi), Enemy_GetCollision(ei)))
             {
                 Bullet_Destroy(bi);
-                Enemy_Destroy(ei);
+                Enemy_Damage(ei);
             }
         }
     }
