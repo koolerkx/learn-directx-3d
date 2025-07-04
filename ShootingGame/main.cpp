@@ -23,6 +23,9 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
 {
     (void)CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
+    // DPI スケーリング
+    SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+
     HWND hWnd = GameWindow_Create(hInstance);
 
     SystemTimer_Initialize();
@@ -127,5 +130,5 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     Direct3D_Finalize();
     Mouse_Finalize();
 
-    return (int)msg.wParam;
+    return static_cast<int>(msg.wParam);
 }
