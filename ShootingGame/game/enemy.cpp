@@ -39,13 +39,13 @@ struct Enemy
 
 static Enemy g_Enemys[ENEMY_MAX]{};
 
-static constexpr XMFLOAT2 ENEMY_SIZE = {32.0f, 48.0f};
+static constexpr XMFLOAT2 ENEMY_SIZE = {64.0f, 64.0f};
 static constexpr XMFLOAT2 ENEMY_SPEED = {-100.0f, 0.0f};
 
 static EnemyType g_EnemyType[]
 {
-    {-1, Color::RED, {{16.0f, 24.0f}, 32.0f}, 1},
-    {-1, Color::GREEN, {{16.0f, 24.0f}, 32.0f}, 1},
+    {-1, Color::RED, {{32.0f, 32.0f}, 32.0f}, 1},
+    {-1, Color::GREEN, {{32.0f, 32.0f}, 32.0f}, 1},
 };
 
 void Enemy_Initialize()
@@ -56,8 +56,8 @@ void Enemy_Initialize()
         enemy.offsetY = 0.0f;
     }
 
-    g_EnemyType[0].texId = Texture_Load(L"assets/white.png");
-    g_EnemyType[1].texId = Texture_Load(L"assets/white.png");
+    g_EnemyType[0].texId = Texture_Load(L"assets/ship_K.png");
+    g_EnemyType[1].texId = Texture_Load(L"assets/ship_K.png");
 }
 
 void Enemy_Finalize()
@@ -120,7 +120,7 @@ void Enemy_Draw()
         Sprite_Draw(g_EnemyType[enemy.typeId].texId,
                     enemy.position.x, enemy.position.y,
                     ENEMY_SIZE.x, ENEMY_SIZE.y,
-                    0, color
+                    270 * (XM_PI / 180.0f), color
         );
     }
 }

@@ -9,8 +9,6 @@
 
 #include <DirectXMath.h>
 
-#include "debug_ostream.h"
-
 using namespace DirectX;
 
 struct EnemySpawn

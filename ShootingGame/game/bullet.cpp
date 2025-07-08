@@ -17,7 +17,7 @@ using namespace DirectX;
 
 #include "direct3d.h"
 
-constexpr XMFLOAT2 BULLET_SIZE = {32.0f, 16.0f};
+constexpr XMFLOAT2 BULLET_SIZE = {64.0f, 64.0f};
 constexpr XMFLOAT2 BULLET_SPEED = {200.0f, 0.0f};
 constexpr double BULLET_LIFETIME = 5.0;
 
@@ -35,7 +35,7 @@ static int g_Bullet_TexId = -1;
 
 void Bullet_Initialize()
 {
-    g_Bullet_TexId = Texture_Load(L"assets/white.png");
+    g_Bullet_TexId = Texture_Load(L"assets/star_tiny.png");
 
     for (Bullet& bullet : g_Bullets)
     {
@@ -101,7 +101,7 @@ void Bullet_Create(const XMFLOAT2& position)
         bullet.lifeTime = 0.0;
         bullet.position = position;
         bullet.velocity = BULLET_SPEED;
-        bullet.collision = {{16.0f, 8.0f}, 24.0f};
+        bullet.collision = {{32.0f, 32.0f}, 16.0f};
         break;
     }
 }

@@ -8,14 +8,14 @@ using namespace DirectX;
 #include "sprite.h"
 #include "bullet.h"
 
-constexpr XMFLOAT2 PLAYER_SIZE = {32.0f, 64.0f};
+constexpr XMFLOAT2 PLAYER_SIZE = {64.0f, 64.0f};
 constexpr float PLAYER_SPEED_ACCERATION = 0.5f;
 
 static XMFLOAT2 g_PlayerPosition{};
 static XMFLOAT2 g_PlayerVelocity{};
 static int g_PlayerTexId = -1;
 
-static Circle g_PlayerCollision{{16.0f, 32.0f}, 24.0f};
+static Circle g_PlayerCollision{{32.0f, 32.0f}, 32.0f};
 static bool g_PlayerIsEnable = true;
 
 void Player_Initialize(const XMFLOAT2& position)
@@ -24,7 +24,7 @@ void Player_Initialize(const XMFLOAT2& position)
     g_PlayerVelocity = {0.0f, 0.0f};
     g_PlayerIsEnable = true;
 
-    g_PlayerTexId = Texture_Load(L"assets/white.png");
+    g_PlayerTexId = Texture_Load(L"assets/ship_J.png");
 }
 
 void Player_Finalize()
@@ -90,7 +90,9 @@ void Player_Update(double elapsed_time)
     // 弾の発射
     if (KeyLogger_IsTrigger(KK_SPACE))
     {
-        Bullet_Create({g_PlayerPosition.x + PLAYER_SIZE.x * 0.5f, g_PlayerPosition.y + (PLAYER_SIZE.y - 16.0f) * 0.5f});
+        Bullet_Create({
+            g_PlayerPosition.x + PLAYER_SIZE.x * 0.5f, g_PlayerPosition.y + (PLAYER_SIZE.y - 64.0f) * 0.5f
+        });
     }
 }
 
@@ -101,7 +103,7 @@ void Player_Draw()
     Sprite_Draw(g_PlayerTexId,
                 g_PlayerPosition.x, g_PlayerPosition.y,
                 PLAYER_SIZE.x, PLAYER_SIZE.y,
-                0, Color::NAVY
+                90 * (XM_PI / 180.0f), Color::NAVY
     );
 }
 
