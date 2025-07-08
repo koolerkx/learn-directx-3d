@@ -11,11 +11,7 @@
 *.sln.docstates
 
 *.cso
-DirectX/assets/kokosozai.png
-DirectX/assets/runningman001.png
-DirectX/assets/runningman002.png
-DirectX/assets/runningman003.png
-DirectX/assets/runningman000.png
+ShootingGame/assets/Explosion.png
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
