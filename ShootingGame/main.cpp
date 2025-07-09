@@ -9,6 +9,8 @@
 #include "sprite_anim.h"
 #include "debug_text.h"
 #include <sstream>
+
+#include "audio.h"
 #include "system_timer.h"
 #include "key_logger.h"
 #include "mouse.h"
@@ -31,6 +33,8 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     SystemTimer_Initialize();
     KeyLogger_Initialize();
     Mouse_Initialize(hWnd);
+
+    InitAudio();
 
     Direct3D_Initialize(hWnd);
     Shader_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
@@ -129,6 +133,8 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     Shader_Finalize();
     Direct3D_Finalize();
     Mouse_Finalize();
+
+    UninitAudio();
 
     return static_cast<int>(msg.wParam);
 }
