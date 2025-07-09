@@ -6,6 +6,7 @@
 #include "enemy_spawner.h"
 #include "player.h"
 #include "effect.h"
+#include "score.h"
 
 void hitJudgementBilletVSEnemy();
 void hitJudgementPlayerVSEnemy();
@@ -31,6 +32,7 @@ void Game_Initialize()
                         }, EnemyTypeID::RED,
                         4.0f, 0.5, 5);
     Effect_Initialize();
+    Score_Initialize(100.0f, 100.0f, 5);
 
     g_bgmId = LoadAudio("assets/audio/gunka.wav");
 
@@ -43,6 +45,7 @@ void Game_Finalize()
     Bullet_Finalize();
     EnemySpawner_Finalize();
     Effect_Finalize();
+    Score_Finalize();
 }
 
 void Game_Update(double elapsed_time)
@@ -65,6 +68,7 @@ void Game_Draw()
     Player_Draw();
 
     Effect_Draw();
+    Score_Draw();
 }
 
 void hitJudgementBilletVSEnemy()
@@ -80,6 +84,7 @@ void hitJudgementBilletVSEnemy()
             {
                 Bullet_Destroy(bi);
                 Enemy_Damage(ei);
+                Score_AddScore(1);
             }
         }
     }
