@@ -11,6 +11,7 @@
 
 static unsigned int g_Score = 0;
 static int g_Digit = 0;
+static int g_CounterStop = 1;
 
 static float g_x = 0.0f;
 static float g_y = 0.0f;
@@ -30,6 +31,13 @@ void Score_Initialize(float x, float y, int digit)
     g_x = x;
     g_y = y;
 
+    // カンストの得点を作る
+    for (int i = 0; i < digit; i++)
+    {
+        g_CounterStop *= 10;
+    }
+    g_CounterStop -= 1;
+
     g_ScoreTexId = Texture_Load(L"assets/consolab_ascii_512.png");
 }
 
@@ -39,7 +47,8 @@ void Score_Finalize()
 
 void Score_Draw()
 {
-    int score = g_Score;
+    int score = min(g_Score, g_CounterStop);
+
     for (int i = 0; i < g_Digit; i++)
     {
         int n = score % 10;
