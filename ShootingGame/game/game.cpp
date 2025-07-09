@@ -1,5 +1,6 @@
 #include "game.h"
 
+#include "Audio.h"
 #include "bullet.h"
 #include "direct3d.h"
 #include "enemy_spawner.h"
@@ -8,6 +9,8 @@
 
 void hitJudgementBilletVSEnemy();
 void hitJudgementPlayerVSEnemy();
+
+int g_bgmId = -1;
 
 void Game_Initialize()
 {
@@ -28,6 +31,10 @@ void Game_Initialize()
                         }, EnemyTypeID::RED,
                         4.0f, 0.5, 5);
     Effect_Initialize();
+
+    g_bgmId = LoadAudio("assets/audio/gunka.wav");
+
+    PlayAudio(g_bgmId, true);
 }
 
 void Game_Finalize()
