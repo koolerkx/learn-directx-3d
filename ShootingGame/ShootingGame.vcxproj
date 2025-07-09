@@ -91,6 +91,7 @@
                 $(ProjectDir)utils;
                 $(ProjectDir)input;
                 $(ProjectDir)game;
+                $(ProjectDir)audio;
                 $(ProjectDir);
                 %(AdditionalIncludeDirectories)
             </AdditionalIncludeDirectories>
@@ -195,6 +196,7 @@
         <ClCompile Include="input\key_logger.cpp"/>
         <ClCompile Include="input\keyboard.cpp"/>
         <ClCompile Include="input\mouse.cpp"/>
+        <ClCompile Include="audio\Audio.cpp"/>
     </ItemGroup>
     <ItemGroup>
         <ClInclude Include="direct3d\direct3d.h"/>
@@ -220,6 +222,7 @@
         <ClInclude Include="input\key_logger.h"/>
         <ClInclude Include="input\keyboard.h"/>
         <ClInclude Include="input\mouse.h"/>
+        <ClCompile Include="audio\Audio.h"/>
     </ItemGroup>
     <ItemGroup>
         <None Include="utils\DirectXTex.inl"/>

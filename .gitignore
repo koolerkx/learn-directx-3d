@@ -15,6 +15,9 @@ ShootingGame/assets/Explosion.png
 ShootingGame/assets/ship_J.png
 ShootingGame/assets/ship_K.png
 ShootingGame/assets/star_tiny.png
+ShootingGame/assets/audio/gunka.wav
+ShootingGame/assets/audio/shoot.wav
+ShootingGame/assets/audio/hit.wav
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
