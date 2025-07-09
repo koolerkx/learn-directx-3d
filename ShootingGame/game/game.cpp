@@ -32,7 +32,7 @@ void Game_Initialize()
                         }, EnemyTypeID::RED,
                         4.0f, 0.5, 5);
     Effect_Initialize();
-    Score_Initialize(100.0f, 100.0f, 2);
+    Score_Initialize(100.0f, 100.0f, 3);
 
     g_bgmId = LoadAudio("assets/audio/gunka.wav");
 
@@ -59,6 +59,7 @@ void Game_Update(double elapsed_time)
     hitJudgementPlayerVSEnemy();
 
     Effect_Update(elapsed_time);
+    Score_Update();
 }
 
 void Game_Draw()
@@ -84,7 +85,7 @@ void hitJudgementBilletVSEnemy()
             {
                 Bullet_Destroy(bi);
                 Enemy_Damage(ei);
-                Score_AddScore(100);
+                Score_AddScore(10);
             }
         }
     }

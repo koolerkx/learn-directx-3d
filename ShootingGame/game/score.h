@@ -10,6 +10,7 @@
 
 void Score_Initialize(float x, float y, int digit);
 void Score_Finalize();
+void Score_Update();
 void Score_Draw();
 
 unsigned int Score_GetScore();

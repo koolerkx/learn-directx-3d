@@ -10,6 +10,8 @@
 #include "texture.h"
 
 static unsigned int g_Score = 0;
+static unsigned int g_ViewScore = 0;
+
 static int g_Digit = 0;
 static int g_CounterStop = 1;
 
@@ -45,9 +47,14 @@ void Score_Finalize()
 {
 }
 
+void Score_Update()
+{
+    g_ViewScore = min(g_Score, g_ViewScore + 1);
+}
+
 void Score_Draw()
 {
-    int score = min(g_Score, g_CounterStop);
+    int score = min(g_ViewScore, g_CounterStop);
 
     for (int i = 0; i < g_Digit; i++)
     {
@@ -65,6 +72,7 @@ unsigned int Score_GetScore()
 
 void Score_AddScore(int score)
 {
+    g_ViewScore = g_Score;
     g_Score += score;
 }
 
