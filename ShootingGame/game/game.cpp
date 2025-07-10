@@ -6,12 +6,15 @@
 #include "enemy_spawner.h"
 #include "player.h"
 #include "effect.h"
+#include "fade.h"
+#include "key_logger.h"
 #include "score.h"
 
 void hitJudgementBilletVSEnemy();
 void hitJudgementPlayerVSEnemy();
 
 int g_bgmId = -1;
+bool g_isGameStart = false;
 
 void Game_Initialize()
 {
@@ -36,7 +39,7 @@ void Game_Initialize()
 
     g_bgmId = LoadAudio("assets/audio/gunka.wav");
 
-    PlayAudio(g_bgmId, true);
+    Fade_Start(2.0, false);
 }
 
 void Game_Finalize()
@@ -50,6 +53,17 @@ void Game_Finalize()
 
 void Game_Update(double elapsed_time)
 {
+    if (!g_isGameStart && Fade_GetState() == FADE_STATE::FINISHED_IN)
+    {
+        // PlayAudio(g_bgmId, true);
+        g_isGameStart = true;
+    }
+
+    if (KeyLogger_IsTrigger(KK_F))
+    {
+        Fade_Start(1.0, true, Color::WHITE);
+    }
+
     EnemySpawner_Update(elapsed_time);
     Player_Update(elapsed_time);
     Bullet_Update(elapsed_time);

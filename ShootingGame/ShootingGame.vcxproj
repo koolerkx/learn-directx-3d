@@ -185,6 +185,7 @@
         <ClCompile Include="game\effect.cpp"/>
         <ClCompile Include="game\enemy.cpp"/>
         <ClCompile Include="game\enemy_spawner.cpp"/>
+        <ClCompile Include="game\fade.cpp"/>
         <ClCompile Include="game\game.cpp"/>
         <ClCompile Include="game\score.cpp"/>
         <ClCompile Include="game_window\game_window.cpp"/>
@@ -210,6 +211,7 @@
         <ClInclude Include="game\effect.h"/>
         <ClInclude Include="game\enemy.h"/>
         <ClInclude Include="game\enemy_spawner.h"/>
+        <ClInclude Include="game\fade.h"/>
         <ClInclude Include="game\game.h"/>
         <ClInclude Include="game\score.h"/>
         <ClInclude Include="game_window\game_window.h"/>

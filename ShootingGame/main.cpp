@@ -11,6 +11,7 @@
 #include <sstream>
 
 #include "audio.h"
+#include "fade.h"
 #include "system_timer.h"
 #include "key_logger.h"
 #include "mouse.h"
@@ -41,6 +42,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     Sprite_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Texture_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     SpriteAnim_Initialize();
+    Fade_Initialize();
 
     // デバッグテキスト
     hal::DebugText debugText(Direct3D_GetDevice(), Direct3D_GetContext(),
@@ -101,12 +103,14 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
                 Game_Update(elapsed_time);
 
                 SpriteAnim_Update(elapsed_time);
+                Fade_Update(elapsed_time);
 
                 //ゲームの描画
                 Direct3D_Clear();
                 Sprite_Begin();
 
                 Game_Draw();
+                Fade_Draw();
 
 #if defined(DEBUG) || defined(_DEBUG)
                 std::stringstream ss;
@@ -127,6 +131,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     while (msg.message != WM_QUIT);
 
     Game_Finalize();
+    Fade_Finalize();
     SpriteAnim_Finalize();
     Texture_Finalize();
     Sprite_Finalize();
