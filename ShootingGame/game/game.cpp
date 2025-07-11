@@ -9,6 +9,7 @@
 #include "fade.h"
 #include "key_logger.h"
 #include "score.h"
+#include "texture.h"
 
 void hitJudgementBilletVSEnemy();
 void hitJudgementPlayerVSEnemy();
@@ -39,7 +40,7 @@ void Game_Initialize()
 
     g_bgmId = LoadAudio("assets/audio/gunka.wav");
 
-    Fade_Start(2.0, false);
+    Fade_Start(1.0, false);
 }
 
 void Game_Finalize()
@@ -49,6 +50,9 @@ void Game_Finalize()
     EnemySpawner_Finalize();
     Effect_Finalize();
     Score_Finalize();
+
+    UnloadAudio(g_bgmId);
+    // Texture_AllRelease();
 }
 
 void Game_Update(double elapsed_time)

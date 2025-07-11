@@ -9,6 +9,7 @@
 
 #include <algorithm>
 
+#include "debug_ostream.h"
 #include "direct3d.h"
 #include "sprite.h"
 #include "texture.h"
@@ -24,7 +25,7 @@ static Color::COLOR g_color = Color::BLACK;
 
 void Fade_Initialize()
 {
-    g_FadeTime = 0.0;
+    g_FadeTime = 1.0;
     g_FadeStartTime = 0.0;
     g_AccumulatedTime = 0.0;
     g_color = Color::BLACK;
@@ -41,6 +42,7 @@ void Fade_Finalize()
 void Fade_Update(double elapsed_time)
 {
     if (g_State == FADE_STATE::FINISHED_IN || g_State == FADE_STATE::FINISHED_OUT) return;
+    if (g_State == FADE_STATE::NONE) return;
 
     g_AccumulatedTime += elapsed_time;
 

@@ -15,7 +15,7 @@
 #include "system_timer.h"
 #include "key_logger.h"
 #include "mouse.h"
-#include "game.h"
+#include "scene.h"
 
 
 /*----------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     // Mouse_SetVisible(false);
     // Mouse_SetMode(MOUSE_POSITION_MODE_RELATIVE);
 
-    Game_Initialize();
+    Scene_Initialize();
 
 
     ShowWindow(hWnd, nCmdShow);
@@ -100,7 +100,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
                 //ゲームの更新
                 KeyLogger_Update();
 
-                Game_Update(elapsed_time);
+                Scene_Update(elapsed_time);
 
                 SpriteAnim_Update(elapsed_time);
                 Fade_Update(elapsed_time);
@@ -109,7 +109,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
                 Direct3D_Clear();
                 Sprite_Begin();
 
-                Game_Draw();
+                Scene_Draw();
                 Fade_Draw();
 
 #if defined(DEBUG) || defined(_DEBUG)
@@ -124,13 +124,15 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
 
                 Direct3D_Present();
 
+                Scene_Refresh();
+
                 frame_count++;
             }
         }
     }
     while (msg.message != WM_QUIT);
 
-    Game_Finalize();
+    Scene_Finalize();
     Fade_Finalize();
     SpriteAnim_Finalize();
     Texture_Finalize();
