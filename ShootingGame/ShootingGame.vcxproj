@@ -91,6 +91,7 @@
                 $(ProjectDir)utils;
                 $(ProjectDir)input;
                 $(ProjectDir)game;
+                $(ProjectDir)game/scene;
                 $(ProjectDir)audio;
                 $(ProjectDir);
                 %(AdditionalIncludeDirectories)
@@ -183,8 +184,8 @@
         <ClCompile Include="game\collision.cpp"/>
         <ClCompile Include="game\effect.cpp"/>
         <ClCompile Include="game\fade.cpp"/>
-        <ClCompile Include="game\game.cpp"/>
-        <ClCompile Include="game\scene.cpp"/>
+        <ClCompile Include="game\scene\game.cpp"/>
+        <ClCompile Include="game\scene\scene.cpp"/>
         <ClCompile Include="game\score.cpp"/>
         <ClCompile Include="game\title.cpp"/>
         <ClCompile Include="game_window\game_window.cpp"/>
@@ -207,8 +208,8 @@
         <ClInclude Include="game\collision.h"/>
         <ClInclude Include="game\effect.h"/>
         <ClInclude Include="game\fade.h"/>
-        <ClInclude Include="game\game.h"/>
-        <ClInclude Include="game\scene.h"/>
+        <ClInclude Include="game\scene\game.h"/>
+        <ClInclude Include="game\scene\scene.h"/>
         <ClInclude Include="game\score.h"/>
         <ClInclude Include="game\title.h"/>
         <ClInclude Include="game_window\game_window.h"/>
