@@ -41,7 +41,7 @@ void Effect_Finalize()
     UnloadAudio(g_EffectSoundId);
 }
 
-void Effect_Update(double elapsed_time)
+void Effect_Update(double)
 {
     for (Effect& effect : g_Effects)
     {

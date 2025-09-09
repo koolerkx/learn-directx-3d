@@ -54,7 +54,7 @@ void Score_Update()
 
 void Score_Draw()
 {
-    int score = min(g_ViewScore, g_CounterStop);
+    int score = min(g_ViewScore, static_cast<unsigned int>(g_CounterStop));
 
     for (int i = 0; i < g_Digit; i++)
     {

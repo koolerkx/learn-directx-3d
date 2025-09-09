@@ -36,13 +36,14 @@ void Fade_Initialize()
 }
 
 void Fade_Finalize()
-{
-}
+{}
 
 void Fade_Update(double elapsed_time)
 {
-    if (g_State == FADE_STATE::FINISHED_IN || g_State == FADE_STATE::FINISHED_OUT) return;
-    if (g_State == FADE_STATE::NONE) return;
+    if (g_State == FADE_STATE::FINISHED_IN || g_State == FADE_STATE::FINISHED_OUT)
+        return;
+    if (g_State == FADE_STATE::NONE)
+        return;
 
     g_AccumulatedTime += elapsed_time;
 
@@ -58,12 +59,17 @@ void Fade_Update(double elapsed_time)
 
 void Fade_Draw()
 {
-    if (g_State == FADE_STATE::NONE) return;
-    if (g_State == FADE_STATE::FINISHED_IN) return;
+    if (g_State == FADE_STATE::NONE)
+        return;
+    if (g_State == FADE_STATE::FINISHED_IN)
+        return;
 
     Color::COLOR color = g_color;
     color.w = g_Alpha;
-    Sprite_Draw(g_FadeTexId, 0.0f, 0.0f, Direct3D_GetBackBufferWidth(), Direct3D_GetBackBufferHeight(), 0.0f, color);
+
+    float width = static_cast<float>(Direct3D_GetBackBufferWidth());
+    float height = static_cast<float>(Direct3D_GetBackBufferHeight());
+    Sprite_Draw(g_FadeTexId, 0.0f, 0.0f, width, height, 0.0f, color);
 }
 
 void Fade_Start(double duration, bool isFadeOut, Color::COLOR color)

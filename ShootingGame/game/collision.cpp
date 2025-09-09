@@ -36,6 +36,4 @@ bool Collision_IsOverlapBox(const Box& a, const Box& b)
     float br = b.center.x + b.half_width;
 
     return at < bb && ab > bt && al < br && ar > bl;
-
-    return false;
 }

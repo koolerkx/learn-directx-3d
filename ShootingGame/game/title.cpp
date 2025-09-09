@@ -26,7 +26,7 @@ void Title_Finalize()
     // Texture_AllRelease();
 }
 
-void Title_Update(double elapsed_time)
+void Title_Update(double)
 {
     if (KeyLogger_IsTrigger(KK_ENTER))
     {
@@ -40,5 +40,7 @@ void Title_Update(double elapsed_time)
 
 void Title_Draw()
 {
-    Sprite_Draw(g_TitleBgTexId, 0.0f, 0.0f, Direct3D_GetBackBufferWidth(), Direct3D_GetBackBufferHeight());
+    float width = static_cast<float>(Direct3D_GetBackBufferWidth());
+    float height = static_cast<float>(Direct3D_GetBackBufferHeight());
+    Sprite_Draw(g_TitleBgTexId, 0.0f, 0.0f, width, height);
 }

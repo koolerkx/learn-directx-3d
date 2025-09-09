@@ -180,11 +180,8 @@
         <ClCompile Include="direct3d\sprtie_anim.cpp"/>
         <ClCompile Include="direct3d\texture.cpp"/>
         <ClCompile Include="direct3d\polygon.cpp"/>
-        <ClCompile Include="game\bullet.cpp"/>
         <ClCompile Include="game\collision.cpp"/>
         <ClCompile Include="game\effect.cpp"/>
-        <ClCompile Include="game\enemy.cpp"/>
-        <ClCompile Include="game\enemy_spawner.cpp"/>
         <ClCompile Include="game\fade.cpp"/>
         <ClCompile Include="game\game.cpp"/>
         <ClCompile Include="game\scene.cpp"/>
@@ -192,7 +189,6 @@
         <ClCompile Include="game\title.cpp"/>
         <ClCompile Include="game_window\game_window.cpp"/>
         <ClCompile Include="main.cpp"/>
-        <ClCompile Include="game\player.cpp"/>
         <ClCompile Include="utils\debug_ostream.cpp"/>
         <ClCompile Include="utils\debug_text.cpp"/>
         <ClCompile Include="utils\system_timer.cpp"/>
@@ -208,18 +204,14 @@
         <ClInclude Include="direct3d\sprite.h"/>
         <ClInclude Include="direct3d\sprite_anim.h"/>
         <ClInclude Include="direct3d\texture.h"/>
-        <ClInclude Include="game\bullet.h"/>
         <ClInclude Include="game\collision.h"/>
         <ClInclude Include="game\effect.h"/>
-        <ClInclude Include="game\enemy.h"/>
-        <ClInclude Include="game\enemy_spawner.h"/>
         <ClInclude Include="game\fade.h"/>
         <ClInclude Include="game\game.h"/>
         <ClInclude Include="game\scene.h"/>
         <ClInclude Include="game\score.h"/>
         <ClInclude Include="game\title.h"/>
         <ClInclude Include="game_window\game_window.h"/>
-        <ClInclude Include="game\player.h"/>
         <ClInclude Include="utils\color.h"/>
         <ClInclude Include="utils\debug_ostream.h"/>
         <ClInclude Include="utils\debug_text.h"/>
@@ -230,7 +222,7 @@
         <ClInclude Include="input\key_logger.h"/>
         <ClInclude Include="input\keyboard.h"/>
         <ClInclude Include="input\mouse.h"/>
-        <ClCompile Include="audio\Audio.h"/>
+        <ClInclude Include="audio\Audio.h"/>
     </ItemGroup>
     <ItemGroup>
         <None Include="utils\DirectXTex.inl"/>

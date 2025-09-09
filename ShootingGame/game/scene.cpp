@@ -10,7 +10,7 @@
 #include "game.h"
 #include "title.h"
 
-static auto g_Scene = Scene::TITLE;
+static auto g_Scene = Scene::GAME;
 static Scene g_SceneNext = g_Scene;
 
 void Scene_Initialize()
