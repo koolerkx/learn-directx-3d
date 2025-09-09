@@ -19,8 +19,8 @@ static ID3D11PixelShader* g_pPixelShader = nullptr;
 static ID3D11SamplerState* g_pSamplerState = nullptr;
 
 // 定数バッファー
-static ID3D11Buffer* g_pVSConstantBuffer0 = nullptr;
-static ID3D11Buffer* g_pVSConstantBuffer1 = nullptr;
+static ID3D11Buffer* g_pVSConstantBuffer0 = nullptr; // Projection Matrix
+static ID3D11Buffer* g_pVSConstantBuffer1 = nullptr; // World Matrix
 
 // 注意！初期化で外部から設定されるもの。Release不要。
 static ID3D11Device* g_pDevice = nullptr;

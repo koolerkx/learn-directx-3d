@@ -181,6 +181,7 @@
         <ClCompile Include="direct3d\sprtie_anim.cpp"/>
         <ClCompile Include="direct3d\texture.cpp"/>
         <ClCompile Include="direct3d\polygon.cpp"/>
+        <ClCompile Include="direct3d\cube.cpp" />
         <ClCompile Include="game\collision.cpp"/>
         <ClCompile Include="game\effect.cpp"/>
         <ClCompile Include="game\fade.cpp"/>
@@ -205,6 +206,8 @@
         <ClInclude Include="direct3d\sprite.h"/>
         <ClInclude Include="direct3d\sprite_anim.h"/>
         <ClInclude Include="direct3d\texture.h"/>
+        <ClInclude Include="direct3d\polygon.h"/>
+        <ClInclude Include="direct3d\cube.h" />
         <ClInclude Include="game\collision.h"/>
         <ClInclude Include="game\effect.h"/>
         <ClInclude Include="game\fade.h"/>
