@@ -11,7 +11,7 @@
 #include <DirectXMath.h>
 #include "debug_ostream.h"
 #include "direct3d.h"
-#include "shader.h"
+#include "shader3d.h"
 
 using namespace DirectX;
 
@@ -75,7 +75,7 @@ void Cube_Finalize()
 
 void Cube_Draw()
 {
-    Shader_Begin();
+    Shader3D_Begin();
 
     // 頂点バッファを描画パイプラインに設定
     UINT stride = sizeof(Vertex3d);
@@ -90,11 +90,11 @@ void Cube_Draw()
     float farZ = 10000.0f;
 
     XMMATRIX mtxPerspective = XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, nearZ, farZ);
-    Shader_SetProjectionMatrix(mtxPerspective);
+    Shader3D_SetProjectionMatrix(mtxPerspective);
 
     // ワールド座標変換行列
     XMMATRIX mtxWorld = XMMatrixIdentity();
-    Shader_SetWorldMatrix(mtxWorld);
+    Shader3D_SetWorldMatrix(mtxWorld);
 
     // ビュー座標変換行列
     constexpr FXMVECTOR cameraPosition = { 2.0f, 2.0f, -5.0f };
