@@ -16,6 +16,12 @@ cbuffer VS_CONSTANT_BUFFER: register(b1)
     float4x4 world;
 };
 
+cbuffer VS_CONSTANT_BUFFER: register(b2)
+{
+    float4x4 view;
+};
+
+
 struct VS_INPUT
 {
     float4 posL : POSITION0; // ローカル座標 

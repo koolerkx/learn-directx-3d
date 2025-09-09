@@ -102,7 +102,7 @@ void Cube_Draw()
     constexpr FXMVECTOR cameraUpDirection = { 0.0f, 1.0f, 0.0f };
 
     XMMATRIX mtxView = XMMatrixLookAtLH(cameraPosition, cameraFocusPosition, cameraUpDirection);
-    // Shader_SetViewMatrix(mtxView);
+    Shader3D_SetViewMatrix(mtxView);
 
     // Shader_SetColor();
 
