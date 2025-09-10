@@ -32,57 +32,55 @@ struct Vertex3d
     XMFLOAT4 color; // 色
 };
 
-static constexpr float FACE_OPACITY = 0.6f; // TEMP
-
 static Vertex3d g_CubeVertex[36]
 {
     // 前
-    { { -0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // LT
-    { { +0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // RB
-    { { -0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // LB
-    { { -0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // LT
-    { { +0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // RT
-    { { +0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // RB
-    
+    { { -0.5f, +0.5f, -0.5f }, Color::RED }, // LT
+    { { +0.5f, -0.5f, -0.5f }, Color::RED }, // RB
+    { { -0.5f, -0.5f, -0.5f }, Color::RED }, // LB
+    { { -0.5f, +0.5f, -0.5f }, Color::RED }, // LT
+    { { +0.5f, +0.5f, -0.5f }, Color::RED }, // RT
+    { { +0.5f, -0.5f, -0.5f }, Color::RED }, // RB
+
     // 後
-    { { +0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // LT
-    { { -0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // RB
-    { { +0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // LB
-    { { +0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // LT
-    { { -0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // RT
-    { { -0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // RB
-    
+    { { +0.5f, -0.5f, +0.5f }, Color::BLUE }, // LT
+    { { +0.5f, +0.5f, +0.5f }, Color::BLUE }, // LB
+    { { -0.5f, +0.5f, +0.5f }, Color::BLUE }, // RB
+    { { +0.5f, -0.5f, +0.5f }, Color::BLUE }, // LT
+    { { -0.5f, +0.5f, +0.5f }, Color::BLUE }, // RB
+    { { -0.5f, -0.5f, +0.5f }, Color::BLUE }, // RT
+
     // 上
-    { { -0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // LT
-    { { +0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // RB
-    { { -0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // LB
-    { { -0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // LT
-    { { +0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // RT
-    { { +0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // RB
-    
+    { { -0.5f, +0.5f, +0.5f }, Color::GREEN }, // LT
+    { { +0.5f, +0.5f, -0.5f }, Color::GREEN }, // RB
+    { { -0.5f, +0.5f, -0.5f }, Color::GREEN }, // LB
+    { { -0.5f, +0.5f, +0.5f }, Color::GREEN }, // LT
+    { { +0.5f, +0.5f, +0.5f }, Color::GREEN }, // RT
+    { { +0.5f, +0.5f, -0.5f }, Color::GREEN }, // RB
+
     // 下
-    { { +0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // LT
-    { { -0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // RB
-    { { +0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // LB
-    { { +0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // LT
-    { { -0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // RT
-    { { -0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // RB
+    { { +0.5f, -0.5f, -0.5f }, Color::YELLOW }, // LT
+    { { +0.5f, -0.5f, +0.5f }, Color::YELLOW }, // LB
+    { { -0.5f, -0.5f, +0.5f }, Color::YELLOW }, // RB
+    { { +0.5f, -0.5f, -0.5f }, Color::YELLOW }, // LT
+    { { -0.5f, -0.5f, +0.5f }, Color::YELLOW }, // RB
+    { { -0.5f, -0.5f, -0.5f }, Color::YELLOW }, // RT
 
     // 右
-    { { +0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // LT
-    { { +0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // RB
-    { { +0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // LB
-    { { +0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // LT
-    { { +0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // RT
-    { { +0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // RB
+    { { +0.5f, +0.5f, -0.5f }, Color::AQUA }, // LT
+    { { +0.5f, -0.5f, +0.5f }, Color::AQUA }, // RB
+    { { +0.5f, -0.5f, -0.5f }, Color::AQUA }, // LB
+    { { +0.5f, +0.5f, -0.5f }, Color::AQUA }, // LT
+    { { +0.5f, +0.5f, +0.5f }, Color::AQUA }, // RT
+    { { +0.5f, -0.5f, +0.5f }, Color::AQUA }, // RB
 
     // 左
-    { { -0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // LT
-    { { -0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // RB
-    { { -0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // LB
-    { { -0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // LT
-    { { -0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // RT
-    { { -0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // RB
+    { { -0.5f, -0.5f, +0.5f }, Color::ORANGE }, // LT
+    { { -0.5f, +0.5f, +0.5f }, Color::ORANGE }, // LB
+    { { -0.5f, +0.5f, -0.5f }, Color::ORANGE }, // RB
+    { { -0.5f, -0.5f, +0.5f }, Color::ORANGE }, // LT
+    { { -0.5f, +0.5f, -0.5f }, Color::ORANGE }, // RB
+    { { -0.5f, -0.5f, -0.5f }, Color::ORANGE }, // RT
 };
 
 void Cube_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -137,11 +135,17 @@ void Cube_Draw()
     Shader3D_SetProjectionMatrix(mtxPerspective);
 
     // ワールド座標変換行列
-    XMMATRIX mtxWorld = XMMatrixIdentity();
+    // XMMATRIX mtxWorld = XMMatrixIdentity();
+
+    static float angle = 0;
+    angle += 0.01f;
+
+    XMMATRIX mtxWorld = XMMatrixRotationX(angle * 0.5f) * XMMatrixRotationY(angle);
+
     Shader3D_SetWorldMatrix(mtxWorld);
 
     // ビュー座標変換行列
-    constexpr FXMVECTOR cameraPosition = { 2.0f, 2.0f, -5.0f };
+    constexpr FXMVECTOR cameraPosition = { 0.5f, 0.5f, -2.0f };
     constexpr FXMVECTOR cameraFocusPosition = { 0.0f, 0.0f, 0.0f };
     constexpr FXMVECTOR cameraUpDirection = { 0.0f, 1.0f, 0.0f };
 
