@@ -8,6 +8,11 @@ namespace Color
     // 型定義
     using COLOR = DirectX::XMFLOAT4;
 
+    inline COLOR SetOpacity(COLOR color, float o)
+    {
+        return { color.x, color.y, color.z, o };
+    }
+
     ///////////////////////////////////////////
     // 基本色 / Basic Colors
     ///////////////////////////////////////////

@@ -12,6 +12,7 @@
 #include "debug_ostream.h"
 #include "direct3d.h"
 #include "shader3d.h"
+#include "color.h"
 
 using namespace DirectX;
 
@@ -31,15 +32,57 @@ struct Vertex3d
     XMFLOAT4 color; // 色
 };
 
+static constexpr float FACE_OPACITY = 0.6f; // TEMP
+
 static Vertex3d g_CubeVertex[36]
 {
     // 前
-    { { -0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f, 1 } }, // LT
-    { { 0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f, 1 } }, // RB
-    { { -0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f, 1 } }, // LB
-    { { -0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f, 1 } }, // LT
-    { { 0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f, 1 } }, // RT
-    { { 0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f, 1 } }, // RB
+    { { -0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // LT
+    { { +0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // RB
+    { { -0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // LB
+    { { -0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // LT
+    { { +0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // RT
+    { { +0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::RED, FACE_OPACITY) }, // RB
+    
+    // 後
+    { { +0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // LT
+    { { -0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // RB
+    { { +0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // LB
+    { { +0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // LT
+    { { -0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // RT
+    { { -0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::BLUE, FACE_OPACITY) }, // RB
+    
+    // 上
+    { { -0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // LT
+    { { +0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // RB
+    { { -0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // LB
+    { { -0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // LT
+    { { +0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // RT
+    { { +0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::GREEN, FACE_OPACITY) }, // RB
+    
+    // 下
+    { { +0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // LT
+    { { -0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // RB
+    { { +0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // LB
+    { { +0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // LT
+    { { -0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // RT
+    { { -0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::YELLOW, FACE_OPACITY) }, // RB
+
+    // 右
+    { { +0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // LT
+    { { +0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // RB
+    { { +0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // LB
+    { { +0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // LT
+    { { +0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // RT
+    { { +0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::AQUA, FACE_OPACITY) }, // RB
+
+    // 左
+    { { -0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // LT
+    { { -0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // RB
+    { { -0.5f, +0.5f, +0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // LB
+    { { -0.5f, -0.5f, +0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // LT
+    { { -0.5f, -0.5f, -0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // RT
+    { { -0.5f, +0.5f, -0.5f }, Color::SetOpacity(Color::ORANGE, FACE_OPACITY) }, // RB
 };
 
 void Cube_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -112,7 +155,7 @@ void Cube_Draw()
 
     // ポリゴン描画命令発行
     // g_pContext->Draw(NUM_VERTEX, 0);
-    g_pContext->Draw(6, 0);
+    g_pContext->Draw(36, 0);
 
     Direct3D_DepthStencilStateDepthIsEnable(false);
 }
