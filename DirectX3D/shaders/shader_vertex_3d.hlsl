@@ -26,13 +26,11 @@ struct VS_INPUT
 {
     float4 posL : POSITION0; // ローカル座標 
     float4 color : COLOR0; // Color
-    float2 uv : TEXCOORD0;
 };
 struct VS_OUTPUT
 {
     float4 posH : SV_POSITION; // 変換済み座標 
     float4 color : COLOR0; // Color
-    float2 uv : TEXCOORD0;
 };
 
 // 頂点シェーダ
@@ -41,12 +39,11 @@ VS_OUTPUT main(VS_INPUT vs_in)
     VS_OUTPUT vs_out;
 
     // 座標変換
-    // float4x4 mtx = mul(world, proj); // 同じ意味で、合成行列
-    // vs_out.posH = mul(vs_in.posL, mtx);
-    vs_in.posL = mul(vs_in.posL, world);
-    vs_out.posH = mul(vs_in.posL, proj);
+    float4 posW = mul(vs_in.posL, world);
+    float4 posWV = mul(posW, view);
+    float4 posH = mul(posWV, proj);
+    vs_out.posH = posH;
 
     vs_out.color = vs_in.color;
-    vs_out.uv = vs_in.uv;
     return vs_out;
 }

@@ -2,7 +2,7 @@
  * @file shader3d.cpp
  * @brief シェーダー
  * @author KOOLER FAN
- * @date 2025/06/10
+ * @date 2025/09/10
  */
 
 #include <d3d11.h>
@@ -49,7 +49,7 @@ bool Shader3D_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
     if (!ifs_vs)
     {
-        MessageBox(nullptr, "頂点シェーダーの読み込みに失敗しました\n\nshader_vertex_2d.cso", "エラー", MB_OK);
+        MessageBox(nullptr, "頂点シェーダーの読み込みに失敗しました\n\nshader_vertex_3d.cso", "エラー", MB_OK);
         return false;
     }
 
@@ -79,7 +79,6 @@ bool Shader3D_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     D3D11_INPUT_ELEMENT_DESC layout[] = {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
     UINT num_elements = ARRAYSIZE(layout); // 配列の要素数を取得
@@ -104,7 +103,6 @@ bool Shader3D_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pVSConstantBuffer0);
     g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pVSConstantBuffer1);
     g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pVSConstantBuffer2);
-
 
     // 事前コンパイル済みピクセルシェーダーの読み込み
     std::ifstream ifs_ps("assets/shader/shader_pixel_3d.cso", std::ios::binary);
@@ -137,14 +135,14 @@ bool Shader3D_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     D3D11_SAMPLER_DESC sampler_desc{};
 
     // フィルタリング
-    sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+    sampler_desc.Filter = D3D11_FILTER_ANISOTROPIC;
 
     // UV参照外の取り扱い（UVアドレッシングモード）
     sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampler_desc.MipLODBias = 0;
-    sampler_desc.MaxAnisotropy = 8;
+    sampler_desc.MaxAnisotropy = 16;
     sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
     sampler_desc.MinLOD = 0;
     sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;

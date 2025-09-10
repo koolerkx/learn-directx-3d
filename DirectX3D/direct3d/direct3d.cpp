@@ -23,6 +23,7 @@ static ID3D11DeviceContext* g_pDeviceContext = nullptr;
 static IDXGISwapChain* g_pSwapChain = nullptr;
 static ID3D11BlendState* g_pBlendStateMultiply = nullptr;
 static ID3D11DepthStencilState* g_pDepthStencilStateDepthDisable = nullptr;
+static ID3D11DepthStencilState* g_pDepthStencilStateDepthEnable = nullptr;
 
 /* バックバッファ関連 */
 static ID3D11RenderTargetView* g_pRenderTargetView = nullptr;
@@ -90,7 +91,7 @@ bool Direct3D_Initialize(HWND hWnd)
         &g_pDevice, // 大事
         &feature_level,
         &g_pDeviceContext // 大事
-    );
+        );
 
     if (FAILED(hr))
     {
@@ -131,7 +132,7 @@ bool Direct3D_Initialize(HWND hWnd)
     g_pDevice->CreateBlendState(&bd, &g_pBlendStateMultiply);
 
     // HACK: 3Dの場合、関数化のほうがいい
-    float blend_factor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+    float blend_factor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
     g_pDeviceContext->OMSetBlendState(g_pBlendStateMultiply, blend_factor, 0xffffffff);
 
     // 深度ステンシルステート設定
@@ -143,12 +144,11 @@ bool Direct3D_Initialize(HWND hWnd)
 
     g_pDevice->CreateDepthStencilState(&dsd, &g_pDepthStencilStateDepthDisable);
 
-    // dsd.DepthEnable = TRUE;
-    // dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    // g_pDevice->CreateDepthStencilState(&dsd, &g_pDepthStencilStateDepthEnable);
+    dsd.DepthEnable = TRUE;
+    dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    g_pDevice->CreateDepthStencilState(&dsd, &g_pDepthStencilStateDepthEnable);
 
-    g_pDeviceContext->OMSetDepthStencilState(g_pDepthStencilStateDepthDisable, NULL);
-
+    Direct3D_DepthStencilStateDepthIsEnable(false);
 
     return true;
 }
@@ -158,6 +158,7 @@ void Direct3D_Finalize()
     releaseBackBuffer();
 
     SAFE_RELEASE(g_pDepthStencilStateDepthDisable);
+    SAFE_RELEASE(g_pDepthStencilStateDepthEnable);
     SAFE_RELEASE(g_pBlendStateMultiply);
     SAFE_RELEASE(g_pSwapChain);
     SAFE_RELEASE(g_pDeviceContext);
@@ -183,7 +184,7 @@ void Direct3D_Finalize()
 
 void Direct3D_Clear()
 {
-    float clear_color[4] = {0.2f, 0.4f, 0.8f, 1.0f};
+    float clear_color[4] = { 0.2f, 0.4f, 0.8f, 1.0f };
     g_pDeviceContext->ClearRenderTargetView(g_pRenderTargetView, clear_color);
     g_pDeviceContext->ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
@@ -320,4 +321,11 @@ void releaseBackBuffer()
     //     g_pDepthStencilView->Release();
     //     g_pDepthStencilView = nullptr;
     // }
+}
+
+void Direct3D_DepthStencilStateDepthIsEnable(bool isEnable)
+{
+    g_pDeviceContext->OMSetDepthStencilState(
+        isEnable ? g_pDepthStencilStateDepthEnable : g_pDepthStencilStateDepthDisable,
+        NULL);
 }

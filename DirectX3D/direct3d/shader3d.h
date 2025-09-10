@@ -2,7 +2,7 @@
  * @file shader3d.h
  * @brief シェーダー
  * @author KOOLER FAN
- * @date 2025/06/10
+ * @date 2025/09/10
  */
 
 #ifndef SHADER3D_H

@@ -16,7 +16,8 @@
 #include "key_logger.h"
 #include "mouse.h"
 #include "scene.h"
-
+#include "shader3d.h"
+#include "cube.h"
 
 /*----------------------------------------------------------------------------------
 	メイン
@@ -43,6 +44,9 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     Texture_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     SpriteAnim_Initialize();
     Fade_Initialize();
+
+    Shader3D_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
+    Cube_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
 
     // デバッグテキスト
     hal::DebugText debugText(Direct3D_GetDevice(), Direct3D_GetContext(),
@@ -132,12 +136,14 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     }
     while (msg.message != WM_QUIT);
 
+    Cube_Finalize();
     Scene_Finalize();
     Fade_Finalize();
     SpriteAnim_Finalize();
     Texture_Finalize();
     Sprite_Finalize();
     Shader_Finalize();
+    Shader3D_Finalize();
     Direct3D_Finalize();
     Mouse_Finalize();
 

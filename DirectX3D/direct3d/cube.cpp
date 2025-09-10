@@ -60,7 +60,7 @@ void Cube_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     bd.Usage = D3D11_USAGE_DEFAULT; // 変換行列があるため、実質動かなくていいです
     bd.ByteWidth = sizeof(Vertex3d) * NUM_VERTEX;
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    bd.CPUAccessFlags = 0;
 
     D3D11_SUBRESOURCE_DATA sd{};
     sd.pSysMem = g_CubeVertex;
@@ -76,6 +76,7 @@ void Cube_Finalize()
 void Cube_Draw()
 {
     Shader3D_Begin();
+    Direct3D_DepthStencilStateDepthIsEnable(true);
 
     // 頂点バッファを描画パイプラインに設定
     UINT stride = sizeof(Vertex3d);
@@ -85,7 +86,7 @@ void Cube_Draw()
     // 頂点シェーダーに変換行列を設定
     // パースペクティブ行列
     float fovAngleY = XMConvertToRadians(60.0f);
-    float aspectRatio = static_cast<float>(Direct3D_GetBackBufferWidth()) / static_cast<float>(Direct3D_GetBackBufferWidth());
+    float aspectRatio = static_cast<float>(Direct3D_GetBackBufferWidth()) / static_cast<float>(Direct3D_GetBackBufferHeight());
     float nearZ = 0.1f;
     float farZ = 10000.0f;
 
@@ -112,4 +113,6 @@ void Cube_Draw()
     // ポリゴン描画命令発行
     // g_pContext->Draw(NUM_VERTEX, 0);
     g_pContext->Draw(6, 0);
+
+    Direct3D_DepthStencilStateDepthIsEnable(false);
 }

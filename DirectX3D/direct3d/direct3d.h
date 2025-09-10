@@ -26,4 +26,7 @@ unsigned int Direct3D_GetBackBufferHeight();
 ID3D11Device* Direct3D_GetDevice();
 ID3D11DeviceContext* Direct3D_GetContext();
 
+void Direct3D_DepthStencilStateDepthIsEnable(bool isEnable = true);
+
+
 #endif // DIRECT3D_H
