@@ -175,6 +175,7 @@
         </PostBuildEvent>
     </ItemDefinitionGroup>
     <ItemGroup>
+        <ClCompile Include="direct3d\camera.cpp" />
         <ClCompile Include="direct3d\direct3d.cpp"/>
         <ClCompile Include="direct3d\grid.cpp" />
         <ClCompile Include="direct3d\shader.cpp"/>
@@ -203,6 +204,7 @@
         <ClCompile Include="audio\Audio.cpp"/>
     </ItemGroup>
     <ItemGroup>
+        <ClInclude Include="direct3d\camera.h" />
         <ClInclude Include="direct3d\direct3d.h"/>
         <ClInclude Include="direct3d\grid.h" />
         <ClInclude Include="direct3d\shader.h"/>

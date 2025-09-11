@@ -125,15 +125,6 @@ void Cube_Draw()
     g_pContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
 
     // 頂点シェーダーに変換行列を設定
-    // パースペクティブ行列
-    float fovAngleY = XMConvertToRadians(60.0f);
-    float aspectRatio = static_cast<float>(Direct3D_GetBackBufferWidth()) / static_cast<float>(Direct3D_GetBackBufferHeight());
-    float nearZ = 0.1f;
-    float farZ = 10000.0f;
-
-    XMMATRIX mtxPerspective = XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, nearZ, farZ);
-    Shader3D_SetProjectionMatrix(mtxPerspective);
-
     // ワールド座標変換行列
     // XMMATRIX mtxWorld = XMMatrixIdentity();
 
@@ -143,14 +134,6 @@ void Cube_Draw()
     XMMATRIX mtxWorld = XMMatrixRotationX(angle * 0.5f) * XMMatrixRotationY(angle);
 
     Shader3D_SetWorldMatrix(mtxWorld);
-
-    // ビュー座標変換行列
-    constexpr FXMVECTOR cameraPosition = { 0.5f, 2.0f, -2.0f };
-    constexpr FXMVECTOR cameraFocusPosition = { 0.0f, 0.0f, 0.0f };
-    constexpr FXMVECTOR cameraUpDirection = { 0.0f, 1.0f, 0.0f };
-
-    XMMATRIX mtxView = XMMatrixLookAtLH(cameraPosition, cameraFocusPosition, cameraUpDirection);
-    Shader3D_SetViewMatrix(mtxView);
 
     // Shader_SetColor();
 
