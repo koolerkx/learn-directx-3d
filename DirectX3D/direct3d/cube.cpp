@@ -145,7 +145,7 @@ void Cube_Draw()
     Shader3D_SetWorldMatrix(mtxWorld);
 
     // ビュー座標変換行列
-    constexpr FXMVECTOR cameraPosition = { 0.5f, 0.5f, -2.0f };
+    constexpr FXMVECTOR cameraPosition = { 0.5f, 2.0f, -2.0f };
     constexpr FXMVECTOR cameraFocusPosition = { 0.0f, 0.0f, 0.0f };
     constexpr FXMVECTOR cameraUpDirection = { 0.0f, 1.0f, 0.0f };
 
