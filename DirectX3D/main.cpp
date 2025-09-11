@@ -18,6 +18,7 @@
 #include "scene.h"
 #include "shader3d.h"
 #include "cube.h"
+#include "grid.h"
 
 /*----------------------------------------------------------------------------------
 	メイン
@@ -46,6 +47,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     Fade_Initialize();
 
     Shader3D_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
+    Grid_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Cube_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
 
     // デバッグテキスト
@@ -137,6 +139,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     while (msg.message != WM_QUIT);
 
     Cube_Finalize();
+    Grid_Finalize();
     Scene_Finalize();
     Fade_Finalize();
     SpriteAnim_Finalize();
