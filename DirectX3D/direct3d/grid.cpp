@@ -16,13 +16,13 @@
 
 using namespace DirectX;
 
-static constexpr int GRID_H_COUNT = 20; // X Axis
-static constexpr int GRID_V_COUNT = 20; // Z Axis
+static constexpr int GRID_H_COUNT = 10; // X Axis
+static constexpr int GRID_V_COUNT = 10; // Z Axis
 static constexpr int GRID_H_LINE_COUNT = GRID_H_COUNT + 1;
 static constexpr int GRID_V_LINE_COUNT = GRID_V_COUNT + 1;
 static constexpr int NUM_VERTEX = (GRID_H_LINE_COUNT + GRID_V_LINE_COUNT) * 2;
 
-static constexpr float GRID_SIZE = 0.5f;
+static constexpr float GRID_SIZE = 1.0f;
 static constexpr float GRID_H_START = (GRID_H_LINE_COUNT * GRID_SIZE) * 0.5f;
 static constexpr float GRID_V_START = (GRID_V_LINE_COUNT * GRID_SIZE) * 0.5f;
 

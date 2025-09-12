@@ -114,7 +114,10 @@ void Cube_Finalize()
     SAFE_RELEASE(g_pVertexBuffer);
 }
 
-void Cube_Draw()
+void Cube_Update(double)
+{}
+
+void Cube_Draw(const DirectX::XMMATRIX& mtxWorld)
 {
     Shader3D_Begin();
     Direct3D_DepthStencilStateDepthIsEnable(true);
@@ -126,16 +129,7 @@ void Cube_Draw()
 
     // 頂点シェーダーに変換行列を設定
     // ワールド座標変換行列
-    // XMMATRIX mtxWorld = XMMatrixIdentity();
-
-    static float angle = 0;
-    angle += 0.01f;
-
-    XMMATRIX mtxWorld = XMMatrixRotationX(angle * 0.5f) * XMMatrixRotationY(angle);
-
     Shader3D_SetWorldMatrix(mtxWorld);
-
-    // Shader_SetColor();
 
     // プリミティブトポロジ設定
     g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
