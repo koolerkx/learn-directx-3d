@@ -16,15 +16,18 @@
 
 using namespace DirectX;
 
-static constexpr int GRID_H_COUNT = 25; // X Axis
-static constexpr int GRID_V_COUNT = 25; // Z Axis
+static constexpr int GRID_H_COUNT = 20; // X Axis
+static constexpr int GRID_V_COUNT = 20; // Z Axis
 static constexpr int GRID_H_LINE_COUNT = GRID_H_COUNT + 1;
 static constexpr int GRID_V_LINE_COUNT = GRID_V_COUNT + 1;
 static constexpr int NUM_VERTEX = (GRID_H_LINE_COUNT + GRID_V_LINE_COUNT) * 2;
 
-static constexpr float GRID_SIZE = 0.25f;
+static constexpr float GRID_SIZE = 0.5f;
 static constexpr float GRID_H_START = (GRID_H_LINE_COUNT * GRID_SIZE) * 0.5f;
 static constexpr float GRID_V_START = (GRID_V_LINE_COUNT * GRID_SIZE) * 0.5f;
+
+static constexpr float GRID_HALF_EXTENT_X = (GRID_H_COUNT * GRID_SIZE) * 0.5f;
+static constexpr float GRID_HALF_EXTENT_Z = (GRID_V_COUNT * GRID_SIZE) * 0.5f;
 
 static constexpr Color::COLOR GRID_H_COLOR = Color::NEON_GREEN;
 static constexpr Color::COLOR GRID_V_COLOR = Color::RED;
@@ -60,10 +63,10 @@ void Grid_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     {
         int index_offset = 0;
 
-        float x1 = -GRID_H_START;
-        float x2 = GRID_H_START - GRID_SIZE;
+        float x1 = -GRID_HALF_EXTENT_X;
+        float x2 = +GRID_HALF_EXTENT_X;
 
-        float z1 = -(GRID_SIZE * GRID_V_LINE_COUNT * 0.5f) + GRID_SIZE * i;
+        float z1 = -GRID_HALF_EXTENT_Z + GRID_SIZE * i;
         float z2 = z1;
 
         g_GridVertex[i * 2 + index_offset].position = { x1, 0.0f, z1 };
@@ -77,11 +80,11 @@ void Grid_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     {
         int index_offset = GRID_V_LINE_COUNT * 2;
 
-        float x1 = -(GRID_SIZE * GRID_H_LINE_COUNT * 0.5f) + GRID_SIZE * i;
+        float x1 = -GRID_HALF_EXTENT_X + GRID_SIZE * i;
         float x2 = x1;
 
-        float z1 = -GRID_V_START;
-        float z2 = GRID_V_START - GRID_SIZE;
+        float z1 = -GRID_HALF_EXTENT_Z;
+        float z2 = GRID_HALF_EXTENT_Z;
 
         g_GridVertex[i * 2 + index_offset].position = { x1, 0.0f, z1 };
         g_GridVertex[i * 2 + index_offset].color = GRID_V_COLOR;
