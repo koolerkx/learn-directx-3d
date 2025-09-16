@@ -7,8 +7,12 @@
 
 #include "texture.h"
 
+#include <wrl/client.h>
+
 #include "direct3d.h"
 #include "DirectXTex.h"
+#include "WICTextureLoader11.h"
+
 using namespace DirectX;
 #include <string>
 
@@ -70,29 +74,27 @@ int Texture_Load(const wchar_t* pFilename)
     // 空いている管理領域を探す
     for (int i = 0; i < TEXTURE_MAX; i++)
     {
-        if (g_Textures[i].pTexture) continue; // 使用中なら次のスロットを探す
+        if (g_Textures[i].pTexture)
+            continue; // 使用中なら次のスロットを探す
 
-        // テクスチャの読み込み
-        TexMetadata metadata;
-        ScratchImage image;
+        ID3D11Resource* pTexture = nullptr;
+        ID3D11ShaderResourceView* pTextureSrv = nullptr;
 
-        HRESULT hr = LoadFromWICFile(pFilename, WIC_FLAGS_NONE, &metadata, image);
-        if (FAILED(hr))
+        if (FAILED(CreateWICTextureFromFile(g_pDevice, pFilename, &pTexture, &pTextureSrv)))
         {
-            MessageBoxW(nullptr, L"テクスチャの初期化に失敗しました", pFilename, MB_OK);
+            MessageBoxW(nullptr, L"テクスチャの初期化に失敗しました", pFilename, MB_OK | MB_ICONERROR);
             return -1;
         }
 
+        D3D11_TEXTURE2D_DESC texture2d_desc;
+        static_cast<ID3D11Texture2D*>(pTexture)->GetDesc(&texture2d_desc);
+        const UINT texture_width = texture2d_desc.Width;
+        const UINT texture_height = texture2d_desc.Height;
+        
         g_Textures[i].filename = pFilename;
-        g_Textures[i].width = static_cast<unsigned int>(metadata.width);
-        g_Textures[i].height = static_cast<unsigned int>(metadata.height);
-        hr = CreateShaderResourceView(
-            g_pDevice,
-            image.GetImages(),
-            image.GetImageCount(),
-            metadata,
-            &g_Textures[i].pTexture
-        );
+        g_Textures[i].width = static_cast<unsigned int>(texture_width);
+        g_Textures[i].height = static_cast<unsigned int>(texture_height);
+        g_Textures[i].pTexture = pTextureSrv;
 
         return i;
     }
@@ -111,7 +113,8 @@ void Texture_AllRelease()
 
 void Texture_SetTexture(int texid)
 {
-    if (texid < 0) return;
+    if (texid < 0)
+        return;
     // if (g_SetTextureIndex == texid) return; // すでに、ShaderResourcesに設定したから
 
     g_SetTextureIndex = texid;
@@ -122,14 +125,16 @@ void Texture_SetTexture(int texid)
 
 int Texture_Width(int texid)
 {
-    if (texid < 0) return -1;
+    if (texid < 0)
+        return -1;
 
     return g_Textures[texid].width;
 }
 
 int Texture_Height(int texid)
 {
-    if (texid < 0) return -1;
+    if (texid < 0)
+        return -1;
 
     return g_Textures[texid].height;
 }
