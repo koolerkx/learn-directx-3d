@@ -11,6 +11,6 @@
 
 void Camera_Initialize(void);
 void Camera_Finalize(void);
-void Camera_Update(void);
+void Camera_Update(double elapsed_time);
 
 #endif // CAMERA_H
