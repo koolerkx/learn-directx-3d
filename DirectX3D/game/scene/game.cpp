@@ -34,14 +34,36 @@ void Game_Update(double elapsed_time)
     g_scale = static_cast<float>(sin(g_AccumulatedTime * 5.0f) + 1.0f) * 0.5f * 2.0f;
     // g_scale = 0.5f;
 
-    Camera_Update(elapsed_time);
     Cube_Update(elapsed_time);
+    Camera_Update(elapsed_time);
 }
 
 void Game_Draw()
 {
     Grid_Draw();
 
-    DirectX::XMMATRIX mtxWorld = DirectX::XMMatrixIdentity();
-    Cube_Draw(mtxWorld);
+    int count = 7;
+
+    for (int y = 0; y < count / 2; y++)
+    {
+        for (int x = 0; x < count - y * 2; x++)
+        {
+            for (int z = 0; z < count - y * 2; z++)
+            {
+                using namespace DirectX;
+                const float _x = static_cast<float>(x);
+                const float _y = static_cast<float>(y);
+                const float _z = static_cast<float>(z);
+
+                XMMATRIX mtxWorld = XMMatrixIdentity();
+                mtxWorld *= XMMatrixTranslation(
+                    _x - (static_cast<float>(count) / 2.0f - 0.5f) + _y,
+                    0.5f + _y,
+                    _z - (static_cast<float>(count) / 2.0f - 0.5f) + _y
+                    );
+
+                Cube_Draw(mtxWorld);
+            }
+        }
+    }
 }
