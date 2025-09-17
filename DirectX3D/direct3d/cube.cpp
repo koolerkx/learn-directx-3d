@@ -13,6 +13,7 @@
 #include "direct3d.h"
 #include "shader3d.h"
 #include "color.h"
+#include "texture.h"
 
 using namespace DirectX;
 
@@ -24,6 +25,9 @@ static ID3D11Buffer* g_pVertexBuffer = nullptr; // 頂点バッファ
 // 注意！初期化で外部から設定されるもの。Release不要。
 static ID3D11Device* g_pDevice = nullptr;
 static ID3D11DeviceContext* g_pContext = nullptr;
+
+static int g_CubeTexId = -1;
+static std::wstring TEXTURE_PATH = L"assets/cube_test_2048.png";
 
 // 頂点構造体
 struct Vertex3d
@@ -107,6 +111,8 @@ void Cube_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     sd.pSysMem = g_CubeVertex;
 
     g_pDevice->CreateBuffer(&bd, &sd, &g_pVertexBuffer);
+
+    g_CubeTexId = Texture_Load(TEXTURE_PATH.c_str());
 }
 
 void Cube_Finalize()
