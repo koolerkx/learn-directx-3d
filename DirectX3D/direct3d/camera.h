@@ -18,4 +18,10 @@ void Camera_Update(double elapsed_time);
 const DirectX::XMFLOAT4X4& Camera_GetMatrix();
 const DirectX::XMFLOAT4X4& Camera_GetPerspectiveMatrix();
 
+const DirectX::XMFLOAT3& Camera_GetFront();
+const DirectX::XMFLOAT3& Camera_GetRight();
+const DirectX::XMFLOAT3& Camera_GetUp();
+
+const DirectX::XMFLOAT3& Camera_GetPosition();
+
 #endif // CAMERA_H

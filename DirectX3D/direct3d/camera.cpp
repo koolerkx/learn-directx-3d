@@ -165,3 +165,23 @@ const XMFLOAT4X4& Camera_GetPerspectiveMatrix()
 {
     return g_PerspectiveMatrix;
 }
+
+const XMFLOAT3& Camera_GetFront()
+{
+    return g_CameraFront;
+}
+
+const XMFLOAT3& Camera_GetRight()
+{
+    return g_CameraRight;
+}
+
+const XMFLOAT3& Camera_GetUp()
+{
+    return g_CameraUp;
+}
+
+const XMFLOAT3& Camera_GetPosition()
+{
+    return g_CameraPosition;
+}

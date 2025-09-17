@@ -3,13 +3,13 @@
 #include "cube.h"
 #include "grid.h"
 #include "camera.h"
-#include <DirectXMath.h>
+#include "key_logger.h"
 
-static float g_x = 4.5f;
-static float g_z = 4.5f;
-static float g_angle = 0.0f;
-static float g_scale = 5.0f;
-static double g_AccumulatedTime = 0.0f;
+#include <DirectXMath.h>
+using namespace DirectX;
+
+static XMFLOAT3 g_CubePosition{};
+static XMFLOAT3 g_CubeVelocity{};
 
 void Game_Initialize()
 {
@@ -23,47 +23,24 @@ void Game_Finalize()
 
 void Game_Update(double elapsed_time)
 {
-
-    g_AccumulatedTime += elapsed_time;
-
-    g_x = static_cast<float>(sin(g_AccumulatedTime * 10)) * 3.0f;
-    g_z = static_cast<float>(cos(g_AccumulatedTime * 10)) * 3.0f;
-
-    g_angle = DirectX::XMConvertToRadians(static_cast<float>(g_AccumulatedTime) * 2048.0f);
-    // g_angle = XMConvertToRadians(g_AccumulatedTime * 720.0f);
-    g_scale = static_cast<float>(sin(g_AccumulatedTime * 5.0f) + 1.0f) * 0.5f * 2.0f;
-    // g_scale = 0.5f;
-
     Cube_Update(elapsed_time);
     Camera_Update(elapsed_time);
+
+    if (KeyLogger_IsTrigger(KK_Z))
+    {
+        g_CubePosition = Camera_GetPosition();
+        XMStoreFloat3(&g_CubeVelocity, XMLoadFloat3(&Camera_GetFront()) * 10.0f);
+    }
+    XMVECTOR cube_position = XMLoadFloat3(&g_CubePosition);
+    cube_position += XMLoadFloat3(&g_CubeVelocity) * elapsed_time;
+    XMStoreFloat3(&g_CubePosition, cube_position);
 }
 
 void Game_Draw()
 {
     Grid_Draw();
 
-    int count = 7;
-
-    for (int y = 0; y < count / 2; y++)
-    {
-        for (int x = 0; x < count - y * 2; x++)
-        {
-            for (int z = 0; z < count - y * 2; z++)
-            {
-                using namespace DirectX;
-                const float _x = static_cast<float>(x);
-                const float _y = static_cast<float>(y);
-                const float _z = static_cast<float>(z);
-
-                XMMATRIX mtxWorld = XMMatrixIdentity();
-                mtxWorld *= XMMatrixTranslation(
-                    _x - (static_cast<float>(count) / 2.0f - 0.5f) + _y,
-                    0.5f + _y,
-                    _z - (static_cast<float>(count) / 2.0f - 0.5f) + _y
-                    );
-
-                Cube_Draw(mtxWorld);
-            }
-        }
-    }
+    XMMATRIX mtxWorld = XMMatrixIdentity();
+    mtxWorld *= XMMatrixTranslationFromVector(XMLoadFloat3(&g_CubePosition));
+    Cube_Draw(mtxWorld);
 }
