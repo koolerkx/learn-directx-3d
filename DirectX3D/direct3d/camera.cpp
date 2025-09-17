@@ -53,7 +53,9 @@ void Camera_Update(double elapsed_time)
     // 移動
     if (KeyLogger_IsPressed(KK_W))
     {
-        cameraPosition += cameraFront * CAMERA_MOVE_SPEED * _elapsed_time;
+        // cameraPosition += cameraFront * CAMERA_MOVE_SPEED * _elapsed_time;
+        XMVECTOR front = XMVector3Normalize(cameraFront * XMVECTOR{ 1.0f, 0.0f, 1.0f });
+        cameraPosition += front * CAMERA_MOVE_SPEED * _elapsed_time;
     }
     if (KeyLogger_IsPressed(KK_A))
     {
@@ -61,25 +63,25 @@ void Camera_Update(double elapsed_time)
     }
     if (KeyLogger_IsPressed(KK_S))
     {
-        cameraPosition += -cameraFront * CAMERA_MOVE_SPEED * _elapsed_time;
+        // cameraPosition += -cameraFront * CAMERA_MOVE_SPEED * _elapsed_time;
+        XMVECTOR front = XMVector3Normalize(cameraFront * XMVECTOR{ 1.0f, 0.0f, 1.0f });
+        cameraPosition += -front * CAMERA_MOVE_SPEED * _elapsed_time;
     }
     if (KeyLogger_IsPressed(KK_D))
     {
         cameraPosition += cameraRight * CAMERA_MOVE_SPEED * _elapsed_time;
     }
 
-    if (KeyLogger_IsPressed(KK_SPACE))
+    if (KeyLogger_IsPressed(KK_E))
     {
         cameraPosition += cameraUp * CAMERA_MOVE_SPEED * _elapsed_time;
-    }
-    if (KeyLogger_IsPressed(KK_LEFTSHIFT))
-    {
-        cameraPosition += -cameraUp * CAMERA_MOVE_SPEED * _elapsed_time;
+        cameraPosition += XMVECTOR{ 0.0f, 1.0f, 0.0f } * CAMERA_MOVE_SPEED * _elapsed_time;
     }
 
-    if (KeyLogger_IsPressed(KK_LEFTSHIFT))
+    if (KeyLogger_IsPressed(KK_Q))
     {
         cameraPosition += -cameraUp * CAMERA_MOVE_SPEED * _elapsed_time;
+        cameraPosition += XMVECTOR{ 0.0f, -1.0f, 0.0f } * CAMERA_MOVE_SPEED * _elapsed_time;
     }
 
     //回転
@@ -99,33 +101,39 @@ void Camera_Update(double elapsed_time)
     }
     if (KeyLogger_IsPressed(KK_LEFT))
     {
-        XMMATRIX rotation = XMMatrixRotationAxis(cameraUp, -CAMERA_ROTATION_SPEED * _elapsed_time);
+        // XMMATRIX rotation = XMMatrixRotationAxis(cameraUp, -CAMERA_ROTATION_SPEED * _elapsed_time);
+        XMMATRIX rotation = XMMatrixRotationY(-CAMERA_ROTATION_SPEED * _elapsed_time);
+        cameraUp = XMVector3TransformNormal(cameraUp, rotation);
+        cameraUp = XMVector3Normalize(cameraUp);
         cameraFront = XMVector3TransformNormal(cameraFront, rotation);
         cameraFront = XMVector3Normalize(cameraFront);
         cameraRight = XMVector3Cross(cameraUp, cameraFront);
     }
     if (KeyLogger_IsPressed(KK_RIGHT))
     {
-        XMMATRIX rotation = XMMatrixRotationAxis(cameraUp, CAMERA_ROTATION_SPEED * _elapsed_time);
+        // XMMATRIX rotation = XMMatrixRotationAxis(cameraUp, CAMERA_ROTATION_SPEED * _elapsed_time);
+        XMMATRIX rotation = XMMatrixRotationY(CAMERA_ROTATION_SPEED * _elapsed_time);
+        cameraUp = XMVector3TransformNormal(cameraUp, rotation);
+        cameraUp = XMVector3Normalize(cameraUp);
         cameraFront = XMVector3TransformNormal(cameraFront, rotation);
         cameraFront = XMVector3Normalize(cameraFront);
         cameraRight = XMVector3Cross(cameraUp, cameraFront);
     }
 
-    if (KeyLogger_IsPressed(KK_Q))
-    {
-        XMMATRIX rotation = XMMatrixRotationAxis(cameraFront, CAMERA_ROTATION_SPEED * _elapsed_time);
-        cameraRight = XMVector3TransformNormal(cameraRight, rotation);
-        cameraRight = XMVector3Normalize(cameraRight);
-        cameraUp = XMVector3Cross(cameraFront, cameraRight);
-    }
-    if (KeyLogger_IsPressed(KK_E))
-    {
-        XMMATRIX rotation = XMMatrixRotationAxis(cameraFront, -CAMERA_ROTATION_SPEED * _elapsed_time);
-        cameraRight = XMVector3TransformNormal(cameraRight, rotation);
-        cameraRight = XMVector3Normalize(cameraRight);
-        cameraUp = XMVector3Cross(cameraFront, cameraRight);
-    }
+    // if (KeyLogger_IsPressed(KK_Q))
+    // {
+    //     XMMATRIX rotation = XMMatrixRotationAxis(cameraFront, CAMERA_ROTATION_SPEED * _elapsed_time);
+    //     cameraRight = XMVector3TransformNormal(cameraRight, rotation);
+    //     cameraRight = XMVector3Normalize(cameraRight);
+    //     cameraUp = XMVector3Cross(cameraFront, cameraRight);
+    // }
+    // if (KeyLogger_IsPressed(KK_E))
+    // {
+    //     XMMATRIX rotation = XMMatrixRotationAxis(cameraFront, -CAMERA_ROTATION_SPEED * _elapsed_time);
+    //     cameraRight = XMVector3TransformNormal(cameraRight, rotation);
+    //     cameraRight = XMVector3Normalize(cameraRight);
+    //     cameraUp = XMVector3Cross(cameraFront, cameraRight);
+    // }
 
 
     XMStoreFloat3(&g_CameraPosition, cameraPosition);
