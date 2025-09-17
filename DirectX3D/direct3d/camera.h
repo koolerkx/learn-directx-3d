@@ -24,4 +24,6 @@ const DirectX::XMFLOAT3& Camera_GetUp();
 
 const DirectX::XMFLOAT3& Camera_GetPosition();
 
+void Camera_DebugDraw();
+
 #endif // CAMERA_H

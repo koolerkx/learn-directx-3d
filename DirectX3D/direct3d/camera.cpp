@@ -9,11 +9,16 @@
 
 #include "camera.h"
 
-
+#include <memory>
+#include <sstream>
 #include <DirectXMath.h>
+#include <iomanip>
+
+#include "color.h"
 #include "direct3d.h"
 #include "shader3d.h"
 #include "key_logger.h"
+#include "debug_text.h"
 
 using namespace DirectX;
 
@@ -28,6 +33,8 @@ constexpr float CAMERA_ROTATION_SPEED = XMConvertToRadians(45.0f); // per second
 static XMFLOAT4X4 g_CameraMatrix;
 static XMFLOAT4X4 g_PerspectiveMatrix;
 
+static std::unique_ptr<hal::DebugText> g_pDebugText = nullptr;
+
 void Camera_Initialize()
 {
     g_CameraPosition = { 0.0f, 1.0f, -10.0f };
@@ -37,9 +44,17 @@ void Camera_Initialize()
 
     XMStoreFloat4x4(&g_CameraMatrix, XMMatrixIdentity());
     XMStoreFloat4x4(&g_PerspectiveMatrix, XMMatrixIdentity());
+
+    g_pDebugText = std::make_unique<hal::DebugText>(Direct3D_GetDevice(), Direct3D_GetContext(),
+                                                    L"assets/consolab_ascii_512.png",
+                                                    Direct3D_GetBackBufferWidth(), Direct3D_GetBackBufferHeight(),
+                                                    0.0f, 32.0f, 0, 0, 0.0f, 16.0f);
 }
 
-void Camera_Finalize() {}
+void Camera_Finalize()
+{
+    g_pDebugText.reset();
+}
 
 void Camera_Update(double elapsed_time)
 {
@@ -91,6 +106,7 @@ void Camera_Update(double elapsed_time)
         cameraFront = XMVector3TransformNormal(cameraFront, rotation);
         cameraFront = XMVector3Normalize(cameraFront);
         cameraUp = XMVector3Cross(cameraFront, cameraRight);
+        cameraUp = XMVector3Normalize(cameraUp);
     }
     if (KeyLogger_IsPressed(KK_UP))
     {
@@ -98,6 +114,7 @@ void Camera_Update(double elapsed_time)
         cameraFront = XMVector3TransformNormal(cameraFront, rotation);
         cameraFront = XMVector3Normalize(cameraFront);
         cameraUp = XMVector3Cross(cameraFront, cameraRight);
+        cameraUp = XMVector3Normalize(cameraUp);
     }
     if (KeyLogger_IsPressed(KK_LEFT))
     {
@@ -108,6 +125,7 @@ void Camera_Update(double elapsed_time)
         cameraFront = XMVector3TransformNormal(cameraFront, rotation);
         cameraFront = XMVector3Normalize(cameraFront);
         cameraRight = XMVector3Cross(cameraUp, cameraFront);
+        cameraRight = XMVector3Normalize(cameraRight);
     }
     if (KeyLogger_IsPressed(KK_RIGHT))
     {
@@ -118,6 +136,7 @@ void Camera_Update(double elapsed_time)
         cameraFront = XMVector3TransformNormal(cameraFront, rotation);
         cameraFront = XMVector3Normalize(cameraFront);
         cameraRight = XMVector3Cross(cameraUp, cameraFront);
+        cameraRight = XMVector3Normalize(cameraRight);
     }
 
     // if (KeyLogger_IsPressed(KK_Q))
@@ -192,4 +211,17 @@ const XMFLOAT3& Camera_GetUp()
 const XMFLOAT3& Camera_GetPosition()
 {
     return g_CameraPosition;
+}
+
+void Camera_DebugDraw()
+{
+    std::stringstream ss;
+
+    ss << std::showpos << std::fixed << std::setprecision(4);
+    ss << "Camera Front   : " << std::setw(8) << g_CameraFront.x << " " << std::setw(8) << g_CameraFront.y << " " << std::setw(8) << g_CameraFront.z << "\n";
+    ss << "Camera Position: " << std::setw(8) << g_CameraPosition.x << " " << std::setw(8) << g_CameraPosition.y << " " << std::setw(8) << g_CameraPosition.z << "\n";
+
+    g_pDebugText->SetText(ss.str().c_str(), Color::YELLOW);
+    g_pDebugText->Draw();
+    g_pDebugText->Clear();
 }
