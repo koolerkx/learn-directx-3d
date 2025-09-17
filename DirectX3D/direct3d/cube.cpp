@@ -34,57 +34,58 @@ struct Vertex3d
 {
     XMFLOAT3 position; // 頂点座標
     XMFLOAT4 color; // 色
+    XMFLOAT2 uv;
 };
 
 static Vertex3d g_CubeVertex[36]
 {
     // 前
-    { { -0.5f, +0.5f, -0.5f }, Color::RED }, // LT
-    { { +0.5f, -0.5f, -0.5f }, Color::RED }, // RB
-    { { -0.5f, -0.5f, -0.5f }, Color::RED }, // LB
-    { { -0.5f, +0.5f, -0.5f }, Color::RED }, // LT
-    { { +0.5f, +0.5f, -0.5f }, Color::RED }, // RT
-    { { +0.5f, -0.5f, -0.5f }, Color::RED }, // RB
+    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0 } }, // LT
+    { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // RB
+    { { -0.5f, -0.5f, -0.5f }, Color::WHITE, { 0, 0.25f } }, // LB
+    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0 } }, // LT
+    { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.25f, 0 } }, // RT
+    { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // RB
 
     // 後
-    { { +0.5f, -0.5f, +0.5f }, Color::BLUE }, // LT
-    { { +0.5f, +0.5f, +0.5f }, Color::BLUE }, // LB
-    { { -0.5f, +0.5f, +0.5f }, Color::BLUE }, // RB
-    { { +0.5f, -0.5f, +0.5f }, Color::BLUE }, // LT
-    { { -0.5f, +0.5f, +0.5f }, Color::BLUE }, // RB
-    { { -0.5f, -0.5f, +0.5f }, Color::BLUE }, // RT
+    { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0 } }, // LT
+    { { +0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // LB
+    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // RB
+    { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0 } }, // LT
+    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // RB
+    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.5f, 0 } }, // RT
 
     // 上
-    { { -0.5f, +0.5f, +0.5f }, Color::GREEN }, // LT
-    { { +0.5f, +0.5f, -0.5f }, Color::GREEN }, // RB
-    { { -0.5f, +0.5f, -0.5f }, Color::GREEN }, // LB
-    { { -0.5f, +0.5f, +0.5f }, Color::GREEN }, // LT
-    { { +0.5f, +0.5f, +0.5f }, Color::GREEN }, // RT
-    { { +0.5f, +0.5f, -0.5f }, Color::GREEN }, // RB
+    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0 } }, // LT
+    { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.75f, 0.25f } }, // RB
+    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // LB
+    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0 } }, // LT
+    { { +0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.75f, 0 } }, // RT
+    { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.75f, 0.25f } }, // RB
 
     // 下
-    { { +0.5f, -0.5f, -0.5f }, Color::YELLOW }, // LT
-    { { +0.5f, -0.5f, +0.5f }, Color::YELLOW }, // LB
-    { { -0.5f, -0.5f, +0.5f }, Color::YELLOW }, // RB
-    { { +0.5f, -0.5f, -0.5f }, Color::YELLOW }, // LT
-    { { -0.5f, -0.5f, +0.5f }, Color::YELLOW }, // RB
-    { { -0.5f, -0.5f, -0.5f }, Color::YELLOW }, // RT
+    { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.75f, 0 } }, // LT
+    { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.75f, 0.25f } }, // LB
+    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 1.0f, 0.25f } }, // RB
+    { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.75f, 0 } }, // LT
+    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 1.0f, 0.25f } }, // RB
+    { { -0.5f, -0.5f, -0.5f }, Color::WHITE, { 1.0f, 0 } }, // RT
 
     // 右
-    { { +0.5f, +0.5f, -0.5f }, Color::AQUA }, // LT
-    { { +0.5f, -0.5f, +0.5f }, Color::AQUA }, // RB
-    { { +0.5f, -0.5f, -0.5f }, Color::AQUA }, // LB
-    { { +0.5f, +0.5f, -0.5f }, Color::AQUA }, // LT
-    { { +0.5f, +0.5f, +0.5f }, Color::AQUA }, // RT
-    { { +0.5f, -0.5f, +0.5f }, Color::AQUA }, // RB
+    { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0.25f } }, // LT
+    { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.5f } }, // RB
+    { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0, 0.5f } }, // LB
+    { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0.25f } }, // LT
+    { { +0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // RT
+    { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.5f } }, // RB
 
     // 左
-    { { -0.5f, -0.5f, +0.5f }, Color::ORANGE }, // LT
-    { { -0.5f, +0.5f, +0.5f }, Color::ORANGE }, // LB
-    { { -0.5f, +0.5f, -0.5f }, Color::ORANGE }, // RB
-    { { -0.5f, -0.5f, +0.5f }, Color::ORANGE }, // LT
-    { { -0.5f, +0.5f, -0.5f }, Color::ORANGE }, // RB
-    { { -0.5f, -0.5f, -0.5f }, Color::ORANGE }, // RT
+    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, {0.25f, 0.25f} }, // LT
+    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, {0.25f, 0.5f} }, // LB
+    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, {0.5f, 0.5f} }, // RB
+    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, {0.25f, 0.25f} }, // LT
+    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, {0.5f, 0.5f} }, // RB
+    { { -0.5f, -0.5f, -0.5f }, Color::WHITE, {0.5f, 0.25f} }, // RT
 };
 
 void Cube_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
