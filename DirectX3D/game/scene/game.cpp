@@ -13,7 +13,15 @@ static XMFLOAT3 g_CubeVelocity{};
 
 void Game_Initialize()
 {
-    Camera_Initialize();
+    constexpr XMFLOAT3 DEFAULT_CAMERA_POSITION = { -10.0f, 10.0f, -10.0f };
+    constexpr XMFLOAT3 DEFAULT_CAMERA_FRONT = { 0.5f, -0.5f, 0.5f };
+    constexpr XMFLOAT3 DEFAULT_CAMERA_UP = { 0.5, 0.5, 0.5 };
+
+    Camera_Initialize(
+        DEFAULT_CAMERA_POSITION,
+        DEFAULT_CAMERA_FRONT,
+        DEFAULT_CAMERA_UP
+        );
 }
 
 void Game_Finalize()
@@ -32,7 +40,7 @@ void Game_Update(double elapsed_time)
         XMStoreFloat3(&g_CubeVelocity, XMLoadFloat3(&Camera_GetFront()) * 10.0f);
     }
     XMVECTOR cube_position = XMLoadFloat3(&g_CubePosition);
-    cube_position += XMLoadFloat3(&g_CubeVelocity) * elapsed_time;
+    cube_position += XMLoadFloat3(&g_CubeVelocity) * static_cast<float>(elapsed_time);
     XMStoreFloat3(&g_CubePosition, cube_position);
 }
 

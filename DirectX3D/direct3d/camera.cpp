@@ -22,7 +22,7 @@
 
 using namespace DirectX;
 
-static XMFLOAT3 g_CameraPosition = { 10.0f, 0.0f, 10.0f };
+static XMFLOAT3 g_CameraPosition = { 0.0f, 0.0f, 0.0f };
 static XMFLOAT3 g_CameraFront = { 0.0f, 0.0f, 1.0f };
 static XMFLOAT3 g_CameraUp = { 0.0f, 1.0f, 0.0f };
 static XMFLOAT3 g_CameraRight = { 1.0f, 0.0f, 0.0f };
@@ -35,22 +35,46 @@ static XMFLOAT4X4 g_PerspectiveMatrix;
 
 static std::unique_ptr<hal::DebugText> g_pDebugText = nullptr;
 
+void Camera_Initialize(
+    const DirectX::XMFLOAT3& position,
+    const DirectX::XMFLOAT3& front,
+    const DirectX::XMFLOAT3& up
+    )
+{
+    Camera_Initialize();
+
+    XMVECTOR _front = XMLoadFloat3(&front);
+    XMVECTOR _up = XMLoadFloat3(&up);
+
+    _front = XMVector3Normalize(_front);
+    _up = XMVector3Normalize(_up);
+
+    XMVECTOR _right = XMVector3Cross(_up, _front);
+    _right = XMVector3Normalize(_right);
+
+    XMStoreFloat3(&g_CameraFront, _front);
+    XMStoreFloat3(&g_CameraUp, _up);
+    XMStoreFloat3(&g_CameraRight, _right);
+    
+    g_CameraPosition = position;
+}
+
 void Camera_Initialize()
 {
     g_CameraPosition = { 0.0f, 1.0f, -10.0f };
     g_CameraFront = { 0.0f, 0.0f, 1.0f };
     g_CameraUp = { 0.0f, 1.0f, 0.0f };
     g_CameraRight = { 1.0f, 0.0f, 0.0f };
-
+    
     XMStoreFloat4x4(&g_CameraMatrix, XMMatrixIdentity());
     XMStoreFloat4x4(&g_PerspectiveMatrix, XMMatrixIdentity());
 
     g_pDebugText = std::make_unique<hal::DebugText>(Direct3D_GetDevice(), Direct3D_GetContext(),
-                                                    L"assets/consolab_ascii_512.png",
-                                                    Direct3D_GetBackBufferWidth(), Direct3D_GetBackBufferHeight(),
-                                                    0.0f, 32.0f, 0, 0, 0.0f, 16.0f);
-}
+                                                L"assets/consolab_ascii_512.png",
+                                                Direct3D_GetBackBufferWidth(), Direct3D_GetBackBufferHeight(),
+                                                0.0f, 32.0f, 0, 0, 0.0f, 16.0f);
 
+}
 void Camera_Finalize()
 {
     g_pDebugText.reset();
@@ -219,6 +243,8 @@ void Camera_DebugDraw()
 
     ss << std::showpos << std::fixed << std::setprecision(4);
     ss << "Camera Front   : " << std::setw(8) << g_CameraFront.x << " " << std::setw(8) << g_CameraFront.y << " " << std::setw(8) << g_CameraFront.z << "\n";
+    ss << "Camera Right: " << std::setw(8) << g_CameraRight.x << " " << std::setw(8) << g_CameraRight.y << " " << std::setw(8) << g_CameraRight.z << "\n";
+    ss << "Camera Up: " << std::setw(8) << g_CameraUp.x << " " << std::setw(8) << g_CameraUp.y << " " << std::setw(8) << g_CameraUp.z << "\n";
     ss << "Camera Position: " << std::setw(8) << g_CameraPosition.x << " " << std::setw(8) << g_CameraPosition.y << " " << std::setw(8) << g_CameraPosition.z << "\n";
 
     g_pDebugText->SetText(ss.str().c_str(), Color::YELLOW);
