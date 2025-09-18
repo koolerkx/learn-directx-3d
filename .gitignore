@@ -10,6 +10,8 @@
 *.userosscache
 *.sln.docstates
 
+DirectX3D/imgui.ini
+
 *.cso
 DirectX3D/assets/Explosion.png
 DirectX3D/assets/ship_J.png

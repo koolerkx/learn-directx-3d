@@ -93,6 +93,7 @@
                 $(ProjectDir)game;
                 $(ProjectDir)game/scene;
                 $(ProjectDir)audio;
+                $(ProjectDir)imgui;
                 $(ProjectDir);
                 %(AdditionalIncludeDirectories)
             </AdditionalIncludeDirectories>
@@ -203,6 +204,13 @@
         <ClCompile Include="input\keyboard.cpp"/>
         <ClCompile Include="input\mouse.cpp"/>
         <ClCompile Include="audio\Audio.cpp"/>
+        <ClCompile Include="imgui\lib\imgui_demo.cpp"/>
+        <ClCompile Include="imgui\lib\imgui_draw.cpp"/>
+        <ClCompile Include="imgui\lib\imgui_impl_dx11.cpp"/>
+        <ClCompile Include="imgui\lib\imgui_impl_win32.cpp"/>
+        <ClCompile Include="imgui\lib\imgui_tables.cpp"/>
+        <ClCompile Include="imgui\lib\imgui_widgets.cpp"/>
+        <ClCompile Include="imgui\lib\imgui.cpp"/>
     </ItemGroup>
     <ItemGroup>
         <ClInclude Include="direct3d\camera.h" />
@@ -235,6 +243,14 @@
         <ClInclude Include="input\keyboard.h"/>
         <ClInclude Include="input\mouse.h"/>
         <ClInclude Include="audio\Audio.h"/>
+        <ClInclude Include="imgui\lib\imconfig.h"/>
+        <ClInclude Include="imgui\lib\imgui_impl_dx11.h"/>
+        <ClInclude Include="imgui\lib\imgui_impl_win32.h"/>
+        <ClInclude Include="imgui\lib\imgui_internal.h"/>
+        <ClInclude Include="imgui\lib\imgui.h"/>
+        <ClInclude Include="imgui\lib\imstb_rectpack.h"/>
+        <ClInclude Include="imgui\lib\imstb_textedit.h"/>
+        <ClInclude Include="imgui\lib\imstb_truetype.h"/>
     </ItemGroup>
     <ItemGroup>
         <None Include="utils\DirectXTex.inl"/>
