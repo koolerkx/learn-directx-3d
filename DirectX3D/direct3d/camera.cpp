@@ -292,17 +292,17 @@ void Camera_SetRightVec(const XMFLOAT3& right)
 
 void Camera_DebugDraw()
 {
-    std::stringstream ss;
-
-    ss << std::showpos << std::fixed << std::setprecision(4);
-    ss << "Camera Front   : " << std::setw(8) << g_CameraFront.x << " " << std::setw(8) << g_CameraFront.y << " " << std::setw(8) << g_CameraFront.z << "\n";
-    ss << "Camera Right: " << std::setw(8) << g_CameraRight.x << " " << std::setw(8) << g_CameraRight.y << " " << std::setw(8) << g_CameraRight.z << "\n";
-    ss << "Camera Up: " << std::setw(8) << g_CameraUp.x << " " << std::setw(8) << g_CameraUp.y << " " << std::setw(8) << g_CameraUp.z << "\n";
-    ss << "Camera Position: " << std::setw(8) << g_CameraPosition.x << " " << std::setw(8) << g_CameraPosition.y << " " << std::setw(8) << g_CameraPosition.z << "\n";
-
-    g_pDebugText->SetText(ss.str().c_str(), Color::YELLOW);
-    g_pDebugText->Draw();
-    g_pDebugText->Clear();
+    // std::stringstream ss;
+    //
+    // ss << std::showpos << std::fixed << std::setprecision(4);
+    // ss << "Camera Front   : " << std::setw(8) << g_CameraFront.x << " " << std::setw(8) << g_CameraFront.y << " " << std::setw(8) << g_CameraFront.z << "\n";
+    // ss << "Camera Right: " << std::setw(8) << g_CameraRight.x << " " << std::setw(8) << g_CameraRight.y << " " << std::setw(8) << g_CameraRight.z << "\n";
+    // ss << "Camera Up: " << std::setw(8) << g_CameraUp.x << " " << std::setw(8) << g_CameraUp.y << " " << std::setw(8) << g_CameraUp.z << "\n";
+    // ss << "Camera Position: " << std::setw(8) << g_CameraPosition.x << " " << std::setw(8) << g_CameraPosition.y << " " << std::setw(8) << g_CameraPosition.z << "\n";
+    //
+    // g_pDebugText->SetText(ss.str().c_str(), Color::YELLOW);
+    // g_pDebugText->Draw();
+    // g_pDebugText->Clear();
 
     DebugImGui_UpdateCameraData(g_CameraFront, g_CameraUp, g_CameraRight, g_CameraPosition);
 }

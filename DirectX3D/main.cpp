@@ -128,13 +128,13 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
                 DebugImGui_Draw();
 
 #if defined(DEBUG) || defined(_DEBUG)
-                std::stringstream ss;
-                ss << "fps:" << fps << std::endl;
+                // std::stringstream ss;
+                // ss << "fps:" << fps << std::endl;
+                //
+                // debugText.SetText(ss.str().c_str());
 
-                debugText.SetText(ss.str().c_str());
-
-                debugText.Draw();
-                debugText.Clear();
+                // debugText.Draw();
+                // debugText.Clear();
 #endif
 
                 Direct3D_Present();
