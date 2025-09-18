@@ -4,6 +4,8 @@
 #include "keyboard.h"
 #include "mouse.h"
 
+#include "debug_imgui.h"
+
 // ウィンドウ情報
 static constexpr char WINDOW_CLASS[] = "GameWindow"; // メインウインドウクラス名
 static constexpr char TITLE[] = "Game"; // 	タイトルバーのテクスト
@@ -65,7 +67,7 @@ HWND GameWindow_Create(_In_ HINSTANCE hInstance)
         nullptr,
         hInstance,
         nullptr
-    );
+        );
 
     return hWnd;
 }
@@ -73,6 +75,8 @@ HWND GameWindow_Create(_In_ HINSTANCE hInstance)
 // ウインドウプロシージャ
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    DebugImGui_WndProcHandler(hWnd, message, wParam, lParam);
+
     switch (message)
     {
     case WM_ACTIVATEAPP:

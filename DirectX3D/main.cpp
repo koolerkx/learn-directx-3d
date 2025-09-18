@@ -18,6 +18,7 @@
 #include "scene.h"
 #include "shader3d.h"
 #include "cube.h"
+#include "debug_imgui.h"
 #include "grid.h"
 #include "sampler.h"
 
@@ -33,7 +34,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 
     HWND hWnd = GameWindow_Create(hInstance);
-
+    
     SystemTimer_Initialize();
     KeyLogger_Initialize();
     Mouse_Initialize(hWnd);
@@ -41,6 +42,8 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     InitAudio();
 
     Direct3D_Initialize(hWnd);
+    DebugImGui_Initialize(hWnd, Direct3D_GetDevice(), Direct3D_GetContext());
+    
     Sampler_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Shader_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Shader3D_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
@@ -114,12 +117,15 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
                 SpriteAnim_Update(elapsed_time);
                 Fade_Update(elapsed_time);
 
+                DebugImGui_Update();
+                
                 //ゲームの描画
                 Direct3D_Clear();
                 Sprite_Begin();
 
                 Scene_Draw();
                 Fade_Draw();
+                DebugImGui_Draw();
 
 #if defined(DEBUG) || defined(_DEBUG)
                 std::stringstream ss;
@@ -151,6 +157,8 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     Shader_Finalize();
     Sampler_Finalize();
     Shader3D_Finalize();
+
+    DebugImGui_Finalize();
     Direct3D_Finalize();
     Mouse_Finalize();
 
