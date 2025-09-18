@@ -19,6 +19,7 @@
 #include "shader3d.h"
 #include "cube.h"
 #include "grid.h"
+#include "sampler.h"
 
 /*----------------------------------------------------------------------------------
 	メイン
@@ -40,13 +41,15 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     InitAudio();
 
     Direct3D_Initialize(hWnd);
+    Sampler_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Shader_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
+    Shader3D_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
+    
     Sprite_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Texture_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     SpriteAnim_Initialize();
     Fade_Initialize();
 
-    Shader3D_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Grid_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Cube_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
 
@@ -146,6 +149,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     Texture_Finalize();
     Sprite_Finalize();
     Shader_Finalize();
+    Sampler_Finalize();
     Shader3D_Finalize();
     Direct3D_Finalize();
     Mouse_Finalize();

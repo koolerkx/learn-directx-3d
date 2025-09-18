@@ -7,8 +7,10 @@
 
 #include <d3d11.h>
 #include <DirectXMath.h>
+
 using namespace DirectX;
 #include "direct3d.h"
+#include "sampler.h"
 #include "debug_ostream.h"
 #include <fstream>
 
@@ -16,7 +18,6 @@ using namespace DirectX;
 static ID3D11VertexShader* g_pVertexShader = nullptr;
 static ID3D11InputLayout* g_pInputLayout = nullptr;
 static ID3D11PixelShader* g_pPixelShader = nullptr;
-static ID3D11SamplerState* g_pSamplerState = nullptr;
 
 // 定数バッファー
 static ID3D11Buffer* g_pVSConstantBuffer0 = nullptr; // Projection Matrix
@@ -147,14 +148,11 @@ bool Shader_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     sampler_desc.MinLOD = 0;
     sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
 
-    g_pDevice->CreateSamplerState(&sampler_desc, &g_pSamplerState);
-
     return true;
 }
 
 void Shader_Finalize()
 {
-    SAFE_RELEASE(g_pSamplerState);
     SAFE_RELEASE(g_pPixelShader);
     SAFE_RELEASE(g_pVSConstantBuffer0);
     SAFE_RELEASE(g_pVSConstantBuffer1);
@@ -197,5 +195,5 @@ void Shader_Begin()
     g_pContext->VSSetConstantBuffers(1, 1, &g_pVSConstantBuffer1);
 
     // サンプラーステートを描画パイプラインに設定
-    g_pContext->PSSetSamplers(0, 1, &g_pSamplerState);
+    Sampler_SetFilterPoint();
 }
