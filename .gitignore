@@ -11,6 +11,7 @@
 *.sln.docstates
 
 DirectX3D/imgui.ini
+DirectX3D/camera_preset.csv
 
 *.cso
 DirectX3D/assets/Explosion.png

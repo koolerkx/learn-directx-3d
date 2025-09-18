@@ -15,6 +15,7 @@
 #include <iomanip>
 
 #include "color.h"
+#include "debug_imgui_camera.h"
 #include "direct3d.h"
 #include "shader3d.h"
 #include "key_logger.h"
@@ -55,7 +56,7 @@ void Camera_Initialize(
     XMStoreFloat3(&g_CameraFront, _front);
     XMStoreFloat3(&g_CameraUp, _up);
     XMStoreFloat3(&g_CameraRight, _right);
-    
+
     g_CameraPosition = position;
 }
 
@@ -65,16 +66,21 @@ void Camera_Initialize()
     g_CameraFront = { 0.0f, 0.0f, 1.0f };
     g_CameraUp = { 0.0f, 1.0f, 0.0f };
     g_CameraRight = { 1.0f, 0.0f, 0.0f };
-    
+
     XMStoreFloat4x4(&g_CameraMatrix, XMMatrixIdentity());
     XMStoreFloat4x4(&g_PerspectiveMatrix, XMMatrixIdentity());
 
     g_pDebugText = std::make_unique<hal::DebugText>(Direct3D_GetDevice(), Direct3D_GetContext(),
-                                                L"assets/consolab_ascii_512.png",
-                                                Direct3D_GetBackBufferWidth(), Direct3D_GetBackBufferHeight(),
-                                                0.0f, 32.0f, 0, 0, 0.0f, 16.0f);
+                                                    L"assets/consolab_ascii_512.png",
+                                                    Direct3D_GetBackBufferWidth(), Direct3D_GetBackBufferHeight(),
+                                                    0.0f, 32.0f, 0, 0, 0.0f, 16.0f);
 
+    DebugImGui_SetOnCameraPositionChanged(Camera_SetPosition);
+    DebugImGui_SetOnCameraFrontChanged(Camera_SetFrontVec);
+    DebugImGui_SetOnCameraUpChanged(Camera_SetUpVec);
+    DebugImGui_SetOnCameraRightChanged(Camera_SetRightVec);
 }
+
 void Camera_Finalize()
 {
     g_pDebugText.reset();
@@ -237,6 +243,53 @@ const XMFLOAT3& Camera_GetPosition()
     return g_CameraPosition;
 }
 
+void Camera_SetPosition(const XMFLOAT3& position)
+{
+    g_CameraPosition = position;
+}
+
+void Camera_SetFrontVec(const XMFLOAT3& front)
+{
+    XMVECTOR front_ = XMVector3Normalize(XMLoadFloat3(&front));
+    XMVECTOR up_ = XMLoadFloat3(&g_CameraUp);
+    XMVECTOR right_ = XMLoadFloat3(&g_CameraRight);
+
+    right_ = XMVector3Normalize(XMVector3Cross(up_, front_));
+    up_ = XMVector3Normalize(XMVector3Cross(front_, right_));
+
+    XMStoreFloat3(&g_CameraFront, front_);
+    XMStoreFloat3(&g_CameraUp, up_);
+    XMStoreFloat3(&g_CameraRight, right_);
+}
+
+void Camera_SetUpVec(const XMFLOAT3& up)
+{
+    XMVECTOR front_ = XMLoadFloat3(&g_CameraFront);
+    XMVECTOR up_ = XMVector3Normalize(XMLoadFloat3(&up));
+    XMVECTOR right_ = XMLoadFloat3(&g_CameraRight);
+
+    front_ = XMVector3Normalize(XMVector3Cross(right_, up_));
+    right_ = XMVector3Normalize(XMVector3Cross(up_, front_));
+
+    XMStoreFloat3(&g_CameraFront, front_);
+    XMStoreFloat3(&g_CameraUp, up_);
+    XMStoreFloat3(&g_CameraRight, right_);
+}
+
+void Camera_SetRightVec(const XMFLOAT3& right)
+{
+    XMVECTOR front_ = XMLoadFloat3(&g_CameraFront);
+    XMVECTOR up_ = XMLoadFloat3(&g_CameraUp);
+    XMVECTOR right_ = XMVector3Normalize(XMLoadFloat3(&right));
+
+    up_ = XMVector3Normalize(XMVector3Cross(front_, right_));
+    front_ = XMVector3Normalize(XMVector3Cross(right_, up_));
+
+    XMStoreFloat3(&g_CameraFront, front_);
+    XMStoreFloat3(&g_CameraUp, up_);
+    XMStoreFloat3(&g_CameraRight, right_);
+}
+
 void Camera_DebugDraw()
 {
     std::stringstream ss;
@@ -250,4 +303,6 @@ void Camera_DebugDraw()
     g_pDebugText->SetText(ss.str().c_str(), Color::YELLOW);
     g_pDebugText->Draw();
     g_pDebugText->Clear();
+
+    DebugImGui_UpdateCameraData(g_CameraFront, g_CameraUp, g_CameraRight, g_CameraPosition);
 }

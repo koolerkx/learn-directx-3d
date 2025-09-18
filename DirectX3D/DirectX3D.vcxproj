@@ -196,6 +196,7 @@
         <ClCompile Include="game\title.cpp"/>
         <ClCompile Include="game_window\game_window.cpp"/>
         <ClCompile Include="imgui\debug_imgui.cpp" />
+        <ClCompile Include="imgui\debug_imgui_camera.cpp" />
         <ClCompile Include="main.cpp"/>
         <ClCompile Include="utils\debug_ostream.cpp"/>
         <ClCompile Include="utils\debug_text.cpp"/>
@@ -234,6 +235,7 @@
         <ClInclude Include="game\title.h"/>
         <ClInclude Include="game_window\game_window.h"/>
         <ClInclude Include="imgui\debug_imgui.h" />
+        <ClInclude Include="imgui\debug_imgui_camera.h" />
         <ClInclude Include="utils\color.h"/>
         <ClInclude Include="utils\debug_ostream.h"/>
         <ClInclude Include="utils\debug_text.h"/>

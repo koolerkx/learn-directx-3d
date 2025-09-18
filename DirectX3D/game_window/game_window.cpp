@@ -9,8 +9,8 @@
 // ウィンドウ情報
 static constexpr char WINDOW_CLASS[] = "GameWindow"; // メインウインドウクラス名
 static constexpr char TITLE[] = "Game"; // 	タイトルバーのテクスト
-const constexpr int SCREEN_WIDTH = 1600;
-const constexpr int SCREEN_HEIGHT = 900;
+const constexpr int SCREEN_WIDTH = 1920;
+const constexpr int SCREEN_HEIGHT = 1080;
 
 // ウインドウプロシージャ　プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

@@ -30,6 +30,11 @@ const DirectX::XMFLOAT3& Camera_GetUp();
 
 const DirectX::XMFLOAT3& Camera_GetPosition();
 
+void Camera_SetPosition(const DirectX::XMFLOAT3& position);
+void Camera_SetFrontVec(const DirectX::XMFLOAT3& front);
+void Camera_SetUpVec(const DirectX::XMFLOAT3& up);
+void Camera_SetRightVec(const DirectX::XMFLOAT3& right);
+
 void Camera_DebugDraw();
 
 #endif // CAMERA_H
