@@ -1,0 +1,3 @@
+[submodule "DirectX3D/imgui"]
+	path = DirectX3D/imgui
+	url = git@github.com:koolerkx/directx3d-imgui-debugui.git
