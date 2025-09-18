@@ -44,20 +44,7 @@ void Camera_Initialize(
 {
     Camera_Initialize();
 
-    XMVECTOR _front = XMLoadFloat3(&front);
-    XMVECTOR _up = XMLoadFloat3(&up);
-
-    _front = XMVector3Normalize(_front);
-    _up = XMVector3Normalize(_up);
-
-    XMVECTOR _right = XMVector3Cross(_up, _front);
-    _right = XMVector3Normalize(_right);
-
-    XMStoreFloat3(&g_CameraFront, _front);
-    XMStoreFloat3(&g_CameraUp, _up);
-    XMStoreFloat3(&g_CameraRight, _right);
-
-    g_CameraPosition = position;
+    Camera_SetParam(position, front, up);
 }
 
 void Camera_Initialize()
@@ -79,6 +66,7 @@ void Camera_Initialize()
     DebugImGui_SetOnCameraFrontChanged(Camera_SetFrontVec);
     DebugImGui_SetOnCameraUpChanged(Camera_SetUpVec);
     DebugImGui_SetOnCameraRightChanged(Camera_SetRightVec);
+    DebugImGui_SetOnCameraPresetApply(Camera_SetParam);
 }
 
 void Camera_Finalize()
@@ -288,6 +276,24 @@ void Camera_SetRightVec(const XMFLOAT3& right)
     XMStoreFloat3(&g_CameraFront, front_);
     XMStoreFloat3(&g_CameraUp, up_);
     XMStoreFloat3(&g_CameraRight, right_);
+}
+
+void Camera_SetParam(const XMFLOAT3& position, const XMFLOAT3& front, const XMFLOAT3& up)
+{
+    XMVECTOR _front = XMLoadFloat3(&front);
+    XMVECTOR _up = XMLoadFloat3(&up);
+
+    _front = XMVector3Normalize(_front);
+    _up = XMVector3Normalize(_up);
+
+    XMVECTOR _right = XMVector3Cross(_up, _front);
+    _right = XMVector3Normalize(_right);
+
+    XMStoreFloat3(&g_CameraFront, _front);
+    XMStoreFloat3(&g_CameraUp, _up);
+    XMStoreFloat3(&g_CameraRight, _right);
+
+    g_CameraPosition = position;
 }
 
 void Camera_DebugDraw()
