@@ -27,8 +27,8 @@ static XMFLOAT3 g_CameraFront = { 0.0f, 0.0f, 1.0f };
 static XMFLOAT3 g_CameraUp = { 0.0f, 1.0f, 0.0f };
 static XMFLOAT3 g_CameraRight = { 1.0f, 0.0f, 0.0f };
 
-constexpr float CAMERA_MOVE_SPEED = 10.0f; // per seconds
-constexpr float CAMERA_ROTATION_SPEED = XMConvertToRadians(45.0f); // per seconds
+constexpr float CAMERA_MOVE_SPEED = 7.5f; // per seconds
+constexpr float CAMERA_ROTATION_SPEED = XMConvertToRadians(60.0f); // per seconds
 
 static XMFLOAT4X4 g_CameraMatrix;
 static XMFLOAT4X4 g_PerspectiveMatrix;

@@ -143,6 +143,8 @@ void Cube_Draw(const DirectX::XMMATRIX& mtxWorld)
 
     // ポリゴン描画命令発行
     // g_pContext->Draw(NUM_VERTEX, 0);
+
+    Texture_SetTexture(g_CubeTexId);
     g_pContext->Draw(36, 0);
 
     Direct3D_DepthStencilStateDepthIsEnable(false);

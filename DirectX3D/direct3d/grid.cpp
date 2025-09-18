@@ -13,6 +13,7 @@
 #include "direct3d.h"
 #include "shader3d.h"
 #include "color.h"
+#include "texture.h"
 
 using namespace DirectX;
 
@@ -37,6 +38,9 @@ static ID3D11Buffer* g_pVertexBuffer = nullptr; // 頂点バッファ
 // 注意！初期化で外部から設定されるもの。Release不要。
 static ID3D11Device* g_pDevice = nullptr;
 static ID3D11DeviceContext* g_pContext = nullptr;
+
+static int g_GridTexId = -1;
+static std::wstring TEXTURE_PATH = L"assets/white.png";
 
 // 頂点構造体
 struct Vertex3d
@@ -92,8 +96,7 @@ void Grid_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
         g_GridVertex[i * 2 + 1 + index_offset].position = { x2, 0.0f, z2 };
         g_GridVertex[i * 2 + 1 + index_offset].color = GRID_V_COLOR;
     }
-
-
+    
     // 頂点バッファ生成
     D3D11_BUFFER_DESC bd = {};
     // bd.Usage = D3D11_USAGE_DYNAMIC; // 書き換えて使えます
@@ -107,6 +110,7 @@ void Grid_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
     g_pDevice->CreateBuffer(&bd, &sd, &g_pVertexBuffer);
 
+    g_GridTexId = Texture_Load(TEXTURE_PATH.c_str());
 }
 
 void Grid_Finalize()
@@ -134,6 +138,7 @@ void Grid_Draw()
 
     // ポリゴン描画命令発行
     // g_pContext->Draw(NUM_VERTEX, 0);
+    Texture_SetTexture(g_GridTexId);
     g_pContext->Draw(NUM_VERTEX, 0);
 
     Direct3D_DepthStencilStateDepthIsEnable(false);

@@ -26,11 +26,13 @@ struct VS_INPUT
 {
     float4 posL : POSITION0; // ローカル座標 
     float4 color : COLOR0; // Color
+    float2 uv: TEXCOORD0;
 };
 struct VS_OUTPUT
 {
     float4 posH : SV_POSITION; // 変換済み座標 
     float4 color : COLOR0; // Color
+    float2 uv: TEXCOORD0;
 };
 
 // 頂点シェーダ
@@ -45,5 +47,6 @@ VS_OUTPUT main(VS_INPUT vs_in)
     vs_out.posH = posH;
 
     vs_out.color = vs_in.color;
+    vs_out.uv = vs_in.uv;
     return vs_out;
 }
