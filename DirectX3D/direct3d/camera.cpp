@@ -107,13 +107,13 @@ void Camera_Update(double elapsed_time)
 
     if (KeyLogger_IsPressed(KK_E))
     {
-        cameraPosition += cameraUp * CAMERA_MOVE_SPEED * _elapsed_time;
+        // cameraPosition += cameraUp * CAMERA_MOVE_SPEED * _elapsed_time;
         cameraPosition += XMVECTOR{ 0.0f, 1.0f, 0.0f } * CAMERA_MOVE_SPEED * _elapsed_time;
     }
 
     if (KeyLogger_IsPressed(KK_Q))
     {
-        cameraPosition += -cameraUp * CAMERA_MOVE_SPEED * _elapsed_time;
+        // cameraPosition += -cameraUp * CAMERA_MOVE_SPEED * _elapsed_time;
         cameraPosition += XMVECTOR{ 0.0f, -1.0f, 0.0f } * CAMERA_MOVE_SPEED * _elapsed_time;
     }
 
