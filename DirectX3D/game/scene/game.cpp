@@ -6,6 +6,9 @@
 #include "key_logger.h"
 
 #include <DirectXMath.h>
+
+#include "mesh_field.h"
+
 using namespace DirectX;
 
 static XMFLOAT3 g_CubePosition{};
@@ -33,6 +36,7 @@ void Game_Update(double elapsed_time)
 {
     Cube_Update(elapsed_time);
     Camera_Update(elapsed_time);
+    MeshField_Update(elapsed_time);
 
     // if (KeyLogger_IsTrigger(KK_Z))
     // {
@@ -51,7 +55,8 @@ void Game_Draw()
     XMMATRIX mtxWorld = XMMatrixIdentity();
     mtxWorld *= XMMatrixTranslationFromVector(XMLoadFloat3(&g_CubePosition));
 
-    Cube_Draw(mtxWorld);
+    // Cube_Draw(mtxWorld);
+    MeshField_Draw();
 
     Camera_DebugDraw();
 }
