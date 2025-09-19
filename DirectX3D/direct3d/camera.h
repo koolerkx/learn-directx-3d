@@ -28,6 +28,9 @@ const DirectX::XMFLOAT3& Camera_GetFront();
 const DirectX::XMFLOAT3& Camera_GetRight();
 const DirectX::XMFLOAT3& Camera_GetUp();
 
+float Camera_GetFov();
+void Camera_SetFov(float fov);
+
 const DirectX::XMFLOAT3& Camera_GetPosition();
 
 void Camera_SetPosition(const DirectX::XMFLOAT3& position);

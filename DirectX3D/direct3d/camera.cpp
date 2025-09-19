@@ -12,9 +12,7 @@
 #include <memory>
 #include <sstream>
 #include <DirectXMath.h>
-#include <iomanip>
 
-#include "color.h"
 #include "debug_imgui_camera.h"
 #include "direct3d.h"
 #include "shader3d.h"
@@ -27,6 +25,8 @@ static XMFLOAT3 g_CameraPosition = { 0.0f, 0.0f, 0.0f };
 static XMFLOAT3 g_CameraFront = { 0.0f, 0.0f, 1.0f };
 static XMFLOAT3 g_CameraUp = { 0.0f, 1.0f, 0.0f };
 static XMFLOAT3 g_CameraRight = { 1.0f, 0.0f, 0.0f };
+
+static float g_CameraFov = 60.0f; // in degree
 
 constexpr float CAMERA_MOVE_SPEED = 7.5f; // per seconds
 constexpr float CAMERA_ROTATION_SPEED = XMConvertToRadians(60.0f); // per seconds
@@ -54,6 +54,8 @@ void Camera_Initialize()
     g_CameraUp = { 0.0f, 1.0f, 0.0f };
     g_CameraRight = { 1.0f, 0.0f, 0.0f };
 
+    g_CameraFov = 60.0f;
+
     XMStoreFloat4x4(&g_CameraMatrix, XMMatrixIdentity());
     XMStoreFloat4x4(&g_PerspectiveMatrix, XMMatrixIdentity());
 
@@ -67,6 +69,7 @@ void Camera_Initialize()
     DebugImGui_SetOnCameraUpChanged(Camera_SetUpVec);
     DebugImGui_SetOnCameraRightChanged(Camera_SetRightVec);
     DebugImGui_SetOnCameraPresetApply(Camera_SetParam);
+    DebugImGui_SetOnCameraFovChanged(Camera_SetFov);
 }
 
 void Camera_Finalize()
@@ -157,6 +160,15 @@ void Camera_Update(double elapsed_time)
         cameraRight = XMVector3Normalize(cameraRight);
     }
 
+    if (KeyLogger_IsPressed(KK_Z))
+    {
+        Camera_SetFov(g_CameraFov - 10.0f * _elapsed_time);
+    }
+    if (KeyLogger_IsPressed(KK_C))
+    {
+        Camera_SetFov(g_CameraFov + 10.0f * _elapsed_time);
+    }
+
     // if (KeyLogger_IsPressed(KK_Q))
     // {
     //     XMMATRIX rotation = XMMatrixRotationAxis(cameraFront, CAMERA_ROTATION_SPEED * _elapsed_time);
@@ -190,7 +202,7 @@ void Camera_Update(double elapsed_time)
     Shader3D_SetViewMatrix(mtxView); // TODO: deprecate
 
     // パースペクティブ行列
-    float fovAngleY = XMConvertToRadians(45.0f);
+    float fovAngleY = XMConvertToRadians(g_CameraFov);
     float aspectRatio = static_cast<float>(Direct3D_GetBackBufferWidth()) / static_cast<float>(Direct3D_GetBackBufferHeight());
     float nearZ = 0.01f;
     float farZ = 10000.0f;
@@ -224,6 +236,17 @@ const XMFLOAT3& Camera_GetRight()
 const XMFLOAT3& Camera_GetUp()
 {
     return g_CameraUp;
+}
+
+float Camera_GetFov()
+{
+    return g_CameraFov;
+}
+
+void Camera_SetFov(float fov)
+{
+    fov = fov <= 180 ? fov > 0 ? fov : 0.01 : 180;
+    g_CameraFov = fov;
 }
 
 const XMFLOAT3& Camera_GetPosition()
@@ -310,5 +333,5 @@ void Camera_DebugDraw()
     // g_pDebugText->Draw();
     // g_pDebugText->Clear();
 
-    DebugImGui_UpdateCameraData(g_CameraFront, g_CameraUp, g_CameraRight, g_CameraPosition);
+    DebugImGui_UpdateCameraData(g_CameraFront, g_CameraUp, g_CameraRight, g_CameraPosition, g_CameraFov);
 }
