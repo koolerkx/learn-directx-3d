@@ -50,17 +50,18 @@ void Sampler_Finalize()
     SAFE_RELEASE(g_pSamplerStateAnisotropic)
 }
 
-void Sampler_SetFilterPoint()
+void Sampler_SetFilter(FILTER filter)
 {
-    g_pContext->PSSetSamplers(0, 1, &g_pSamplerStatePoint);
-}
-
-void Sampler_SetFilterLinear()
-{
-    g_pContext->PSSetSamplers(0, 1, &g_pSamplerStateLinear);
-}
-
-void Sampler_SetFilterAnisotropic()
-{
-    g_pContext->PSSetSamplers(0, 1, &g_pSamplerStateAnisotropic);
+    switch (filter)
+    {
+    case FILTER::POINT:
+        g_pContext->PSSetSamplers(0, 1, &g_pSamplerStatePoint);
+        break;
+    case FILTER::LINEAR:
+        g_pContext->PSSetSamplers(0, 1, &g_pSamplerStateLinear);
+        break;
+    case FILTER::ANISOTROPIC:
+        g_pContext->PSSetSamplers(0, 1, &g_pSamplerStateAnisotropic);
+        break;
+    }
 }

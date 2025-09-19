@@ -132,7 +132,6 @@ bool Shader3D_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
         return false;
     }
 
-    Sampler_SetFilterPoint();
     return true;
 }
 
@@ -190,5 +189,5 @@ void Shader3D_Begin()
     g_pContext->VSSetConstantBuffers(1, 1, &g_pVSConstantBuffer1);
     g_pContext->VSSetConstantBuffers(2, 1, &g_pVSConstantBuffer2);
 
-    Sampler_SetFilterPoint();
+    Sampler_SetFilter(FILTER::ANISOTROPIC);
 }

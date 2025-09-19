@@ -7,13 +7,19 @@
 #ifndef SAMPLER_H
 #define SAMPLER_H
 
+#include <cstdint>
 #include <d3d11.h>
 
 void Sampler_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 void Sampler_Finalize(void);
 
-void Sampler_SetFilterPoint();
-void Sampler_SetFilterLinear();
-void Sampler_SetFilterAnisotropic();
+enum class FILTER: uint8_t
+{
+    POINT,
+    LINEAR,
+    ANISOTROPIC
+};
+
+void Sampler_SetFilter(FILTER filter);
 
 #endif // SAMPLER_H
