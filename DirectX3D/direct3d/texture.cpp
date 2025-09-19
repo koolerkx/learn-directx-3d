@@ -80,7 +80,7 @@ int Texture_Load(const wchar_t* pFilename)
         ID3D11Resource* pTexture = nullptr;
         ID3D11ShaderResourceView* pTextureSrv = nullptr;
 
-        if (FAILED(CreateWICTextureFromFile(g_pDevice, pFilename, &pTexture, &pTextureSrv)))
+        if (FAILED(CreateWICTextureFromFile(g_pDevice, g_pContext, pFilename, &pTexture, &pTextureSrv)))
         {
             MessageBoxW(nullptr, L"テクスチャの初期化に失敗しました", pFilename, MB_OK | MB_ICONERROR);
             return -1;
