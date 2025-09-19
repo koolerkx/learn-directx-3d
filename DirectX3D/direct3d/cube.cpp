@@ -18,9 +18,11 @@
 using namespace DirectX;
 
 // 三角形二つ、六面
-static constexpr int NUM_VERTEX = 3 * 2 * 6;
+static constexpr int NUM_VERTEX = 24;
+static constexpr int NUM_INDEX = 36;
 
 static ID3D11Buffer* g_pVertexBuffer = nullptr; // 頂点バッファ
+static ID3D11Buffer* g_pIndexBuffer = nullptr; // インデックスバッファ
 
 // 注意！初期化で外部から設定されるもの。Release不要。
 static ID3D11Device* g_pDevice = nullptr;
@@ -37,55 +39,64 @@ struct Vertex3d
     XMFLOAT2 uv;
 };
 
-static Vertex3d g_CubeVertex[36]
+static Vertex3d g_CubeVertex[NUM_VERTEX]
 {
     // 前
     { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0 } }, // LT
     { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // RB
     { { -0.5f, -0.5f, -0.5f }, Color::WHITE, { 0, 0.25f } }, // LB
-    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0 } }, // LT
+    // { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0 } }, // LT
     { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.25f, 0 } }, // RT
-    { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // RB
+    // { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // RB
 
     // 後
     { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0 } }, // LT
     { { +0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // LB
     { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // RB
-    { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0 } }, // LT
-    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // RB
+    // { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0 } }, // LT
+    // { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // RB
     { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.5f, 0 } }, // RT
 
     // 上
     { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0 } }, // LT
     { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.75f, 0.25f } }, // RB
     { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // LB
-    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0 } }, // LT
+    // { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0 } }, // LT
     { { +0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.75f, 0 } }, // RT
-    { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.75f, 0.25f } }, // RB
+    // { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.75f, 0.25f } }, // RB
 
     // 下
     { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.75f, 0 } }, // LT
     { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.75f, 0.25f } }, // LB
     { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 1.0f, 0.25f } }, // RB
-    { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.75f, 0 } }, // LT
-    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 1.0f, 0.25f } }, // RB
+    // { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.75f, 0 } }, // LT
+    // { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 1.0f, 0.25f } }, // RB
     { { -0.5f, -0.5f, -0.5f }, Color::WHITE, { 1.0f, 0 } }, // RT
 
     // 右
     { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0.25f } }, // LT
     { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.5f } }, // RB
     { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0, 0.5f } }, // LB
-    { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0.25f } }, // LT
+    // { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0.25f } }, // LT
     { { +0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // RT
-    { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.5f } }, // RB
+    // { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.5f } }, // RB
 
     // 左
-    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, {0.25f, 0.25f} }, // LT
-    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, {0.25f, 0.5f} }, // LB
-    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, {0.5f, 0.5f} }, // RB
-    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, {0.25f, 0.25f} }, // LT
-    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, {0.5f, 0.5f} }, // RB
-    { { -0.5f, -0.5f, -0.5f }, Color::WHITE, {0.5f, 0.25f} }, // RT
+    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // LT
+    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.5f } }, // LB
+    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.5f, 0.5f } }, // RB
+    // { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // LT
+    // { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.5f, 0.5f } }, // RB
+    { { -0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // RT
+};
+
+static uint16_t g_CubeIndex[NUM_INDEX] = {
+    0, 1, 2, 0, 3, 1,
+    4, 5, 6, 4, 6, 7,
+    8, 9, 10, 8, 11, 9,
+    12, 13, 14, 12, 14, 15,
+    16, 17, 18, 16, 19, 17,
+    20, 21, 22, 20, 22, 23
 };
 
 void Cube_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -113,12 +124,19 @@ void Cube_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
     g_pDevice->CreateBuffer(&bd, &sd, &g_pVertexBuffer);
 
+    bd.ByteWidth = sizeof(uint16_t) * NUM_INDEX;
+    bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    sd.pSysMem = g_CubeIndex;
+    
+    g_pDevice->CreateBuffer(&bd, &sd, &g_pIndexBuffer);
+
     g_CubeTexId = Texture_Load(TEXTURE_PATH.c_str());
 }
 
 void Cube_Finalize()
 {
     SAFE_RELEASE(g_pVertexBuffer);
+    SAFE_RELEASE(g_pIndexBuffer);
 }
 
 void Cube_Update(double)
@@ -133,6 +151,7 @@ void Cube_Draw(const DirectX::XMMATRIX& mtxWorld)
     UINT stride = sizeof(Vertex3d);
     UINT offset = 0;
     g_pContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+    g_pContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
     // 頂点シェーダーに変換行列を設定
     // ワールド座標変換行列
@@ -142,10 +161,8 @@ void Cube_Draw(const DirectX::XMMATRIX& mtxWorld)
     g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // ポリゴン描画命令発行
-    // g_pContext->Draw(NUM_VERTEX, 0);
-
     Texture_SetTexture(g_CubeTexId);
-    g_pContext->Draw(36, 0);
+    g_pContext->DrawIndexed(36, 0, 0);
 
     Direct3D_DepthStencilStateDepthIsEnable(false);
 }
