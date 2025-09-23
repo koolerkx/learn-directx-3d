@@ -179,6 +179,7 @@
         <ClCompile Include="direct3d\camera.cpp" />
         <ClCompile Include="direct3d\direct3d.cpp"/>
         <ClCompile Include="direct3d\grid.cpp" />
+        <ClCompile Include="direct3d\mesh_field.cpp" />
         <ClCompile Include="direct3d\sampler.cpp" />
         <ClCompile Include="direct3d\shader.cpp"/>
         <ClCompile Include="direct3d\shader3d.cpp"/>
@@ -218,6 +219,7 @@
         <ClInclude Include="direct3d\camera.h" />
         <ClInclude Include="direct3d\direct3d.h"/>
         <ClInclude Include="direct3d\grid.h" />
+        <ClInclude Include="direct3d\mesh_field.h" />
         <ClInclude Include="direct3d\sampler.h" />
         <ClInclude Include="direct3d\shader.h"/>
         <ClInclude Include="direct3d\shader3d.h"/>
