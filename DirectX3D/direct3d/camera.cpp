@@ -245,7 +245,7 @@ float Camera_GetFov()
 
 void Camera_SetFov(float fov)
 {
-    fov = fov <= 180 ? fov > 0 ? fov : 0.01 : 180;
+    fov = fov <= 180.0f ? fov > 0.0f ? fov : 0.01f : 180.0f;
     g_CameraFov = fov;
 }
 

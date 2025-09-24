@@ -45,7 +45,7 @@ struct Vertex3d
 namespace
 {
     bool g_is_display = true;
-    
+
     float g_size_x = 1.0f;
     float g_size_z = 1.0f;
 
@@ -96,10 +96,10 @@ namespace
             int x = i % x_count;
             int z = i / x_count;
 
-            int LT = x + z * vertex_x_count;
-            int RT = x + z * vertex_x_count + 1;
-            int LB = LT + vertex_x_count;
-            int RB = RT + vertex_x_count;
+            uint16_t LT = static_cast<uint16_t>(x + z * vertex_x_count);
+            uint16_t RT = static_cast<uint16_t>(x + z * vertex_x_count + 1);
+            uint16_t LB = static_cast<uint16_t>(LT + vertex_x_count);
+            uint16_t RB = static_cast<uint16_t>(RT + vertex_x_count);
 
             // FIXME: Workaround for showing polygon with CCW front
             cube_index.push_back(LT);
@@ -126,7 +126,7 @@ namespace
         D3D11_BUFFER_DESC bd = {};
         // bd.Usage = D3D11_USAGE_DYNAMIC; // 書き換えて使えます
         bd.Usage = D3D11_USAGE_DEFAULT; // 変換行列があるため、実質動かなくていいです
-        bd.ByteWidth = sizeof(Vertex3d) * g_field_vertex.size();
+        bd.ByteWidth = static_cast<UINT>(sizeof(Vertex3d) * g_field_vertex.size());
         bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bd.CPUAccessFlags = 0;
 
@@ -209,8 +209,9 @@ void MeshField_Update(double)
 
 void MeshField_Draw(const DirectX::XMMATRIX& mtxWorld)
 {
-    if (!g_is_display) return;
-    
+    if (!g_is_display)
+        return;
+
     Shader3D_Begin();
     Sampler_SetFilter(FILTER::POINT);
     Direct3D_DepthStencilStateDepthIsEnable(true);
@@ -230,7 +231,7 @@ void MeshField_Draw(const DirectX::XMMATRIX& mtxWorld)
 
     // ポリゴン描画命令発行
     Texture_SetTexture(g_CubeTexId);
-    g_pContext->DrawIndexed(g_field_index.size(), 0, 0);
+    g_pContext->DrawIndexed(static_cast<UINT>(g_field_index.size()), 0, 0);
 
     Direct3D_DepthStencilStateDepthIsEnable(false);
 }
