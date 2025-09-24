@@ -17,4 +17,16 @@ void MeshField_Finalize(void);
 void MeshField_Update(double elapsed_time);
 void MeshField_Draw(const DirectX::XMMATRIX& mtxWorld = DirectX::XMMatrixIdentity());
 
+void MeshField_SetXCount(int x_count);
+void MeshField_SetZCount(int z_count);
+void MeshField_SetXSize(float x_size);
+void MeshField_SetZSize(float z_size);
+void MeshField_SetY(float y);
+
+int MeshField_GetXCount();
+int MeshField_GetZCount();
+float MeshField_GetXSize();
+float MeshField_GetZSize();
+float MeshField_GetY();
+
 #endif // MESH_FIELD_H

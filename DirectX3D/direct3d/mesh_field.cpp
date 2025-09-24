@@ -23,8 +23,6 @@ using namespace DirectX;
 static constexpr int DEFAULT_X_COUNT = 10;
 static constexpr int DEFAULT_Z_COUNT = 10;
 
-static constexpr float DEFAULT_Y = -1.0f;
-
 static ID3D11Buffer* g_pVertexBuffer = nullptr; // 頂点バッファ
 static ID3D11Buffer* g_pIndexBuffer = nullptr; // インデックスバッファ
 
@@ -48,6 +46,11 @@ namespace
     float g_size_x = 1.0f;
     float g_size_z = 1.0f;
 
+    int g_x_count = DEFAULT_X_COUNT;
+    int g_z_count = DEFAULT_Z_COUNT;
+
+    float g_pos_y = 0.0f;
+
     std::vector<Vertex3d> g_field_vertex;
     std::vector<uint16_t> g_field_index;
 
@@ -66,7 +69,7 @@ namespace
                 cube_vertex.emplace_back(Vertex3d{
                     {
                         static_cast<float>(x) * g_size_x - offset_x,
-                        DEFAULT_Y,
+                        g_pos_y,
                         static_cast<float>(z) * g_size_z - offset_z
                     },
                     Color::WHITE,
@@ -107,6 +110,13 @@ namespace
         return cube_index;
     }
 
+    void MeshField_MakeIndexVertex(int x_count, int z_count)
+    {
+        g_field_vertex = MeshField_MakeVertex(x_count, z_count);
+        g_field_index = MeshField_MakeIndex(x_count, z_count);
+
+    }
+
     void MeshField_CreateBuffer()
     {
         // 頂点バッファ生成
@@ -128,6 +138,24 @@ namespace
 
         g_pDevice->CreateBuffer(&bd, &sd, &g_pIndexBuffer);
     }
+
+    void MeshField_UpdateBuffer()
+    {
+        g_pContext->UpdateSubresource(
+            g_pVertexBuffer,
+            0,
+            nullptr,
+            g_field_vertex.data(),
+            0, 0
+            );
+
+        g_pContext->UpdateSubresource(
+            g_pIndexBuffer,
+            0, nullptr,
+            g_field_index.data(),
+            0, 0
+            );
+    }
 }
 
 void MeshField_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -142,8 +170,7 @@ void MeshField_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     g_pDevice = pDevice;
     g_pContext = pContext;
 
-    g_field_vertex = MeshField_MakeVertex(DEFAULT_X_COUNT, DEFAULT_Z_COUNT);
-    g_field_index = MeshField_MakeIndex(DEFAULT_X_COUNT, DEFAULT_Z_COUNT);
+    MeshField_MakeIndexVertex(g_x_count, g_z_count);
 
     MeshField_CreateBuffer();
 
@@ -183,4 +210,64 @@ void MeshField_Draw(const DirectX::XMMATRIX& mtxWorld)
     g_pContext->DrawIndexed(g_field_index.size(), 0, 0);
 
     Direct3D_DepthStencilStateDepthIsEnable(false);
+}
+
+void MeshField_SetXCount(int x_count)
+{
+    g_x_count = x_count;
+    MeshField_MakeIndexVertex(g_x_count, g_z_count);
+    MeshField_UpdateBuffer();
+}
+
+void MeshField_SetZCount(int z_count)
+{
+    g_x_count = z_count;
+    MeshField_MakeIndexVertex(g_x_count, g_z_count);
+    MeshField_UpdateBuffer();
+}
+
+void MeshField_SetXSize(float x_size)
+{
+    g_size_x = x_size;
+    MeshField_MakeIndexVertex(g_x_count, g_z_count);
+    MeshField_UpdateBuffer();
+}
+
+void MeshField_SetZSize(float z_size)
+{
+    g_size_z = z_size;
+    MeshField_MakeIndexVertex(g_x_count, g_z_count);
+    MeshField_UpdateBuffer();
+}
+
+void MeshField_SetY(float y)
+{
+    g_pos_y = y;
+    MeshField_MakeIndexVertex(g_x_count, g_z_count);
+    MeshField_UpdateBuffer();
+}
+
+int MeshField_GetXCount()
+{
+    return g_x_count;
+}
+
+int MeshField_GetZCount()
+{
+    return g_z_count;
+}
+
+float MeshField_GetXSize()
+{
+    return g_size_x;
+}
+
+float MeshField_GetZSize()
+{
+    return g_size_z;
+}
+
+float MeshField_GetY()
+{
+    return g_pos_y;
 }
