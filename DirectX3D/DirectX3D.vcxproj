@@ -199,6 +199,7 @@
         <ClCompile Include="imgui\debug_imgui.cpp" />
         <ClCompile Include="imgui\debug_imgui_camera.cpp" />
         <ClCompile Include="imgui\debug_imgui_mesh_field.cpp" />
+        <ClCompile Include="imgui\debug_imgui_render.cpp" />
         <ClCompile Include="main.cpp"/>
         <ClCompile Include="utils\debug_ostream.cpp"/>
         <ClCompile Include="utils\debug_text.cpp"/>
@@ -240,6 +241,7 @@
         <ClInclude Include="imgui\debug_imgui.h" />
         <ClInclude Include="imgui\debug_imgui_camera.h" />
         <ClInclude Include="imgui\debug_imgui_mesh_field.h" />
+        <ClInclude Include="imgui\debug_imgui_render.h" />
         <ClInclude Include="utils\color.h"/>
         <ClInclude Include="utils\debug_ostream.h"/>
         <ClInclude Include="utils\debug_text.h"/>
