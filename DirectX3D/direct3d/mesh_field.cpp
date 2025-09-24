@@ -20,10 +20,10 @@
 
 using namespace DirectX;
 
-static constexpr int DEFAULT_X_COUNT = 5;
-static constexpr int DEFAULT_Z_COUNT = 3;
+static constexpr int DEFAULT_X_COUNT = 10;
+static constexpr int DEFAULT_Z_COUNT = 10;
 
-static constexpr float DEFAULT_Y = 0.0f;
+static constexpr float DEFAULT_Y = -1.0f;
 
 static ID3D11Buffer* g_pVertexBuffer = nullptr; // 頂点バッファ
 static ID3D11Buffer* g_pIndexBuffer = nullptr; // インデックスバッファ
@@ -33,7 +33,7 @@ static ID3D11Device* g_pDevice = nullptr;
 static ID3D11DeviceContext* g_pContext = nullptr;
 
 static int g_CubeTexId = -1;
-static std::wstring TEXTURE_PATH = L"assets/block_test.png";
+static std::wstring TEXTURE_PATH = L"assets/grass.jpg";
 
 // 頂点構造体
 struct Vertex3d
