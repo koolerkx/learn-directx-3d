@@ -16,6 +16,7 @@
 #include "texture.h"
 #include <vector>
 
+#include "debug_imgui_mesh_field.h"
 #include "sampler.h"
 
 using namespace DirectX;
@@ -43,6 +44,8 @@ struct Vertex3d
 
 namespace
 {
+    bool g_is_display = true;
+    
     float g_size_x = 1.0f;
     float g_size_z = 1.0f;
 
@@ -69,6 +72,7 @@ namespace
                 cube_vertex.emplace_back(Vertex3d{
                     {
                         static_cast<float>(x) * g_size_x - offset_x,
+                        // g_pos_y + exp(static_cast<float>(x) / x_count * 1.5f) + exp(static_cast<float>(z) / z_count * 1.5f) - 2.0f,
                         g_pos_y,
                         static_cast<float>(z) * g_size_z - offset_z
                     },
@@ -114,7 +118,6 @@ namespace
     {
         g_field_vertex = MeshField_MakeVertex(x_count, z_count);
         g_field_index = MeshField_MakeIndex(x_count, z_count);
-
     }
 
     void MeshField_CreateBuffer()
@@ -175,6 +178,15 @@ void MeshField_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     MeshField_CreateBuffer();
 
     g_CubeTexId = Texture_Load(TEXTURE_PATH.c_str());
+
+    DebugImgui_MeshField_SetCallback(MeshFieldDataCallbackFn{
+        MeshField_SetIsDisplay,
+        MeshField_SetXSize,
+        MeshField_SetZSize,
+        MeshField_SetXCount,
+        MeshField_SetZCount,
+        MeshField_SetY
+    });
 }
 
 void MeshField_Finalize()
@@ -184,10 +196,21 @@ void MeshField_Finalize()
 }
 
 void MeshField_Update(double)
-{}
+{
+    DebugImGui_UpdateMeshFieldData(MeshFieldData{
+        g_is_display,
+        g_size_x,
+        g_size_z,
+        g_x_count,
+        g_z_count,
+        g_pos_y
+    });
+}
 
 void MeshField_Draw(const DirectX::XMMATRIX& mtxWorld)
 {
+    if (!g_is_display) return;
+    
     Shader3D_Begin();
     Sampler_SetFilter(FILTER::POINT);
     Direct3D_DepthStencilStateDepthIsEnable(true);
@@ -214,20 +237,30 @@ void MeshField_Draw(const DirectX::XMMATRIX& mtxWorld)
 
 void MeshField_SetXCount(int x_count)
 {
+    if (x_count < 1)
+        x_count = 1;
     g_x_count = x_count;
     MeshField_MakeIndexVertex(g_x_count, g_z_count);
-    MeshField_UpdateBuffer();
+    SAFE_RELEASE(g_pVertexBuffer);
+    SAFE_RELEASE(g_pIndexBuffer);
+    MeshField_CreateBuffer();
 }
 
 void MeshField_SetZCount(int z_count)
 {
-    g_x_count = z_count;
+    if (z_count < 1)
+        z_count = 1;
+    g_z_count = z_count;
     MeshField_MakeIndexVertex(g_x_count, g_z_count);
-    MeshField_UpdateBuffer();
+    SAFE_RELEASE(g_pVertexBuffer);
+    SAFE_RELEASE(g_pIndexBuffer);
+    MeshField_CreateBuffer();
 }
 
 void MeshField_SetXSize(float x_size)
 {
+    if (x_size < 0.001f)
+        x_size = 0.001f;
     g_size_x = x_size;
     MeshField_MakeIndexVertex(g_x_count, g_z_count);
     MeshField_UpdateBuffer();
@@ -235,6 +268,8 @@ void MeshField_SetXSize(float x_size)
 
 void MeshField_SetZSize(float z_size)
 {
+    if (z_size < 0.001f)
+        z_size = 0.001f;
     g_size_z = z_size;
     MeshField_MakeIndexVertex(g_x_count, g_z_count);
     MeshField_UpdateBuffer();
@@ -270,4 +305,14 @@ float MeshField_GetZSize()
 float MeshField_GetY()
 {
     return g_pos_y;
+}
+
+void MeshField_SetIsDisplay(bool is_display)
+{
+    g_is_display = is_display;
+}
+
+bool MeshField_GetIsDisplay()
+{
+    return g_is_display;
 }

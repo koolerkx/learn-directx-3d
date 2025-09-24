@@ -29,4 +29,7 @@ float MeshField_GetXSize();
 float MeshField_GetZSize();
 float MeshField_GetY();
 
+void MeshField_SetIsDisplay(bool is_display);
+bool MeshField_GetIsDisplay();
+
 #endif // MESH_FIELD_H
