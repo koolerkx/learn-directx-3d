@@ -27,6 +27,6 @@ ID3D11Device* Direct3D_GetDevice();
 ID3D11DeviceContext* Direct3D_GetContext();
 
 void Direct3D_DepthStencilStateDepthIsEnable(bool isEnable = true);
-
+void Direct3D_RSWireframe(bool isEnable);
 
 #endif // DIRECT3D_H

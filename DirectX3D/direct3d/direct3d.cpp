@@ -19,6 +19,9 @@ static ID3D11BlendState* g_pBlendStateMultiply = nullptr;
 static ID3D11DepthStencilState* g_pDepthStencilStateDepthDisable = nullptr;
 static ID3D11DepthStencilState* g_pDepthStencilStateDepthEnable = nullptr;
 
+static ID3D11RasterizerState* g_pRSWireframe = nullptr;
+static ID3D11RasterizerState* g_pRSSolid = nullptr;
+
 /* バックバッファ関連 */
 static ID3D11RenderTargetView* g_pRenderTargetView = nullptr;
 static ID3D11Texture2D* g_pDepthStencilBuffer = nullptr;
@@ -144,6 +147,23 @@ bool Direct3D_Initialize(HWND hWnd)
 
     Direct3D_DepthStencilStateDepthIsEnable(false);
 
+    D3D11_RASTERIZER_DESC wfDesc{};
+    wfDesc.FillMode = D3D11_FILL_WIREFRAME;
+    wfDesc.CullMode = D3D11_CULL_BACK;
+    wfDesc.FrontCounterClockwise = FALSE;
+    wfDesc.DepthClipEnable = TRUE;
+
+    g_pDevice->CreateRasterizerState(&wfDesc, &g_pRSWireframe);
+
+    D3D11_RASTERIZER_DESC solidDesc{};
+    solidDesc.FillMode = D3D11_FILL_SOLID;
+    solidDesc.CullMode = D3D11_CULL_BACK;
+    solidDesc.FrontCounterClockwise = FALSE;
+    solidDesc.DepthClipEnable = TRUE;
+
+    g_pDevice->CreateRasterizerState(&solidDesc, &g_pRSSolid);
+    Direct3D_RSWireframe(false);
+
     return true;
 }
 
@@ -151,6 +171,8 @@ void Direct3D_Finalize()
 {
     releaseBackBuffer();
 
+    SAFE_RELEASE(g_pRSWireframe);
+    SAFE_RELEASE(g_pRSSolid);
     SAFE_RELEASE(g_pDepthStencilStateDepthDisable);
     SAFE_RELEASE(g_pDepthStencilStateDepthEnable);
     SAFE_RELEASE(g_pBlendStateMultiply);
@@ -322,4 +344,9 @@ void Direct3D_DepthStencilStateDepthIsEnable(bool isEnable)
     g_pDeviceContext->OMSetDepthStencilState(
         isEnable ? g_pDepthStencilStateDepthEnable : g_pDepthStencilStateDepthDisable,
         NULL);
+}
+
+void Direct3D_RSWireframe(bool isEnable)
+{
+    g_pDeviceContext->RSSetState(isEnable ? g_pRSWireframe : g_pRSSolid);
 }

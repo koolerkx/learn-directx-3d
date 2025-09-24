@@ -55,7 +55,7 @@ void Game_Draw()
     // XMMATRIX mtxWorld = XMMatrixIdentity();
     // mtxWorld *= XMMatrixTranslationFromVector(XMLoadFloat3(&g_CubePosition));
 
-    // Cube_Draw(mtxWorld);
+    Cube_Draw();
     MeshField_Draw();
 
     Camera_DebugDraw();
