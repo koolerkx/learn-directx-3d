@@ -176,18 +176,19 @@
         </PostBuildEvent>
     </ItemDefinitionGroup>
     <ItemGroup>
-        <ClCompile Include="direct3d\camera.cpp" />
+        <ClCompile Include="direct3d\camera.cpp"/>
         <ClCompile Include="direct3d\direct3d.cpp"/>
-        <ClCompile Include="direct3d\grid.cpp" />
-        <ClCompile Include="direct3d\mesh_field.cpp" />
-        <ClCompile Include="direct3d\sampler.cpp" />
+        <ClCompile Include="direct3d\grid.cpp"/>
+        <ClCompile Include="direct3d\mesh_field.cpp"/>
+        <ClCompile Include="direct3d\sampler.cpp"/>
         <ClCompile Include="direct3d\shader.cpp"/>
         <ClCompile Include="direct3d\shader3d.cpp"/>
+        <ClCompile Include="direct3d\shader_field.cpp" />
         <ClCompile Include="direct3d\sprite.cpp"/>
         <ClCompile Include="direct3d\sprtie_anim.cpp"/>
         <ClCompile Include="direct3d\texture.cpp"/>
         <ClCompile Include="direct3d\polygon.cpp"/>
-        <ClCompile Include="direct3d\cube.cpp" />
+        <ClCompile Include="direct3d\cube.cpp"/>
         <ClCompile Include="game\collision.cpp"/>
         <ClCompile Include="game\effect.cpp"/>
         <ClCompile Include="game\fade.cpp"/>
@@ -196,10 +197,10 @@
         <ClCompile Include="game\score.cpp"/>
         <ClCompile Include="game\title.cpp"/>
         <ClCompile Include="game_window\game_window.cpp"/>
-        <ClCompile Include="imgui\debug_imgui.cpp" />
-        <ClCompile Include="imgui\debug_imgui_camera.cpp" />
-        <ClCompile Include="imgui\debug_imgui_mesh_field.cpp" />
-        <ClCompile Include="imgui\debug_imgui_render.cpp" />
+        <ClCompile Include="imgui\debug_imgui.cpp"/>
+        <ClCompile Include="imgui\debug_imgui_camera.cpp"/>
+        <ClCompile Include="imgui\debug_imgui_mesh_field.cpp"/>
+        <ClCompile Include="imgui\debug_imgui_render.cpp"/>
         <ClCompile Include="main.cpp"/>
         <ClCompile Include="utils\debug_ostream.cpp"/>
         <ClCompile Include="utils\debug_text.cpp"/>
@@ -218,18 +219,19 @@
         <ClCompile Include="imgui\lib\imgui.cpp"/>
     </ItemGroup>
     <ItemGroup>
-        <ClInclude Include="direct3d\camera.h" />
+        <ClInclude Include="direct3d\camera.h"/>
         <ClInclude Include="direct3d\direct3d.h"/>
-        <ClInclude Include="direct3d\grid.h" />
-        <ClInclude Include="direct3d\mesh_field.h" />
-        <ClInclude Include="direct3d\sampler.h" />
+        <ClInclude Include="direct3d\grid.h"/>
+        <ClInclude Include="direct3d\mesh_field.h"/>
+        <ClInclude Include="direct3d\sampler.h"/>
         <ClInclude Include="direct3d\shader.h"/>
         <ClInclude Include="direct3d\shader3d.h"/>
+        <ClInclude Include="direct3d\shader_field.h" />
         <ClInclude Include="direct3d\sprite.h"/>
         <ClInclude Include="direct3d\sprite_anim.h"/>
         <ClInclude Include="direct3d\texture.h"/>
         <ClInclude Include="direct3d\polygon.h"/>
-        <ClInclude Include="direct3d\cube.h" />
+        <ClInclude Include="direct3d\cube.h"/>
         <ClInclude Include="game\collision.h"/>
         <ClInclude Include="game\effect.h"/>
         <ClInclude Include="game\fade.h"/>
@@ -238,10 +240,10 @@
         <ClInclude Include="game\score.h"/>
         <ClInclude Include="game\title.h"/>
         <ClInclude Include="game_window\game_window.h"/>
-        <ClInclude Include="imgui\debug_imgui.h" />
-        <ClInclude Include="imgui\debug_imgui_camera.h" />
-        <ClInclude Include="imgui\debug_imgui_mesh_field.h" />
-        <ClInclude Include="imgui\debug_imgui_render.h" />
+        <ClInclude Include="imgui\debug_imgui.h"/>
+        <ClInclude Include="imgui\debug_imgui_camera.h"/>
+        <ClInclude Include="imgui\debug_imgui_mesh_field.h"/>
+        <ClInclude Include="imgui\debug_imgui_render.h"/>
         <ClInclude Include="utils\color.h"/>
         <ClInclude Include="utils\debug_ostream.h"/>
         <ClInclude Include="utils\debug_text.h"/>
@@ -265,6 +267,9 @@
     <ItemGroup>
         <None Include="utils\DirectXTex.inl"/>
     </ItemGroup>
+    <PropertyGroup>
+        <ShaderModel>5.0</ShaderModel>
+    </PropertyGroup>
     <ItemGroup>
         <FxCompile Include="shaders\shader_pixel_2d.hlsl">
             <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -289,6 +294,12 @@
             <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
             <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
             <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+        </FxCompile>
+        <FxCompile Include="shaders\shader_pixel_field.hlsl">
+            <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+            <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+            <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+            <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
         </FxCompile>
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>

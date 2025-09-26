@@ -11,11 +11,12 @@
 #include <DirectXMath.h>
 #include "debug_ostream.h"
 #include "direct3d.h"
-#include "shader3d.h"
+#include "shader_field.h"
 #include "color.h"
 #include "texture.h"
 #include <vector>
 
+#include "camera.h"
 #include "debug_imgui_mesh_field.h"
 #include "sampler.h"
 
@@ -172,7 +173,7 @@ void MeshField_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
     g_pDevice = pDevice;
     g_pContext = pContext;
-
+    
     MeshField_MakeIndexVertex(g_x_count, g_z_count);
 
     MeshField_CreateBuffer();
@@ -187,12 +188,16 @@ void MeshField_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
         MeshField_SetZCount,
         MeshField_SetY
     });
+    
+    Shader_Field_Initialize(pDevice, pContext);
 }
 
 void MeshField_Finalize()
 {
     SAFE_RELEASE(g_pVertexBuffer);
     SAFE_RELEASE(g_pIndexBuffer);
+
+    Shader_Field_Finalize();
 }
 
 void MeshField_Update(double)
@@ -212,9 +217,12 @@ void MeshField_Draw(const DirectX::XMMATRIX& mtxWorld)
     if (!g_is_display)
         return;
 
-    Shader3D_Begin();
+    Shader_Field_Begin();
     Sampler_SetFilter(FILTER::POINT);
     Direct3D_DepthStencilStateDepthIsEnable(true);
+
+    Shader_Field_SetViewMatrix(XMLoadFloat4x4(&Camera_GetMatrix()));
+    Shader_Field_SetProjectionMatrix(XMLoadFloat4x4(&Camera_GetPerspectiveMatrix()));
 
     // 頂点バッファを描画パイプラインに設定
     UINT stride = sizeof(Vertex3d);
@@ -224,7 +232,7 @@ void MeshField_Draw(const DirectX::XMMATRIX& mtxWorld)
 
     // 頂点シェーダーに変換行列を設定
     // ワールド座標変換行列
-    Shader3D_SetWorldMatrix(mtxWorld);
+    Shader_Field_SetWorldMatrix(mtxWorld);
 
     // プリミティブトポロジ設定
     g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
