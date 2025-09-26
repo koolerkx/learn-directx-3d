@@ -34,7 +34,7 @@ static ID3D11DeviceContext* g_pContext = nullptr;
 
 static int g_CubeTexId_0 = -1;
 static int g_CubeTexId_1 = -1;
-static std::wstring TEXTURE_PATH_0 = L"assets/Frame186.png";
+static std::wstring TEXTURE_PATH_0 = L"assets/sand.jpg";
 static std::wstring TEXTURE_PATH_1 = L"assets/grass.jpg";
 
 // 頂点構造体
@@ -79,10 +79,16 @@ namespace
                         g_pos_y,
                         static_cast<float>(z) * g_size_z - offset_z
                     },
-                    Color::WHITE,
+                    Color::GREEN,
                     { static_cast<float>(x), static_cast<float>(z) }
                 });
             }
+        }
+
+        for (int z = 0; z <= z_count; ++z)
+        {
+            int i = z * (x_count + 1) + (x_count / 2);
+            cube_vertex[i].color = Color::RED;
         }
 
         return cube_vertex;
@@ -175,7 +181,7 @@ void MeshField_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
     g_pDevice = pDevice;
     g_pContext = pContext;
-    
+
     MeshField_MakeIndexVertex(g_x_count, g_z_count);
 
     MeshField_CreateBuffer();
@@ -191,7 +197,7 @@ void MeshField_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
         MeshField_SetZCount,
         MeshField_SetY
     });
-    
+
     Shader_Field_Initialize(pDevice, pContext);
 }
 

@@ -24,8 +24,8 @@ float4 main(PS_INPUT ps_in) : SV_TARGET
     float2 uv = ps_in.uv;
 
     // 1. 違うスケールのものを合成
-    float2 uv0 = uv * 0.5f;
-    return tex0.Sample(samp, uv0) * 0.5f + tex1.Sample(samp, uv) * 0.5f; // * ps_in.color;
+    // float2 uv0 = uv * 0.5f;
+    // return tex0.Sample(samp, uv0) * 0.5f + tex0.Sample(samp, uv) * 0.5f; // * ps_in.color;
 
     // 2. 回転合成
     // 小さいほうを回転させて、大きいほうはそのまま
@@ -36,5 +36,7 @@ float4 main(PS_INPUT ps_in) : SV_TARGET
     // uv1.y = - uv.x * sin(A) + uv.y * cos(A);
     // return tex0.Sample(samp, uv1) * 0.5f + tex0.Sample(samp, uv) * 0.5f;
 
-    
+    // 3. 違うテクスチャ合成
+    // return tex0.Sample(samp, uv) * 0.3f + tex1.Sample(samp, uv) * 0.7f; // * ps_in.color;
+    return tex0.Sample(samp, uv) * ps_in.color.r + tex1.Sample(samp, uv) * ps_in.color.g; // * ps_in.color;
 }
