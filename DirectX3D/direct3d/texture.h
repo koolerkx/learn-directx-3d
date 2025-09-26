@@ -27,8 +27,9 @@ void Texture_AllRelease();
 
 /**
 * @param texid 管理番号
+* @param slot slot
 */
-void Texture_SetTexture(int texid);
+void Texture_SetTexture(int texid, int slot = 0);
 
 int Texture_Width(int texid);
 int Texture_Height(int texid);

@@ -32,8 +32,10 @@ static ID3D11Buffer* g_pIndexBuffer = nullptr; // インデックスバッファ
 static ID3D11Device* g_pDevice = nullptr;
 static ID3D11DeviceContext* g_pContext = nullptr;
 
-static int g_CubeTexId = -1;
-static std::wstring TEXTURE_PATH = L"assets/grass.jpg";
+static int g_CubeTexId_0 = -1;
+static int g_CubeTexId_1 = -1;
+static std::wstring TEXTURE_PATH_0 = L"assets/Frame186.png";
+static std::wstring TEXTURE_PATH_1 = L"assets/grass.jpg";
 
 // 頂点構造体
 struct Vertex3d
@@ -178,7 +180,8 @@ void MeshField_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
     MeshField_CreateBuffer();
 
-    g_CubeTexId = Texture_Load(TEXTURE_PATH.c_str());
+    g_CubeTexId_0 = Texture_Load(TEXTURE_PATH_0.c_str());
+    g_CubeTexId_1 = Texture_Load(TEXTURE_PATH_1.c_str());
 
     DebugImgui_MeshField_SetCallback(MeshFieldDataCallbackFn{
         MeshField_SetIsDisplay,
@@ -238,7 +241,9 @@ void MeshField_Draw(const DirectX::XMMATRIX& mtxWorld)
     g_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // ポリゴン描画命令発行
-    Texture_SetTexture(g_CubeTexId);
+    Texture_SetTexture(g_CubeTexId_0, 0);
+    Texture_SetTexture(g_CubeTexId_1, 1);
+
     g_pContext->DrawIndexed(static_cast<UINT>(g_field_index.size()), 0, 0);
 
     Direct3D_DepthStencilStateDepthIsEnable(false);
