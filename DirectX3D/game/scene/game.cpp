@@ -7,12 +7,11 @@
 
 #include <DirectXMath.h>
 
-#include "mesh_field.h"
+#include "light.h"
 
 using namespace DirectX;
 
-static XMFLOAT3 g_CubePosition{};
-static XMFLOAT3 g_CubeVelocity{};
+static double acc_time = 0;
 
 void Game_Initialize()
 {
@@ -36,7 +35,7 @@ void Game_Update(double elapsed_time)
 {
     // Cube_Update(elapsed_time);
     Camera_Update(elapsed_time);
-    MeshField_Update(elapsed_time);
+    // MeshField_Update(elapsed_time);
 
     // if (KeyLogger_IsTrigger(KK_Z))
     // {
@@ -46,17 +45,23 @@ void Game_Update(double elapsed_time)
     // XMVECTOR cube_position = XMLoadFloat3(&g_CubePosition);
     // cube_position += XMLoadFloat3(&g_CubeVelocity) * static_cast<float>(elapsed_time);
     // XMStoreFloat3(&g_CubePosition, cube_position);
+    
+    acc_time += elapsed_time;
 }
 
 void Game_Draw()
 {
     Grid_Draw();
+    
+    Light_SetAmbient({ 0.2f, 0.2f, 0.2f });
+    Light_SetDirectional({ 1.0f, 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f});
 
-    // XMMATRIX mtxWorld = XMMatrixIdentity();
-    // mtxWorld *= XMMatrixTranslationFromVector(XMLoadFloat3(&g_CubePosition));
+    
 
-    Cube_Draw();
-    MeshField_Draw();
+    XMMATRIX mtxWorld = XMMatrixIdentity();
+    mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
+    Cube_Draw(mtxWorld);
+    // MeshField_Draw();
 
     Camera_DebugDraw();
 }

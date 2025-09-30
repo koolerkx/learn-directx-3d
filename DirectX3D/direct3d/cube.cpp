@@ -35,6 +35,7 @@ static std::wstring TEXTURE_PATH = L"assets/cube_test_2048.png";
 struct Vertex3d
 {
     XMFLOAT3 position; // 頂点座標
+    XMFLOAT3 normal;
     XMFLOAT4 color; // 色
     XMFLOAT2 uv;
 };
@@ -42,52 +43,40 @@ struct Vertex3d
 static Vertex3d g_CubeVertex[NUM_VERTEX]
 {
     // 前
-    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0 } }, // LT
-    { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // RB
-    { { -0.5f, -0.5f, -0.5f }, Color::WHITE, { 0, 0.25f } }, // LB
-    // { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0 } }, // LT
-    { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.25f, 0 } }, // RT
-    // { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // RB
+    { { -0.5f, +0.5f, -0.5f }, { 0, 0, -1 }, Color::WHITE, { 0, 0 } }, // LT
+    { { +0.5f, -0.5f, -0.5f }, { 0, 0, -1 }, Color::WHITE, { 0.25f, 0.25f } }, // RB
+    { { -0.5f, -0.5f, -0.5f }, { 0, 0, -1 }, Color::WHITE, { 0, 0.25f } }, // LB
+    { { +0.5f, +0.5f, -0.5f }, { 0, 0, -1 }, Color::WHITE, { 0.25f, 0 } }, // RT
 
     // 後
-    { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0 } }, // LT
-    { { +0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // LB
-    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // RB
-    // { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0 } }, // LT
-    // { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // RB
-    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.5f, 0 } }, // RT
+    { { +0.5f, -0.5f, +0.5f }, { 0, 0, 1 }, Color::WHITE, { 0.25f, 0 } }, // LT
+    { { +0.5f, +0.5f, +0.5f }, { 0, 0, 1 }, Color::WHITE, { 0.25f, 0.25f } }, // LB
+    { { -0.5f, +0.5f, +0.5f }, { 0, 0, 1 }, Color::WHITE, { 0.5f, 0.25f } }, // RB
+    { { -0.5f, -0.5f, +0.5f }, { 0, 0, 1 }, Color::WHITE, { 0.5f, 0 } }, // RT
 
     // 上
-    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0 } }, // LT
-    { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.75f, 0.25f } }, // RB
-    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // LB
-    // { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.5f, 0 } }, // LT
-    { { +0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.75f, 0 } }, // RT
-    // { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.75f, 0.25f } }, // RB
+    { { -0.5f, +0.5f, +0.5f }, { 0, 1, 0 }, Color::WHITE, { 0.5f, 0 } }, // LT
+    { { +0.5f, +0.5f, -0.5f }, { 0, 1, 0 }, Color::WHITE, { 0.75f, 0.25f } }, // RB
+    { { -0.5f, +0.5f, -0.5f }, { 0, 1, 0 }, Color::WHITE, { 0.5f, 0.25f } }, // LB
+    { { +0.5f, +0.5f, +0.5f }, { 0, 1, 0 }, Color::WHITE, { 0.75f, 0 } }, // RT
 
     // 下
-    { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.75f, 0 } }, // LT
-    { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.75f, 0.25f } }, // LB
-    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 1.0f, 0.25f } }, // RB
-    // { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.75f, 0 } }, // LT
-    // { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 1.0f, 0.25f } }, // RB
-    { { -0.5f, -0.5f, -0.5f }, Color::WHITE, { 1.0f, 0 } }, // RT
+    { { +0.5f, -0.5f, -0.5f }, { 0, -1, 0 }, Color::WHITE, { 0.75f, 0 } }, // LT
+    { { +0.5f, -0.5f, +0.5f }, { 0, -1, 0 }, Color::WHITE, { 0.75f, 0.25f } }, // LB
+    { { -0.5f, -0.5f, +0.5f }, { 0, -1, 0 }, Color::WHITE, { 1.0f, 0.25f } }, // RB
+    { { -0.5f, -0.5f, -0.5f }, { 0, -1, 0 }, Color::WHITE, { 1.0f, 0 } }, // RT
 
     // 右
-    { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0.25f } }, // LT
-    { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.5f } }, // RB
-    { { +0.5f, -0.5f, -0.5f }, Color::WHITE, { 0, 0.5f } }, // LB
-    // { { +0.5f, +0.5f, -0.5f }, Color::WHITE, { 0, 0.25f } }, // LT
-    { { +0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // RT
-    // { { +0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.5f } }, // RB
+    { { +0.5f, +0.5f, -0.5f }, { 1, 0, 0 }, Color::WHITE, { 0, 0.25f } }, // LT
+    { { +0.5f, -0.5f, +0.5f }, { 1, 0, 0 }, Color::WHITE, { 0.25f, 0.5f } }, // RB
+    { { +0.5f, -0.5f, -0.5f }, { 1, 0, 0 }, Color::WHITE, { 0, 0.5f } }, // LB
+    { { +0.5f, +0.5f, +0.5f }, { 1, 0, 0 }, Color::WHITE, { 0.25f, 0.25f } }, // RT
 
     // 左
-    { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // LT
-    { { -0.5f, +0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.5f } }, // LB
-    { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.5f, 0.5f } }, // RB
-    // { { -0.5f, -0.5f, +0.5f }, Color::WHITE, { 0.25f, 0.25f } }, // LT
-    // { { -0.5f, +0.5f, -0.5f }, Color::WHITE, { 0.5f, 0.5f } }, // RB
-    { { -0.5f, -0.5f, -0.5f }, Color::WHITE, { 0.5f, 0.25f } }, // RT
+    { { -0.5f, -0.5f, +0.5f }, { -1, 0, 0 }, Color::WHITE, { 0.25f, 0.25f } }, // LT
+    { { -0.5f, +0.5f, +0.5f }, { -1, 0, 0 }, Color::WHITE, { 0.25f, 0.5f } }, // LB
+    { { -0.5f, +0.5f, -0.5f }, { -1, 0, 0 }, Color::WHITE, { 0.5f, 0.5f } }, // RB
+    { { -0.5f, -0.5f, -0.5f }, { -1, 0, 0 }, Color::WHITE, { 0.5f, 0.25f } }, // RT
 };
 
 static uint16_t g_CubeIndex[NUM_INDEX] = {
@@ -127,7 +116,7 @@ void Cube_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     bd.ByteWidth = sizeof(uint16_t) * NUM_INDEX;
     bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
     sd.pSysMem = g_CubeIndex;
-    
+
     g_pDevice->CreateBuffer(&bd, &sd, &g_pIndexBuffer);
 
     g_CubeTexId = Texture_Load(TEXTURE_PATH.c_str());
