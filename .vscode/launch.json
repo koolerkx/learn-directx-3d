@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug DirectX3D",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/x64/Debug/DirectX3D.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/DirectX3D",
+            "environment": [],
+            "console": "integratedTerminal",
+            "preLaunchTask": "MSBuild: Build Debug (x64)"
+        },
+        {
+            "name": "Release DirectX3D",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/x64/Release/DirectX3D.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/DirectX3D",
+            "environment": [],
+            "console": "integratedTerminal",
+            "preLaunchTask": "MSBuild: Build Release (x64)"
+        }
+    ]
+}

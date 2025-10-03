@@ -1,0 +1,66 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "${config:msbuild.path}",
+            "args": [
+                "${workspaceFolder}\\DirectX3D\\DirectX3D.vcxproj",
+                "/t:Clean",
+                "/p:Configuration=${input:cfg}",
+                "/p:Platform=x64",
+                "/nologo",
+                "/verbosity:minimal"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "MSBuild: Build Debug (x64)",
+            "type": "shell",
+            "command": "${config:msbuild.path}",
+            "args": [
+                "${workspaceFolder}/DirectX3D.sln",
+                "/t:Build",
+                "/p:Configuration=Debug",
+                "/p:Platform=x64",
+                "/m",
+                "/nologo",
+                "/verbosity:minimal"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "MSBuild: Build Release (x64)",
+            "type": "shell",
+            "command": "${config:msbuild.path}",
+            "args": [
+                "${workspaceFolder}/DirectX3D.sln",
+                "/t:Build",
+                "/p:Configuration=Release",
+                "/p:Platform=x64",
+                "/m",
+                "/nologo",
+                "/verbosity:minimal"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "cfg",
+            "type": "pickString",
+            "description": "Select Configuration",
+            "options": [
+                "Debug",
+                "Release"
+            ],
+            "default": "Debug"
+        }
+    ]
+}
