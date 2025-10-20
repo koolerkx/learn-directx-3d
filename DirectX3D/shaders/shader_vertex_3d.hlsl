@@ -63,7 +63,10 @@ VS_OUTPUT main(VS_INPUT vs_in)
     float dl = max(dot(-directional_world_vector, normalW), 0);
 
     float3 color = vs_in.color.rgb * directional_color.rgb * dl +vs_in.color.rgb * ambient_color.rgb;
-    vs_out.color = float4(color, vs_in.color.a);
+    
+    // vs_out.color = float4(color, vs_in.color.a);  // HDR
+    vs_out.color = saturate(float4(color, vs_in.color.a));  // LDR
+    
     vs_out.uv = vs_in.uv;
     return vs_out;
 }
