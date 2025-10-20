@@ -98,7 +98,7 @@ AI_FORCE_INLINE aiReturn aiMaterial::Get(const char* pKey,unsigned int type,
             return AI_FAILURE;
         }
 
-        iNum = static_cast<unsigned int>(std::min(static_cast<size_t>(iNum),prop->mDataLength / sizeof(Type)));
+        iNum = static_cast<unsigned int>(min(static_cast<size_t>(iNum),prop->mDataLength / sizeof(Type)));
         ::memcpy(pOut,prop->mData,iNum * sizeof(Type));
         if (pMax) {
             *pMax = iNum;
@@ -224,8 +224,8 @@ AI_FORCE_INLINE aiReturn aiMaterial::Get(const char* pKey,unsigned int type,
 
 // ---------------------------------------------------------------------------
 template<class TYPE>
-aiReturn aiMaterial::AddProperty (const TYPE* pInput, 
-        const unsigned int pNumValues, const char* pKey, unsigned int type, 
+aiReturn aiMaterial::AddProperty (const TYPE* pInput,
+        const unsigned int pNumValues, const char* pKey, unsigned int type,
         unsigned int index) {
     return AddBinaryProperty((const void*)pInput, pNumValues * sizeof(TYPE),
         pKey,type,index,aiPTI_Buffer);

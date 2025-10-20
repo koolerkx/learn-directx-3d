@@ -9,10 +9,13 @@
 
 #include "light.h"
 #include "mesh_field.h"
+#include "model.h"
 
 using namespace DirectX;
 
 static double acc_time = 0;
+
+MODEL* pModel;
 
 void Game_Initialize()
 {
@@ -25,11 +28,14 @@ void Game_Initialize()
         DEFAULT_CAMERA_FRONT,
         DEFAULT_CAMERA_UP
         );
+
+    pModel = ModelLoad("assets/test.fbx");
 }
 
 void Game_Finalize()
 {
     Camera_Finalize();
+    ModelRelease(pModel);
 }
 
 void Game_Update(double elapsed_time)
@@ -60,8 +66,10 @@ void Game_Draw()
     XMMATRIX mtxWorld = XMMatrixIdentity();
     mtxWorld *= XMMatrixTranslation(0.0f, 1.0f, 0.0f);
     mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
-    Cube_Draw(mtxWorld);
+    // Cube_Draw(mtxWorld);
     MeshField_Draw();
+
+    ModelDraw(pModel, mtxWorld);
 
     Camera_DebugDraw();
 }

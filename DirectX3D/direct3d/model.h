@@ -1,5 +1,6 @@
 #pragma once
 
+#include <DirectXMath.h>
 #include <unordered_map>
 
 #include "assimp/cimport.h"
@@ -7,8 +8,6 @@
 #include "assimp/postprocess.h"
 #include "assimp/matrix4x4.h"
 #pragma comment (lib, "assimp-vc143-mt.lib")
-
-
 
 struct MODEL
 {
@@ -21,6 +20,7 @@ struct MODEL
 };
 
 
-MODEL* ModelLoad(const char* FileName);
+MODEL* ModelLoad(const char* FileName, float scale = 1.0f, bool bBlender = false);
 void ModelRelease(MODEL* model);
 
+void ModelDraw(MODEL* pModel, const DirectX::XMMATRIX& mtxWorld);
