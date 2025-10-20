@@ -41,6 +41,7 @@ static std::wstring TEXTURE_PATH_1 = L"assets/grass.jpg";
 struct Vertex3d
 {
     XMFLOAT3 position; // 頂点座標
+    XMFLOAT3 normal;
     XMFLOAT4 color; // 色
     XMFLOAT2 uv;
 };
@@ -79,6 +80,7 @@ namespace
                         g_pos_y,
                         static_cast<float>(z) * g_size_z - offset_z
                     },
+                    { 0.0f, 1.0f, 0.0f },
                     Color::GREEN,
                     { static_cast<float>(x), static_cast<float>(z) }
                 });

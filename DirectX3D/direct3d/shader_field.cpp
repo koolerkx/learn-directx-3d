@@ -46,11 +46,11 @@ bool Shader_Field_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 
     // 事前コンパイル済み頂点シェーダーの読み込み
-    std::ifstream ifs_vs("assets/shader/shader_vertex_3d.cso", std::ios::binary);
+    std::ifstream ifs_vs("assets/shader/shader_vertex_field.cso", std::ios::binary);
 
     if (!ifs_vs)
     {
-        MessageBox(nullptr, "頂点シェーダーの読み込みに失敗しました\n\nshader_vertex_3d.cso", "エラー", MB_OK);
+        MessageBox(nullptr, "頂点シェーダーの読み込みに失敗しました\n\nshader_vertex_field.cso", "エラー", MB_OK);
         return false;
     }
 
@@ -79,6 +79,7 @@ bool Shader_Field_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
     // 頂点レイアウトの定義
     D3D11_INPUT_ELEMENT_DESC layout[] = {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };

@@ -58,7 +58,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     Light_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Grid_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     Cube_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
-    // MeshField_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
+    MeshField_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
 
     // デバッグテキスト
     hal::DebugText debugText(Direct3D_GetDevice(), Direct3D_GetContext(),
@@ -151,7 +151,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     }
     while (msg.message != WM_QUIT);
 
-    // MeshField_Finalize();
+    MeshField_Finalize();
     Cube_Finalize();
     Grid_Finalize();
     Light_Finalize();

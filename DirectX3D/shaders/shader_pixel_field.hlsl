@@ -9,10 +9,11 @@ struct PS_INPUT
 {
     float4 posH : SV_POSITION;
     float4 color : COLOR0;
+    float4 light_color: COLOR1;
     float2 uv: TEXCOORD0;
 };
 
-Texture2D tex0: register(t0);// テクスチャ
+Texture2D tex0: register(t0); // テクスチャ
 Texture2D tex1: register(t1); // テクスチャ
 SamplerState samp; // テクスチャさんプラ
 
@@ -38,5 +39,8 @@ float4 main(PS_INPUT ps_in) : SV_TARGET
 
     // 3. 違うテクスチャ合成
     // return tex0.Sample(samp, uv) * 0.3f + tex1.Sample(samp, uv) * 0.7f; // * ps_in.color;
-    return tex0.Sample(samp, uv) * ps_in.color.r + tex1.Sample(samp, uv) * ps_in.color.g; // * ps_in.color;
+
+    float4 texColor = tex0.Sample(samp, uv) * ps_in.color.r + tex1.Sample(samp, uv) * ps_in.color.g; // * ps_in.color;
+
+    return texColor * ps_in.light_color;
 }

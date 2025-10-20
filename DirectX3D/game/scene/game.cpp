@@ -8,6 +8,7 @@
 #include <DirectXMath.h>
 
 #include "light.h"
+#include "mesh_field.h"
 
 using namespace DirectX;
 
@@ -53,15 +54,14 @@ void Game_Draw()
 {
     Grid_Draw();
     
-    Light_SetAmbient({ 0.2f, 0.2f, 0.2f });
-    Light_SetDirectional({ 1.0f, 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f});
-
+    Light_SetAmbient({ 0.5f, 0.5f, 0.5f });
+    Light_SetDirectional({ 1.0f, 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f});
     
-
     XMMATRIX mtxWorld = XMMatrixIdentity();
+    mtxWorld *= XMMatrixTranslation(0.0f, 1.0f, 0.0f);
     mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
     Cube_Draw(mtxWorld);
-    // MeshField_Draw();
+    MeshField_Draw();
 
     Camera_DebugDraw();
 }
