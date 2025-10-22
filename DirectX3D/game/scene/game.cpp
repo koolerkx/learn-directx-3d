@@ -29,7 +29,7 @@ void Game_Initialize()
         DEFAULT_CAMERA_UP
         );
 
-    pModel = ModelLoad("assets/test.fbx");
+    pModel = ModelLoad("assets/shinamon.fbx");
 }
 
 void Game_Finalize()

@@ -28,12 +28,11 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
 
     const std::string modelPath(FileName);
 
-    model->AiScene = aiImportFile(FileName, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
+    model->AiScene = aiImportFile(FileName, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded | aiProcess_OptimizeMeshes);
     assert(model->AiScene);
 
     model->VertexBuffer = new ID3D11Buffer*[model->AiScene->mNumMeshes];
     model->IndexBuffer = new ID3D11Buffer*[model->AiScene->mNumMeshes];
-
 
     for (unsigned int m = 0; m < model->AiScene->mNumMeshes; m++)
     {
@@ -106,14 +105,12 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
 
             delete[] index;
         }
-
     }
-
-
+    
     //テクスチャ読み込み
     if (model->AiScene->mNumTextures)
     {
-        for (int i = 0; i < model->AiScene->mNumTextures; i++)
+        for (unsigned int i = 0; i < model->AiScene->mNumTextures; i++)
         {
             aiTexture* aitexture = model->AiScene->mTextures[i];
 
@@ -127,6 +124,8 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
                 &pTexture,
                 &pTextureSrv
                 );
+
+            pTexture->Release();
 
             if (FAILED(texture_hr))
             {
@@ -191,6 +190,10 @@ void ModelDraw(MODEL* pModel, const DirectX::XMMATRIX& mtxWorld)
         {
             Texture_SetTexture(g_default_texture_id);
         }
+
+        aiColor3D diffuse;
+        pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+        Shader3D_SetMaterialColor({diffuse.r, diffuse.g, diffuse.b, 1.0f});
 
         UINT stride = sizeof(Vertex);
         UINT offset = 0;

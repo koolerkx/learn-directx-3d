@@ -18,6 +18,8 @@ void Shader3D_SetProjectionMatrix(const DirectX::XMMATRIX& matrix);
 void Shader3D_SetWorldMatrix(const DirectX::XMMATRIX& matrix);
 void Shader3D_SetViewMatrix(const DirectX::XMMATRIX& matrix);
 
+void Shader3D_SetMaterialColor(const DirectX::XMFLOAT4& material_color);
+
 void Shader3D_Begin();
 
 #endif // SHADER3D_H

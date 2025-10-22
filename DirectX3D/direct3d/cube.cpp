@@ -134,6 +134,9 @@ void Cube_Update(double)
 void Cube_Draw(const DirectX::XMMATRIX& mtxWorld)
 {
     Shader3D_Begin();
+
+    Shader3D_SetMaterialColor(Color::SetOpacity(Color::WHITE, 1.0f));
+    
     Direct3D_DepthStencilStateDepthIsEnable(true);
 
     // 頂点バッファを描画パイプラインに設定

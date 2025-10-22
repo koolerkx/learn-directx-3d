@@ -24,6 +24,8 @@ static ID3D11Buffer* g_pVSConstantBuffer0 = nullptr; // Projection Matrix
 static ID3D11Buffer* g_pVSConstantBuffer1 = nullptr; // World Matrix
 static ID3D11Buffer* g_pVSConstantBuffer2 = nullptr; // View Matrix
 
+static ID3D11Buffer* g_pPSConstantBuffer0 = nullptr; // Material
+
 // 注意！初期化で外部から設定されるもの。Release不要。
 static ID3D11Device* g_pDevice = nullptr;
 static ID3D11DeviceContext* g_pContext = nullptr;
@@ -126,6 +128,11 @@ bool Shader3D_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     hr = g_pDevice->CreatePixelShader(psbinary_pointer, filesize, nullptr, &g_pPixelShader);
 
     delete[] psbinary_pointer; // バイナリデータのバッファを解放
+    
+    buffer_desc.ByteWidth = sizeof(XMFLOAT4); // バッファのサイズ
+
+    g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pPSConstantBuffer0);
+
 
     if (FAILED(hr))
     {
@@ -142,6 +149,7 @@ void Shader3D_Finalize()
     SAFE_RELEASE(g_pVSConstantBuffer0);
     SAFE_RELEASE(g_pVSConstantBuffer1);
     SAFE_RELEASE(g_pVSConstantBuffer2);
+    SAFE_RELEASE(g_pPSConstantBuffer0);
     SAFE_RELEASE(g_pInputLayout);
     SAFE_RELEASE(g_pVertexShader);
 }
@@ -176,6 +184,11 @@ void Shader3D_SetViewMatrix(const DirectX::XMMATRIX& matrix)
     g_pContext->UpdateSubresource(g_pVSConstantBuffer2, 0, nullptr, &transpose, 0, 0);
 }
 
+void Shader3D_SetMaterialColor(const DirectX::XMFLOAT4& material_color)
+{
+    g_pContext->UpdateSubresource(g_pPSConstantBuffer0, 0, nullptr, &material_color, 0, 0);
+}
+
 void Shader3D_Begin()
 {
     // 頂点シェーダーとピクセルシェーダーを描画パイプラインに設定
@@ -189,6 +202,8 @@ void Shader3D_Begin()
     g_pContext->VSSetConstantBuffers(0, 1, &g_pVSConstantBuffer0);
     g_pContext->VSSetConstantBuffers(1, 1, &g_pVSConstantBuffer1);
     g_pContext->VSSetConstantBuffers(2, 1, &g_pVSConstantBuffer2);
+    
+    g_pContext->PSSetConstantBuffers(0, 1, &g_pPSConstantBuffer0);
 
     Sampler_SetFilter(FILTER::ANISOTROPIC);
 }
