@@ -17,6 +17,7 @@ static double acc_time = 0;
 
 MODEL* pModel_slime;
 MODEL* pModel_shinamon;
+MODEL* pModel_densha;
 
 void Game_Initialize()
 {
@@ -30,8 +31,9 @@ void Game_Initialize()
         DEFAULT_CAMERA_UP
         );
 
-    pModel_slime = ModelLoad("assets/slime_re.fbx");
-    pModel_shinamon = ModelLoad("assets/shinamon.fbx");
+    pModel_slime = ModelLoad("assets/slime_re.fbx", 0.25f);
+    pModel_densha = ModelLoad("assets/densha.fbx", 2.0f, true);
+    pModel_shinamon = ModelLoad("assets/shinamon.fbx", 0.25f);
 }
 
 void Game_Finalize()
@@ -39,6 +41,7 @@ void Game_Finalize()
     Camera_Finalize();
     ModelRelease(pModel_slime);
     ModelRelease(pModel_shinamon);
+    ModelRelease(pModel_densha);
 }
 
 void Game_Update(double elapsed_time)
@@ -68,12 +71,14 @@ void Game_Draw()
     
     XMMATRIX mtxWorld = XMMatrixIdentity();
     mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
-    mtxWorld *= XMMatrixTranslation(0.0f, 5.0f, 0.0f);
+    mtxWorld *= XMMatrixTranslation(0.0f, 2.0f, 0.0f);
     // Cube_Draw(mtxWorld);
     ModelDraw(pModel_shinamon, mtxWorld);
     
-    mtxWorld *= XMMatrixTranslation(10.0f, 0.0f, 10.0f);
+    mtxWorld *= XMMatrixTranslation(2.0f, 0.0f, 0.0f);
     ModelDraw(pModel_slime, mtxWorld);
+    mtxWorld *= XMMatrixTranslation(4.0f, 0.0f, 0.0f);
+    ModelDraw(pModel_densha, mtxWorld);
 
     MeshField_Draw();
 
