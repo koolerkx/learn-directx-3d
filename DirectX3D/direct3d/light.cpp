@@ -17,8 +17,8 @@ using namespace DirectX;
 static ID3D11Device* g_pDevice = nullptr;
 static ID3D11DeviceContext* g_pContext = nullptr;
 
-static ID3D11Buffer* g_pVSConstantBuffer3 = nullptr; // Ambient Light
-static ID3D11Buffer* g_pVSConstantBuffer4 = nullptr; // Directional Light
+static ID3D11Buffer* g_pPSConstantBuffer1 = nullptr; // Ambient Light
+static ID3D11Buffer* g_pPSConstantBuffer2 = nullptr; // Directional Light
 
 struct AmbientLightBuffer
 {
@@ -52,22 +52,22 @@ void Light_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER; // バインドフラグ
 
     buffer_desc.ByteWidth = sizeof(XMFLOAT4); // バッファのサイズ
-    g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pVSConstantBuffer3);
+    g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pPSConstantBuffer1);
     buffer_desc.ByteWidth = sizeof(DirectionalLightBuffer); // バッファのサイズ
-    g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pVSConstantBuffer4);
+    g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pPSConstantBuffer2);
 }
 
 void Light_Finalize(void)
 {
-    SAFE_RELEASE(g_pVSConstantBuffer3);
-    SAFE_RELEASE(g_pVSConstantBuffer4);
+    SAFE_RELEASE(g_pPSConstantBuffer1);
+    SAFE_RELEASE(g_pPSConstantBuffer2);
 }
 
 void Light_SetAmbient(const DirectX::XMFLOAT3& color)
 {
     AmbientLightBuffer data = { color };
-    g_pContext->UpdateSubresource(g_pVSConstantBuffer3, 0, nullptr, &data, 0, 0);
-    g_pContext->VSSetConstantBuffers(3, 1, &g_pVSConstantBuffer3);
+    g_pContext->UpdateSubresource(g_pPSConstantBuffer1, 0, nullptr, &data, 0, 0);
+    g_pContext->PSSetConstantBuffers(1, 1, &g_pPSConstantBuffer1);
 }
 
 void Light_SetDirectional(
@@ -77,6 +77,6 @@ void Light_SetDirectional(
     )
 {
     DirectionalLightBuffer data = { directional, color, 0.0f, camera_position};
-    g_pContext->UpdateSubresource(g_pVSConstantBuffer4, 0, nullptr, &data, 0, 0);
-    g_pContext->VSSetConstantBuffers(4, 1, &g_pVSConstantBuffer4);
+    g_pContext->UpdateSubresource(g_pPSConstantBuffer2, 0, nullptr, &data, 0, 0);
+    g_pContext->PSSetConstantBuffers(2, 1, &g_pPSConstantBuffer2);
 }

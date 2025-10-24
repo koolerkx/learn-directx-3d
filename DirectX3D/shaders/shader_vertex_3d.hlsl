@@ -21,20 +21,6 @@ cbuffer VS_CONSTANT_BUFFER: register(b2)
     float4x4 view;
 };
 
-cbuffer VS_CONSTANT_BUFFER: register(b3)
-{
-    float3 ambient_color;
-}
-
-cbuffer VS_CONSTANT_BUFFER: register(b4)
-{
-    float4 directional_world_vector;
-    float3 directional_color;
-    float3 eye_powW;
-    // float3 specular_light_color;
-    // float specular_power;
-}
-
 struct VS_INPUT
 {
     float3 posL : POSITION0; // ローカル座標
@@ -45,8 +31,10 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 posH : SV_POSITION; // 変換済み座標
+    float4 posW : POSITION1; 
     float4 color : COLOR0; // Color
     float2 uv: TEXCOORD0;
+    float4 normalW : NORMAL1;
 };
 
 // 頂点シェーダ
@@ -59,25 +47,14 @@ VS_OUTPUT main(VS_INPUT vs_in)
     float4 posW = mul(pos, world);
     float4 posWV = mul(posW, view);
     float4 posH = mul(posWV, proj);
+
+    vs_out.posW = posW;
     vs_out.posH = posH;
 
     // ライト計算
     float4 normalW = normalize(mul(float4(vs_in.normalL, 0), world));
-    float dl = max(dot(-directional_world_vector, normalW), 0);
-
-    // スペキュラーライト
-    float3 toEye = normalize(eye_powW - posW.xyz);
-    float3 r = reflect(directional_world_vector, normalW).xyz;
-    
-    float spec = pow(max(dot(r, toEye), 0.0f), 10.0f);
-    // float spec = t * specular_light_color;
-
-    float3 color = vs_in.color.rgb * directional_color.rgb * dl +vs_in.color.rgb * ambient_color.rgb;
-    color += float3(1.0f, 1.0f, 1.0f) * spec;
-    
-    // vs_out.color = float4(color, vs_in.color.a);  // HDR
-    // vs_out.color = saturate(float4(color, vs_in.color.a));  // LDR
-    vs_out.color = float4(color, vs_in.color.a);
+    vs_out.normalW = normalW;
+    vs_out.color = vs_in.color;
     
     vs_out.uv = vs_in.uv;
     return vs_out;
