@@ -18,6 +18,8 @@ static double acc_time = 0;
 MODEL* pModel_slime;
 MODEL* pModel_shinamon;
 MODEL* pModel_densha;
+MODEL* pModel_robot;
+MODEL* pModel_kriby;
 
 void Game_Initialize()
 {
@@ -34,6 +36,8 @@ void Game_Initialize()
     pModel_slime = ModelLoad("assets/slime_re.fbx", 0.25f);
     pModel_densha = ModelLoad("assets/densha.fbx", 2.0f, true);
     pModel_shinamon = ModelLoad("assets/shinamon.fbx", 0.25f);
+    pModel_robot = ModelLoad("assets/robot.fbx", 0.25f);
+    pModel_kriby = ModelLoad("assets/test.fbx", 0.1f);
 }
 
 void Game_Finalize()
@@ -42,6 +46,8 @@ void Game_Finalize()
     ModelRelease(pModel_slime);
     ModelRelease(pModel_shinamon);
     ModelRelease(pModel_densha);
+    ModelRelease(pModel_robot);
+    ModelRelease(pModel_kriby);
 }
 
 void Game_Update(double elapsed_time)
@@ -67,7 +73,7 @@ void Game_Draw()
     Grid_Draw();
     
     Light_SetAmbient({ 0.5f, 0.5f, 0.5f });
-    Light_SetDirectional({ 1.0f, 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f});
+    Light_SetDirectional({ 1.0f, 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f}, Camera_GetPosition());
     
     XMMATRIX mtxWorld = XMMatrixIdentity();
     mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
@@ -79,6 +85,12 @@ void Game_Draw()
     ModelDraw(pModel_slime, mtxWorld);
     mtxWorld *= XMMatrixTranslation(4.0f, 0.0f, 0.0f);
     ModelDraw(pModel_densha, mtxWorld);
+
+    mtxWorld *= XMMatrixTranslation(-8.0f, 0.0f, 0.0f);
+    ModelDraw(pModel_robot, mtxWorld);
+
+    mtxWorld *= XMMatrixTranslation(-2.0f, 0.0f, 0.0f);
+    ModelDraw(pModel_kriby, mtxWorld);
 
     MeshField_Draw();
 

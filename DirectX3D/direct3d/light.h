@@ -15,6 +15,10 @@
 void Light_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 void Light_Finalize(void);
 void Light_SetAmbient(const DirectX::XMFLOAT3& color);
-void Light_SetDirectional(const DirectX::XMFLOAT4& directional, const DirectX::XMFLOAT3& color);
+void Light_SetDirectional(
+    const DirectX::XMFLOAT4& directional,
+    const DirectX::XMFLOAT3& color,
+    const DirectX::XMFLOAT3& camera_position
+    );
 
 #endif

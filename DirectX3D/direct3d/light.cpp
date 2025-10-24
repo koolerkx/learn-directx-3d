@@ -31,6 +31,8 @@ struct DirectionalLightBuffer
     XMFLOAT4 world_vector;
     XMFLOAT3 color;
     float pad;
+    XMFLOAT3 eye_posW;
+    float pad2;
 };
 
 void Light_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -68,9 +70,13 @@ void Light_SetAmbient(const DirectX::XMFLOAT3& color)
     g_pContext->VSSetConstantBuffers(3, 1, &g_pVSConstantBuffer3);
 }
 
-void Light_SetDirectional(const DirectX::XMFLOAT4& directional, const DirectX::XMFLOAT3& color)
+void Light_SetDirectional(
+    const DirectX::XMFLOAT4& directional,
+    const DirectX::XMFLOAT3& color,
+    const DirectX::XMFLOAT3& camera_position
+    )
 {
-    DirectionalLightBuffer data = { directional, color };
+    DirectionalLightBuffer data = { directional, color, 0.0f, camera_position};
     g_pContext->UpdateSubresource(g_pVSConstantBuffer4, 0, nullptr, &data, 0, 0);
     g_pContext->VSSetConstantBuffers(4, 1, &g_pVSConstantBuffer4);
 }
