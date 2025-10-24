@@ -11,7 +11,7 @@
 
 using namespace DirectX;
 
-int g_default_texture_id = -1;
+int g_TextureWhite = -1;
 
 // 頂点構造体
 struct Vertex
@@ -106,39 +106,87 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
             delete[] index;
         }
     }
-    
-    //テクスチャ読み込み
-    if (model->AiScene->mNumTextures)
+
+    g_TextureWhite = Texture_Load(L"assets/white.png");
+
+    // FBXにテクスチャが内包されている場合
+    for (unsigned int i = 0; i < model->AiScene->mNumTextures; i++)
     {
-        for (unsigned int i = 0; i < model->AiScene->mNumTextures; i++)
+        aiTexture* aitexture = model->AiScene->mTextures[i];
+
+        ID3D11Resource* pTexture = nullptr;
+        ID3D11ShaderResourceView* pTextureSrv = nullptr;
+
+        HRESULT texture_hr = CreateWICTextureFromMemory(
+            Direct3D_GetDevice(),
+            reinterpret_cast<const uint8_t*>(aitexture->pcData),
+            aitexture->mWidth,
+            &pTexture,
+            &pTextureSrv
+            );
+
+        pTexture->Release();
+
+        if (FAILED(texture_hr))
         {
-            aiTexture* aitexture = model->AiScene->mTextures[i];
-
-            ID3D11Resource* pTexture = nullptr;
-            ID3D11ShaderResourceView* pTextureSrv = nullptr;
-
-            HRESULT texture_hr = CreateWICTextureFromMemory(
-                Direct3D_GetDevice(),
-                reinterpret_cast<const uint8_t*>(aitexture->pcData),
-                aitexture->mWidth,
-                &pTexture,
-                &pTextureSrv
-                );
-
-            pTexture->Release();
-
-            if (FAILED(texture_hr))
-            {
-                MessageBoxW(nullptr, L"モデルのテクスチャの読込に失敗しました", L"モデルテクスチャ読み込み失敗！", MB_OK | MB_ICONERROR);
-                assert(false);
-            }
-
-            model->Texture[aitexture->mFilename.data] = pTextureSrv;
+            MessageBoxW(nullptr, L"モデルのテクスチャの読込に失敗しました", L"モデルテクスチャ読み込み失敗！", MB_OK | MB_ICONERROR);
+            assert(false);
         }
+
+        model->Texture[aitexture->mFilename.data] = pTextureSrv;
     }
-    else
+
+    // fbxのファイルパスだけ取得
+    // Extract filepath only
+    size_t pos = modelPath.find_last_of("/\\");
+    std::string directory = "";
+
+    if (pos != std::string::npos)
     {
-        g_default_texture_id = Texture_Load(L"assets/white.png");
+        directory = modelPath.substr(0, pos);
+    }
+
+    for (unsigned int m = 0; m < model->AiScene->mNumMeshes; m++)
+    {
+        aiString filename;
+        aiMaterial* aimaterial = model->AiScene->mMaterials[model->AiScene->mMeshes[m]->mMaterialIndex];
+        aimaterial->GetTexture(aiTextureType_DIFFUSE, 0, &filename);
+
+        if (filename.length == 0)
+        {
+            continue;
+        }
+        if (model->Texture.count(filename.C_Str()))
+        {
+            continue;
+        }
+
+        ID3D11Resource* pTexture = nullptr;
+        ID3D11ShaderResourceView* pTextureSrv = nullptr;
+
+        std::string texfilename = directory + "/" + filename.C_Str();
+
+        int len = MultiByteToWideChar(CP_UTF8, 0, texfilename.c_str(), -1, nullptr, 0);
+        wchar_t* pWideFilename = new wchar_t[len];
+        MultiByteToWideChar(CP_UTF8, 0, texfilename.c_str(), -1, pWideFilename, len);
+
+        HRESULT texture_hr = CreateWICTextureFromFile(
+            Direct3D_GetDevice(),
+            pWideFilename,
+            &pTexture,
+            &pTextureSrv
+            );
+
+        delete[] pWideFilename;
+        pTexture->Release();
+
+        if (FAILED(texture_hr))
+        {
+            MessageBoxW(nullptr, L"モデルのテクスチャの読込に失敗しました", L"モデルテクスチャ読み込み失敗！", MB_OK | MB_ICONERROR);
+            assert(false);
+        }
+
+        model->Texture[filename.C_Str()] = pTextureSrv;
     }
 
     return model;
@@ -182,18 +230,19 @@ void ModelDraw(MODEL* pModel, const DirectX::XMMATRIX& mtxWorld)
         aiMaterial* pMaterial = pModel->AiScene->mMaterials[pModel->AiScene->mMeshes[m]->mMaterialIndex];
         pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &texture);
 
-        if (texture != aiString(""))
+        if (texture.length != 0)
         {
             pContext->PSSetShaderResources(0, 1, &pModel->Texture[texture.data]);
+            Shader3D_SetMaterialColor({ 1.0f, 1.0f, 1.0f, 1.0f });
         }
         else
         {
-            Texture_SetTexture(g_default_texture_id);
-        }
+            Texture_SetTexture(g_TextureWhite);
 
-        aiColor3D diffuse;
-        pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
-        Shader3D_SetMaterialColor({diffuse.r, diffuse.g, diffuse.b, 1.0f});
+            aiColor3D diffuse;
+            pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+            Shader3D_SetMaterialColor({ diffuse.r, diffuse.g, diffuse.b, 1.0f });
+        }
 
         UINT stride = sizeof(Vertex);
         UINT offset = 0;

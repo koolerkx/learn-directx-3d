@@ -15,7 +15,8 @@ using namespace DirectX;
 
 static double acc_time = 0;
 
-MODEL* pModel;
+MODEL* pModel_slime;
+MODEL* pModel_shinamon;
 
 void Game_Initialize()
 {
@@ -29,13 +30,15 @@ void Game_Initialize()
         DEFAULT_CAMERA_UP
         );
 
-    pModel = ModelLoad("assets/shinamon.fbx");
+    pModel_slime = ModelLoad("assets/slime_re.fbx");
+    pModel_shinamon = ModelLoad("assets/shinamon.fbx");
 }
 
 void Game_Finalize()
 {
     Camera_Finalize();
-    ModelRelease(pModel);
+    ModelRelease(pModel_slime);
+    ModelRelease(pModel_shinamon);
 }
 
 void Game_Update(double elapsed_time)
@@ -64,12 +67,15 @@ void Game_Draw()
     Light_SetDirectional({ 1.0f, 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f});
     
     XMMATRIX mtxWorld = XMMatrixIdentity();
-    mtxWorld *= XMMatrixTranslation(0.0f, 1.0f, 0.0f);
     mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
+    mtxWorld *= XMMatrixTranslation(0.0f, 5.0f, 0.0f);
     // Cube_Draw(mtxWorld);
-    MeshField_Draw();
+    ModelDraw(pModel_shinamon, mtxWorld);
+    
+    mtxWorld *= XMMatrixTranslation(10.0f, 0.0f, 10.0f);
+    ModelDraw(pModel_slime, mtxWorld);
 
-    ModelDraw(pModel, mtxWorld);
+    MeshField_Draw();
 
     Camera_DebugDraw();
 }
