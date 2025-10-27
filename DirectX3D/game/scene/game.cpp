@@ -54,7 +54,7 @@ void Game_Update(double elapsed_time)
 {
     // Cube_Update(elapsed_time);
     Camera_Update(elapsed_time);
-    // MeshField_Update(elapsed_time);
+    MeshField_Update(elapsed_time);
 
     // if (KeyLogger_IsTrigger(KK_Z))
     // {

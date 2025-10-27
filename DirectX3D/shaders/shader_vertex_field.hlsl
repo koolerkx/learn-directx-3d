@@ -43,9 +43,10 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 posH : SV_POSITION; // 変換済み座標
+    float4 posW: POSITION1;
     float4 color : COLOR0; // Color
-    float4 light_color: COLOR1;
     float2 uv: TEXCOORD0;
+    float4 normalW: NORMAL1;
 };
 
 // 頂点シェーダ
@@ -58,17 +59,14 @@ VS_OUTPUT main(VS_INPUT vs_in)
     float4 posW = mul(pos, world);
     float4 posWV = mul(posW, view);
     float4 posH = mul(posWV, proj);
+    vs_out.posW = posW;
     vs_out.posH = posH;
 
-    // ライト計算
     float4 normalW = normalize(mul(float4(vs_in.normalL, 0), world));
-    float dl = max(dot(-directional_world_vector, normalW), 0);
+    vs_out.normalW = normalW;
 
     vs_out.color = vs_in.color;
     vs_out.uv = vs_in.uv;
-
-    float3 color = directional_color.rgb * dl + ambient_color.rgb;
-    vs_out.light_color = float4(color, 1.0f);
 
     return vs_out;
 }
