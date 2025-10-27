@@ -17,6 +17,7 @@ void Shader_Field_Finalize();
 void Shader_Field_SetProjectionMatrix(const DirectX::XMMATRIX& matrix);
 void Shader_Field_SetWorldMatrix(const DirectX::XMMATRIX& matrix);
 void Shader_Field_SetViewMatrix(const DirectX::XMMATRIX& matrix);
+void Shader_Field_SetMaterialColor(const DirectX::XMFLOAT4& material_color);
 
 void Shader_Field_Begin();
 

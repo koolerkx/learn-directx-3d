@@ -19,6 +19,7 @@ static ID3D11DeviceContext* g_pContext = nullptr;
 
 static ID3D11Buffer* g_pPSConstantBuffer1 = nullptr; // Ambient Light
 static ID3D11Buffer* g_pPSConstantBuffer2 = nullptr; // Directional Light
+static ID3D11Buffer* g_pPSConstantBuffer3 = nullptr; // Phong Light
 
 struct AmbientLightBuffer
 {
@@ -30,9 +31,15 @@ struct DirectionalLightBuffer
 {
     XMFLOAT4 world_vector;
     XMFLOAT3 color;
-    float pad;
+    float padding;
+};
+
+struct SpecularLightBuffer
+{
     XMFLOAT3 eye_posW;
-    float pad2;
+    float specular_power;
+    XMFLOAT3 specular_light_color;
+    float padding;
 };
 
 void Light_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -55,12 +62,15 @@ void Light_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pPSConstantBuffer1);
     buffer_desc.ByteWidth = sizeof(DirectionalLightBuffer); // バッファのサイズ
     g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pPSConstantBuffer2);
+    buffer_desc.ByteWidth = sizeof(SpecularLightBuffer); // バッファのサイズ
+    g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pPSConstantBuffer3);
 }
 
 void Light_Finalize(void)
 {
     SAFE_RELEASE(g_pPSConstantBuffer1);
     SAFE_RELEASE(g_pPSConstantBuffer2);
+    SAFE_RELEASE(g_pPSConstantBuffer3);
 }
 
 void Light_SetAmbient(const DirectX::XMFLOAT3& color)
@@ -72,11 +82,21 @@ void Light_SetAmbient(const DirectX::XMFLOAT3& color)
 
 void Light_SetDirectional(
     const DirectX::XMFLOAT4& directional,
-    const DirectX::XMFLOAT3& color,
-    const DirectX::XMFLOAT3& camera_position
+    const DirectX::XMFLOAT3& color
     )
 {
-    DirectionalLightBuffer data = { directional, color, 0.0f, camera_position};
+    DirectionalLightBuffer data = { directional, color };
     g_pContext->UpdateSubresource(g_pPSConstantBuffer2, 0, nullptr, &data, 0, 0);
     g_pContext->PSSetConstantBuffers(2, 1, &g_pPSConstantBuffer2);
+}
+
+void Light_SetSpecular(
+    const DirectX::XMFLOAT3& camera_position,
+    float specular_power,
+    const DirectX::XMFLOAT3& color
+    )
+{
+    SpecularLightBuffer data = { camera_position, specular_power, color };
+    g_pContext->UpdateSubresource(g_pPSConstantBuffer3, 0, nullptr, &data, 0, 0);
+    g_pContext->PSSetConstantBuffers(3, 1, &g_pPSConstantBuffer3);
 }

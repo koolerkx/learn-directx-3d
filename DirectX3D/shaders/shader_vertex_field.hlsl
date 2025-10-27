@@ -36,7 +36,7 @@ struct VS_INPUT
 {
     float3 posL : POSITION0; // ローカル座標
     float3 normalL : NORMAL0;
-    float4 color : COLOR0; // Color
+    float4 blend : COLOR0; // Color
     float2 uv: TEXCOORD0;
 };
 
@@ -44,7 +44,7 @@ struct VS_OUTPUT
 {
     float4 posH : SV_POSITION; // 変換済み座標
     float4 posW: POSITION1;
-    float4 color : COLOR0; // Color
+    float4 blend : COLOR0; // Color
     float2 uv: TEXCOORD0;
     float4 normalW: NORMAL1;
 };
@@ -65,7 +65,7 @@ VS_OUTPUT main(VS_INPUT vs_in)
     float4 normalW = normalize(mul(float4(vs_in.normalL, 0), world));
     vs_out.normalW = normalW;
 
-    vs_out.color = vs_in.color;
+    vs_out.blend = vs_in.blend;
     vs_out.uv = vs_in.uv;
 
     return vs_out;

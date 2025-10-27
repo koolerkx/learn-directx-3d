@@ -17,8 +17,13 @@ void Light_Finalize(void);
 void Light_SetAmbient(const DirectX::XMFLOAT3& color);
 void Light_SetDirectional(
     const DirectX::XMFLOAT4& directional,
-    const DirectX::XMFLOAT3& color,
-    const DirectX::XMFLOAT3& camera_position
+    const DirectX::XMFLOAT3& color
+    );
+
+void Light_SetSpecular(
+    const DirectX::XMFLOAT3& camera_position,
+    float specular_power,
+    const DirectX::XMFLOAT3& color
     );
 
 #endif
