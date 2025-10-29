@@ -26,4 +26,7 @@ void Light_SetSpecular(
     const DirectX::XMFLOAT3& color
     );
 
+void Light_SetPointCount(int count);
+void Light_SetPointLight(int n, const DirectX::XMFLOAT3& position, float range, const DirectX::XMFLOAT3& color);
+
 #endif

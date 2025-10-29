@@ -11,6 +11,7 @@
 #include "light.h"
 #include "mesh_field.h"
 #include "model.h"
+#include "sampler.h"
 
 using namespace DirectX;
 
@@ -72,11 +73,18 @@ void Game_Update(double elapsed_time)
 void Game_Draw()
 {
     Grid_Draw();
-    MeshField_Draw();
     
-    Light_SetAmbient({ 0.5f, 0.5f, 0.5f });
-    Light_SetDirectional({ 1.0f, 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f});
-    Light_SetSpecular(Camera_GetPosition(), 64.0f, {0.3f, 0.3f, 1.0f});
+    Light_SetAmbient({ 0.1f, 0.1f, 0.1f});
+    Light_SetDirectional({ 1.0f, 0.0f, 0.0f, 0.0f }, { 0.2f, 0.2f, 0.2f});
+    Light_SetSpecular(Camera_GetPosition(), 16.0f, {0.3f, 0.3f, 1.0f});
+    Light_SetPointCount(3);
+    Light_SetPointLight(0, {-10.0f, 5.0f, 0.0f}, 20, {1.0f, 0.0f, 0.0f});
+    Light_SetPointLight(1, {10.0f, 5.0f, 0.0f}, 20, {0.0f, 1.0f, 0.0f});
+    Light_SetPointLight(2, {0.0f, 5.0f, 10.0f}, 20, {0.0f, 0.0f, 1.0f});
+
+    Sampler_SetFilter(FILTER::ANISOTROPIC);
+    
+    MeshField_Draw();
     
     XMMATRIX mtxWorld = XMMatrixIdentity();
     mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
@@ -92,10 +100,10 @@ void Game_Draw()
     mtxWorld *= XMMatrixTranslation(-8.0f, 0.0f, 0.0f);
     ModelDraw(pModel_robot, mtxWorld);
 
-    Light_SetSpecular(Camera_GetPosition(), 64.0f, {0.1f, 0.1f, 0.1f});
+    Light_SetSpecular(Camera_GetPosition(), 16.0f, {0.1f, 0.1f, 0.1f});
     mtxWorld *= XMMatrixTranslation(-2.0f, 0.0f, 0.0f);
 
-    Light_SetSpecular(Camera_GetPosition(), 1.0f, {0.1f, 0.1f, 0.1f});
+    Light_SetSpecular(Camera_GetPosition(), 16.0f, {0.1f, 0.1f, 0.1f});
     ModelDraw(pModel_kriby, mtxWorld);
     
     Camera_DebugDraw();

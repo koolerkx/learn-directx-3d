@@ -20,6 +20,7 @@ static ID3D11DeviceContext* g_pContext = nullptr;
 static ID3D11Buffer* g_pPSConstantBuffer1 = nullptr; // Ambient Light
 static ID3D11Buffer* g_pPSConstantBuffer2 = nullptr; // Directional Light
 static ID3D11Buffer* g_pPSConstantBuffer3 = nullptr; // Phong Light
+static ID3D11Buffer* g_pPSConstantBuffer4 = nullptr; // Point Light
 
 struct AmbientLightBuffer
 {
@@ -41,6 +42,24 @@ struct SpecularLightBuffer
     XMFLOAT3 specular_light_color;
     float padding;
 };
+
+struct PointLight 
+{
+    XMFLOAT3 LightPosition;
+    float Range;
+    XMFLOAT4 Color;
+    //float SpecularPower;
+    //XMFLOAT3 SpecularColor;
+};
+
+struct PointLightList 
+{
+    PointLight light[4];
+    int count;
+    XMFLOAT3 dummy;
+};
+
+static PointLightList g_PointLights{};
 
 void Light_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -64,6 +83,8 @@ void Light_Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pPSConstantBuffer2);
     buffer_desc.ByteWidth = sizeof(SpecularLightBuffer); // バッファのサイズ
     g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pPSConstantBuffer3);
+    buffer_desc.ByteWidth = sizeof(PointLightList); // バッファのサイズ
+    g_pDevice->CreateBuffer(&buffer_desc, nullptr, &g_pPSConstantBuffer4);
 }
 
 void Light_Finalize(void)
@@ -71,6 +92,7 @@ void Light_Finalize(void)
     SAFE_RELEASE(g_pPSConstantBuffer1);
     SAFE_RELEASE(g_pPSConstantBuffer2);
     SAFE_RELEASE(g_pPSConstantBuffer3);
+    SAFE_RELEASE(g_pPSConstantBuffer4);
 }
 
 void Light_SetAmbient(const DirectX::XMFLOAT3& color)
@@ -99,4 +121,22 @@ void Light_SetSpecular(
     SpecularLightBuffer data = { camera_position, specular_power, color };
     g_pContext->UpdateSubresource(g_pPSConstantBuffer3, 0, nullptr, &data, 0, 0);
     g_pContext->PSSetConstantBuffers(3, 1, &g_pPSConstantBuffer3);
+}
+
+void Light_SetPointCount(int count)
+{
+    g_PointLights.count = count;
+
+    g_pContext->UpdateSubresource(g_pPSConstantBuffer4, 0, nullptr, &g_PointLights, 0, 0);
+    g_pContext->PSSetConstantBuffers(4, 1, &g_pPSConstantBuffer4);
+}
+
+void Light_SetPointLight(int n, const DirectX::XMFLOAT3& position, float range, const DirectX::XMFLOAT3& color)
+{
+    g_PointLights.light[n].LightPosition = position;
+    g_PointLights.light[n].Range = range;
+    g_PointLights.light[n].Color = { color.x,color.y,color.z,1.0f };
+
+    g_pContext->UpdateSubresource(g_pPSConstantBuffer4, 0, nullptr, &g_PointLights, 0, 0);
+    g_pContext->PSSetConstantBuffers(4, 1, &g_pPSConstantBuffer4);
 }
