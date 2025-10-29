@@ -44,7 +44,7 @@ float4 main(PS_INPUT ps_in) : SV_TARGET
 {
     float4 texture_color = tex.Sample(samp, ps_in.uv);
     float3 material_color = texture_color.rgb * ps_in.color.rgb * diffuse_color.rgb;
-    
+
     // ライト
     float3 normalW = normalize(ps_in.normalW);
     float dl = max(dot(-directional_world_vector, normalW), 0);
@@ -58,9 +58,15 @@ float4 main(PS_INPUT ps_in) : SV_TARGET
     float3 specular = t * specular_light_color;
 
     float alpha = texture_color.a * ps_in.color.a * diffuse_color.a;
-    float4 light_color = float4(ambient.rgb + diffuse.rgb + specular.rgb, alpha);
 
-    
+    // lim Light
+    float power1 = 1.0f - dl;
+    float power2 = 1.0f - max(dot(toEye, normalW.xyz), 0.0f);
+    float lim_power = power1 * power2;
+    lim_power = pow(lim_power, 1.3f);
+    float3 lim_light = lim_power * directional_color.rgb;
+
+    float4 light_color = float4(ambient.rgb + diffuse.rgb + specular.rgb + lim_light.rgb, alpha);
 
     return light_color;
 }

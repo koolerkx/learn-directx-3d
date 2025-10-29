@@ -72,6 +72,7 @@ void Game_Update(double elapsed_time)
 void Game_Draw()
 {
     Grid_Draw();
+    MeshField_Draw();
     
     Light_SetAmbient({ 0.5f, 0.5f, 0.5f });
     Light_SetDirectional({ 1.0f, 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f});
@@ -96,8 +97,6 @@ void Game_Draw()
 
     Light_SetSpecular(Camera_GetPosition(), 1.0f, {0.1f, 0.1f, 0.1f});
     ModelDraw(pModel_kriby, mtxWorld);
-
-    MeshField_Draw();
-
+    
     Camera_DebugDraw();
 }
