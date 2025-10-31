@@ -11,18 +11,13 @@
 #include "light.h"
 #include "mesh_field.h"
 #include "model.h"
+#include "player.h"
 #include "sampler.h"
 
 using namespace DirectX;
 
 static double acc_time = 0;
 static float g_angle = 0;
-
-MODEL* pModel_slime;
-MODEL* pModel_shinamon;
-MODEL* pModel_densha;
-MODEL* pModel_robot;
-MODEL* pModel_kriby;
 
 void Game_Initialize()
 {
@@ -36,21 +31,14 @@ void Game_Initialize()
         DEFAULT_CAMERA_UP
         );
 
-    pModel_slime = ModelLoad("assets/slime_re.fbx", 0.25f);
-    pModel_densha = ModelLoad("assets/densha.fbx", 2.0f, true);
-    pModel_shinamon = ModelLoad("assets/shinamon.fbx", 0.25f);
-    pModel_robot = ModelLoad("assets/robot.fbx", 0.25f);
-    pModel_kriby = ModelLoad("assets/test.fbx", 0.1f);
+    Player_Initialize({0.0f, 5.0f, 0.0f}, {0.0f, 0.0f, 1.0f});
 }
 
 void Game_Finalize()
 {
     Camera_Finalize();
-    ModelRelease(pModel_slime);
-    ModelRelease(pModel_shinamon);
-    ModelRelease(pModel_densha);
-    ModelRelease(pModel_robot);
-    ModelRelease(pModel_kriby);
+
+    Player_Finalize();
 }
 
 void Game_Update(double elapsed_time)
@@ -58,6 +46,7 @@ void Game_Update(double elapsed_time)
     // Cube_Update(elapsed_time);
     Camera_Update(elapsed_time);
     MeshField_Update(elapsed_time);
+    Player_Update(elapsed_time);
 
     // if (KeyLogger_IsTrigger(KK_Z))
     // {
@@ -70,7 +59,7 @@ void Game_Update(double elapsed_time)
 
     acc_time += elapsed_time;
 
-    g_angle += XMConvertToRadians(elapsed_time * 120.0f);
+    g_angle += static_cast<float>(elapsed_time) * 120.0f;
 }
 
 void Game_Draw()
@@ -86,14 +75,14 @@ void Game_Draw()
         &pp0,
         XMVector3Transform(
             { 10.0f, 5.0f, 0.0f },
-            XMMatrixRotationY(g_angle)
+            XMMatrixRotationY(XMConvertToRadians(g_angle))
             )
         );
     XMStoreFloat3(
         &pp1,
         XMVector3Transform(
             { 10.0f, 5.0f, 0.0f },
-            XMMatrixRotationY(g_angle + 180)
+            XMMatrixRotationY(XMConvertToRadians(g_angle + 120))
             )
         );
 
@@ -101,39 +90,24 @@ void Game_Draw()
         &pp2,
         XMVector3Transform(
             { 10.0f, 5.0f, 0.0f },
-            XMMatrixRotationY(g_angle + 240)
+            XMMatrixRotationY(XMConvertToRadians(g_angle + 240))
             )
         );
 
-    Light_SetPointLight(0, pp0, 20, { 1.0f, 0.0f, 0.0f });
-    Light_SetPointLight(1, pp1, 20, { 0.0f, 1.0f, 0.0f });
-    Light_SetPointLight(2, pp2, 20, { 0.0f, 0.0f, 1.0f });
+    Light_SetPointLight(0, pp0, 30, { 1.0f, 0.0f, 0.0f });
+    Light_SetPointLight(1, pp1, 30, { 0.0f, 1.0f, 0.0f });
+    Light_SetPointLight(2, pp2, 30, { 0.0f, 0.0f, 1.0f });
 
     Sampler_SetFilter(FILTER::ANISOTROPIC);
 
     Light_SetSpecular(Camera_GetPosition(), 16.0f, { 0.7f, 0.7f, 0.7f });
     MeshField_Draw();
     
-    Light_SetSpecular(Camera_GetPosition(), 16.0f, { 0.5f, 0.5f, 0.5f });
+    // XMMATRIX mtxWorld = XMMatrixIdentity();
+    // mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
+    // mtxWorld *= XMMatrixTranslation(0.0f, 2.0f, 0.0f);
 
-    XMMATRIX mtxWorld = XMMatrixIdentity();
-    mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
-    mtxWorld *= XMMatrixTranslation(0.0f, 2.0f, 0.0f);
-    ModelDraw(pModel_kriby, mtxWorld);
-    
-    // Cube_Draw(mtxWorld);
-
-
-    mtxWorld *= XMMatrixTranslation(2.0f, 0.0f, 0.0f);
-    ModelDraw(pModel_slime, mtxWorld);
-    mtxWorld *= XMMatrixTranslation(4.0f, 0.0f, 0.0f);
-    ModelDraw(pModel_densha, mtxWorld);
-
-    mtxWorld *= XMMatrixTranslation(-8.0f, 0.0f, 0.0f);
-    ModelDraw(pModel_robot, mtxWorld);
-
-    mtxWorld *= XMMatrixTranslation(-2.0f, 0.0f, 0.0f);
-    ModelDraw(pModel_shinamon, mtxWorld);
+    Player_Draw();
 
     Camera_DebugDraw();
 }
