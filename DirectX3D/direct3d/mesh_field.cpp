@@ -16,7 +16,7 @@
 #include "texture.h"
 #include <vector>
 
-#include "camera.h"
+// #include "camera.h"
 #include "debug_imgui_mesh_field.h"
 #include "sampler.h"
 
@@ -230,12 +230,10 @@ void MeshField_Draw(const DirectX::XMMATRIX& mtxWorld)
 
     Shader_Field_Begin();
     Sampler_SetFilter(FILTER::POINT);
-        Direct3D_DepthStencilStateDepthIsEnable(true);
+    Direct3D_DepthStencilStateDepthIsEnable(true);
 
-    Shader_Field_SetViewMatrix(XMLoadFloat4x4(&Camera_GetMatrix()));
-    Shader_Field_SetProjectionMatrix(XMLoadFloat4x4(&Camera_GetPerspectiveMatrix()));
-    Shader_Field_SetMaterialColor({1.0f, 1.0f, 1.0f, 1.0f});
-    
+    Shader_Field_SetMaterialColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+
     // 頂点バッファを描画パイプラインに設定
     UINT stride = sizeof(Vertex3d);
     UINT offset = 0;

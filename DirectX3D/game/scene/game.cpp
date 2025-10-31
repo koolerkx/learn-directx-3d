@@ -2,7 +2,7 @@
 
 #include "cube.h"
 #include "grid.h"
-#include "camera.h"
+// #include "camera.h"
 #include "key_logger.h"
 
 #include <DirectXMath.h>
@@ -12,6 +12,7 @@
 #include "mesh_field.h"
 #include "model.h"
 #include "player.h"
+#include "player_camera.h"
 #include "sampler.h"
 
 using namespace DirectX;
@@ -21,30 +22,34 @@ static float g_angle = 0;
 
 void Game_Initialize()
 {
-    constexpr XMFLOAT3 DEFAULT_CAMERA_POSITION = { -10.0f, 10.0f, -10.0f };
-    constexpr XMFLOAT3 DEFAULT_CAMERA_FRONT = { 0.5f, -0.5f, 0.5f };
-    constexpr XMFLOAT3 DEFAULT_CAMERA_UP = { 0.5, 0.5, 0.5 };
+    // constexpr XMFLOAT3 DEFAULT_CAMERA_POSITION = { -10.0f, 10.0f, -10.0f };
+    // constexpr XMFLOAT3 DEFAULT_CAMERA_FRONT = { 0.5f, -0.5f, 0.5f };
+    // constexpr XMFLOAT3 DEFAULT_CAMERA_UP = { 0.5, 0.5, 0.5 };
 
-    Camera_Initialize(
-        DEFAULT_CAMERA_POSITION,
-        DEFAULT_CAMERA_FRONT,
-        DEFAULT_CAMERA_UP
-        );
+    // Camera_Initialize(
+    //     DEFAULT_CAMERA_POSITION,
+    //     DEFAULT_CAMERA_FRONT,
+    //     DEFAULT_CAMERA_UP
+    //     );
+    Player_Camera_Initialize();
 
     Player_Initialize({0.0f, 5.0f, 0.0f}, {0.0f, 0.0f, 1.0f});
 }
 
 void Game_Finalize()
 {
-    Camera_Finalize();
-
+    // Camera_Finalize();
+    Player_Camera_Finalize();
+    
     Player_Finalize();
 }
 
 void Game_Update(double elapsed_time)
 {
     // Cube_Update(elapsed_time);
-    Camera_Update(elapsed_time);
+    // Camera_Update(elapsed_time);
+    Player_Camera_Update(elapsed_time);
+    
     MeshField_Update(elapsed_time);
     Player_Update(elapsed_time);
 
@@ -100,7 +105,8 @@ void Game_Draw()
 
     Sampler_SetFilter(FILTER::ANISOTROPIC);
 
-    Light_SetSpecular(Camera_GetPosition(), 16.0f, { 0.7f, 0.7f, 0.7f });
+    // Light_SetSpecular(Camera_GetPosition(), 16.0f, { 0.7f, 0.7f, 0.7f });
+    Light_SetSpecular(Player_Camera_GetPosition(), 16.0f, { 0.7f, 0.7f, 0.7f });
     MeshField_Draw();
     
     // XMMATRIX mtxWorld = XMMatrixIdentity();
@@ -109,5 +115,5 @@ void Game_Draw()
 
     Player_Draw();
 
-    Camera_DebugDraw();
+    // Camera_DebugDraw();
 }

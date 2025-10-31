@@ -11,9 +11,9 @@
 
 #include <DirectXMath.h>
 
-#include "camera.h"
 #include "key_logger.h"
 #include "light.h"
+#include "player_camera.h"
 using namespace DirectX;
 
 #include "model.h"
@@ -71,15 +71,63 @@ void Player_Update(double elapsed_time)
         g_IsJump = false;
     }
 
+    XMVECTOR movement_direction = {0.0f, 0.0f, 0.0f};
+    XMVECTOR camera_front = XMLoadFloat3(&Player_Camera_GetFront());
+    XMVECTOR camera_right = XMVector3Cross(XMLoadFloat3(&Player_Camera_GetUp()), XMLoadFloat3(&Player_Camera_GetFront()));
+    
+    if (KeyLogger_IsPressed(KK_W))
+    {
+        movement_direction += camera_front;
+    }
+    if (KeyLogger_IsPressed(KK_S))
+    {
+        movement_direction -= camera_front;
+    }
+    if (KeyLogger_IsPressed(KK_A))
+    {
+        movement_direction -= camera_right;
+    }
+    if (KeyLogger_IsPressed(KK_D))
+    {
+        movement_direction += camera_right;
+    }
+
+    // Normalize movement to prevent faster diagonal movement
+    movement_direction = XMVector3Normalize(movement_direction);
+    
+    // Apply movement acceleration
+    velocity += movement_direction * static_cast<float>(80000.0 / 50.0 * elapsed_time);
+    
+    // FIX: Use XMVectorMultiply instead of initializer list for damping
+    XMVECTOR damping_mask = XMVectorSet(-1.0f, 0.0f, -1.0f, 0.0f);
+    velocity += XMVectorMultiply(camera_front, damping_mask) * static_cast<float>(5.0 * elapsed_time);
+    
+    // Apply friction/drag to prevent infinite acceleration (FIX: Added damping)
+    const float drag_coefficient = 0.95f; // Adjust this value to control friction (0-1)
+    velocity = XMVectorMultiply(velocity, XMVectorReplicate(drag_coefficient));
+    
+    position += velocity * static_cast<float>(elapsed_time);
+    
+
     XMStoreFloat3(&g_PlayerVelocity, velocity);
     XMStoreFloat3(&g_PlayerPosition, position);
 }
 
 void Player_Draw()
 {
-    Light_SetSpecular(Camera_GetPosition(), 32.0f, { 0.5f, 0.5f, 0.5f });
+    Light_SetSpecular(Player_Camera_GetPosition(), 10.0f, { 0.5f, 0.5f, 0.5f });
 
     XMMATRIX mtxWorld = XMMatrixIdentity();
     mtxWorld *= XMMatrixTranslation(g_PlayerPosition.x, g_PlayerPosition.y, g_PlayerPosition.z);
     ModelDraw(g_PlayerModel.get(), mtxWorld);
+}
+
+const XMFLOAT3& Player_GetPosition()
+{
+    return g_PlayerPosition;
+}
+
+const XMFLOAT3& Player_GetFront()
+{
+    return g_PlayerFront;
 }

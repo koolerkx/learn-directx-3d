@@ -15,4 +15,7 @@ void Player_Finalize(void);
 void Player_Update(double elapsed_time);
 void Player_Draw(void);
 
+const DirectX::XMFLOAT3& Player_GetPosition();
+const DirectX::XMFLOAT3& Player_GetFront();
+
 #endif
