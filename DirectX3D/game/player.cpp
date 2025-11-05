@@ -95,7 +95,11 @@ void Player_Update(double elapsed_time)
     }
 
     // Normalize movement to prevent faster diagonal movement
-    movement_direction = XMVector3Normalize(movement_direction);
+    if (XMVectorGetX(XMVector3LengthSq(movement_direction)) > 0.0f)
+    {
+        movement_direction = XMVector3Normalize(movement_direction);
+        XMStoreFloat3(&g_PlayerFront, movement_direction);
+    }
 
     // Apply movement acceleration
     velocity += movement_direction * static_cast<float>(800.0 / 50.0 * elapsed_time);
@@ -120,6 +124,10 @@ void Player_Draw()
     Light_SetSpecular(Player_Camera_GetPosition(), 10.0f, { 0.5f, 0.5f, 0.5f });
 
     XMMATRIX mtxWorld = XMMatrixIdentity();
+
+    float angle = atan2f(g_PlayerFront.x, g_PlayerFront.z) + XMConvertToRadians(180.0f);
+
+    mtxWorld *= XMMatrixRotationY(angle);
     mtxWorld *= XMMatrixTranslation(g_PlayerPosition.x, g_PlayerPosition.y, g_PlayerPosition.z);
     ModelDraw(g_PlayerModel.get(), mtxWorld);
 }
