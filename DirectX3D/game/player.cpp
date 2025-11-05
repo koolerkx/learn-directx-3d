@@ -98,21 +98,50 @@ void Player_Update(double elapsed_time)
     if (XMVectorGetX(XMVector3LengthSq(movement_direction)) > 0.0f)
     {
         movement_direction = XMVector3Normalize(movement_direction);
-        XMStoreFloat3(&g_PlayerFront, movement_direction);
+
+        XMVECTOR dot = XMVector3Dot(XMLoadFloat3(&g_PlayerFront), movement_direction);
+        float angle = acosf(XMVectorGetX(dot));
+
+        const float rotation_speed = XMConvertToRadians(720.0f * elapsed_time);
+
+        //XMStoreFloat3(&g_PlayerFront, movement_direction);
+        XMVECTOR front;
+        if (angle < rotation_speed)
+        {
+            front = movement_direction;
+        }
+        else
+        {
+            XMMATRIX r = XMMatrixIdentity();
+            if (XMVectorGetY(XMVector3Cross(movement_direction, XMLoadFloat3(&g_PlayerFront))) < 0.0f)
+            {
+                r = XMMatrixRotationY(rotation_speed);
+            }
+            else
+            {
+                r = XMMatrixRotationY(-rotation_speed);
+            }
+            front = XMVector3TransformNormal(XMLoadFloat3(&g_PlayerFront), r);
+        }
+
+        XMStoreFloat3(&g_PlayerFront, front);
+
+        velocity += front * static_cast<float>(800.0 / 50.0 * elapsed_time);
     }
 
     // Apply movement acceleration
-    velocity += movement_direction * static_cast<float>(800.0 / 50.0 * elapsed_time);
+    velocity += -velocity * static_cast<float>(4.0 * elapsed_time);
+    position += velocity * static_cast<float>(elapsed_time);
 
     // FIX: Use XMVectorMultiply instead of initializer list for damping
     // XMVECTOR damping_mask = XMVectorSet(-1.0f, 0.0f, -1.0f, 0.0f);
     // velocity += XMVectorMultiply(camera_front, damping_mask) * static_cast<float>(5.0 * elapsed_time);
 
     // Apply friction/drag to prevent infinite acceleration (FIX: Added damping)
-    const float drag_coefficient = 0.95f; // Adjust this value to control friction (0-1)
-    velocity = XMVectorMultiply(velocity, XMVectorReplicate(drag_coefficient));
-
-    position += velocity * static_cast<float>(elapsed_time);
+    // const float drag_coefficient = 0.95f; // Adjust this value to control friction (0-1)
+    // velocity = XMVectorMultiply(velocity, XMVectorReplicate(drag_coefficient));
+    //
+    // position += velocity * static_cast<float>(elapsed_time);
 
 
     XMStoreFloat3(&g_PlayerVelocity, velocity);

@@ -42,9 +42,11 @@ void Player_Camera_Update(double elapsed_time)
     // fixed direction
     XMVECTOR camera_position = XMLoadFloat3(&Player_GetPosition());
     camera_position += { 0.0f, 4.0f, -12.0f };
+    camera_position *= {1.0f, 0.0f, 1.0f};
 
     // fixed position
     // XMVECTOR camera_position = XMVECTOR{0.0f, 5.0f, 8.0f};
+    
     XMVECTOR camera_front = XMVector3Normalize(target - camera_position);
     XMVECTOR camera_up = XMLoadFloat3(&g_CameraUp);
 
