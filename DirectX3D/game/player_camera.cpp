@@ -37,7 +37,7 @@ void Player_Camera_Update(double elapsed_time)
     XMVECTOR player_front = XMLoadFloat3(&Player_GetFront());
 
     constexpr float camera_distance = 5.0f;
-    XMVECTOR camera_position = target - (player_front * camera_distance);
+    XMVECTOR camera_position = target - (player_front * camera_distance) + XMVectorSetY({}, 2);
     XMVECTOR camera_front = XMVector3Normalize(target - camera_position);
     XMVECTOR camera_up = XMLoadFloat3(&g_CameraUp);
 
