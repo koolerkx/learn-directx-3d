@@ -136,7 +136,7 @@ void Cube_Draw(const DirectX::XMMATRIX& mtxWorld)
     Shader3D_Begin();
 
     Shader3D_SetMaterialColor(Color::SetOpacity(Color::WHITE, 1.0f));
-    
+
     Direct3D_DepthStencilStateDepthIsEnable(true);
 
     // 頂点バッファを描画パイプラインに設定
@@ -157,4 +157,12 @@ void Cube_Draw(const DirectX::XMMATRIX& mtxWorld)
     g_pContext->DrawIndexed(36, 0, 0);
 
     Direct3D_DepthStencilStateDepthIsEnable(false);
+}
+
+AABB Cube_GetAABB(const DirectX::XMFLOAT3& position)
+{
+    return {
+        { position.x - 0.5f, position.y - 0.5f, position.z - 0.5f },
+        { position.x + 0.5f, position.y + 0.5f, position.z + 0.5f }
+    };
 }

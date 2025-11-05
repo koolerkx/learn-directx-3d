@@ -8,6 +8,7 @@
 #include <DirectXMath.h>
 
 #include "color.h"
+#include "debug_frame.h"
 #include "light.h"
 #include "mesh_field.h"
 #include "model.h"
@@ -33,14 +34,14 @@ void Game_Initialize()
     //     );
     Player_Camera_Initialize();
 
-    Player_Initialize({0.0f, 5.0f, 0.0f}, {0.0f, 0.0f, 1.0f});
+    Player_Initialize({ 0.0f, 5.0f, 0.0f }, { 0.0f, 0.0f, 1.0f });
 }
 
 void Game_Finalize()
 {
     // Camera_Finalize();
     Player_Camera_Finalize();
-    
+
     Player_Finalize();
 }
 
@@ -49,7 +50,7 @@ void Game_Update(double elapsed_time)
     // Cube_Update(elapsed_time);
     // Camera_Update(elapsed_time);
     Player_Camera_Update(elapsed_time);
-    
+
     MeshField_Update(elapsed_time);
     Player_Update(elapsed_time);
 
@@ -108,12 +109,18 @@ void Game_Draw()
     // Light_SetSpecular(Camera_GetPosition(), 16.0f, { 0.7f, 0.7f, 0.7f });
     Light_SetSpecular(Player_Camera_GetPosition(), 16.0f, { 0.7f, 0.7f, 0.7f });
     MeshField_Draw();
-    
+
     // XMMATRIX mtxWorld = XMMatrixIdentity();
     // mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
     // mtxWorld *= XMMatrixTranslation(0.0f, 2.0f, 0.0f);
 
     Player_Draw();
 
+    XMMATRIX cube_pos = XMMatrixTranslation(3.0f, 0.5f, 2.0f);
+
+    Cube_Draw(cube_pos);
+
+    DebugFrame_AABB_Draw(Cube_GetAABB({ 3.0f, 0.5f, 2.0f }));
+    DebugFrame_AABB_Draw(Player_GetAABB());
     // Camera_DebugDraw();
 }

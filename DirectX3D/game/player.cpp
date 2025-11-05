@@ -11,6 +11,7 @@
 
 #include <DirectXMath.h>
 
+#include "cube.h"
 #include "key_logger.h"
 #include "light.h"
 #include "player_camera.h"
@@ -27,12 +28,13 @@ static const std::string MODEL_PATH = "assets/slime_re.fbx";
 
 static bool g_IsJump = false;
 
-static constexpr XMVECTOR jump_direction = { 0.0f, 1.0f, 0.0f };
-static constexpr float jump_force = 5.0f;
+static constexpr XMVECTOR JUMP_DIRECTION = { 0.0f, 1.0f, 0.0f };
+static constexpr float JUMP_FORCE = 5.0f;
 
-static constexpr XMVECTOR gravity_direction = { 0.0f, -1.0f, 0.0f };
-static constexpr float gravity_force = 9.8f;
-static constexpr float gravity_scale = 1.0f;
+static constexpr XMVECTOR GRAVITY_DIRECTION = { 0.0f, -1.0f, 0.0f };
+static constexpr float GRAVITY_FORCE = 9.8f;
+static constexpr float GRAVITY_SCALE = 1.0f;
+static const XMVECTOR GRAVITY_ACC = GRAVITY_DIRECTION * GRAVITY_FORCE * GRAVITY_SCALE;
 
 static constexpr float speed = 0.5;
 
@@ -56,21 +58,38 @@ void Player_Update(double elapsed_time)
 {
     XMVECTOR position = XMLoadFloat3(&g_PlayerPosition);
     XMVECTOR velocity = XMLoadFloat3(&g_PlayerVelocity);
+    XMVECTOR gravity_velocity{};
 
     if (KeyLogger_IsTrigger(KK_SPACE) && !g_IsJump)
     {
-        velocity += jump_direction * jump_force;
+        velocity += JUMP_DIRECTION * JUMP_FORCE;
         g_IsJump = true;
     }
 
-    velocity += gravity_direction * gravity_force * gravity_scale * static_cast<float>(elapsed_time);
-    position += velocity * static_cast<float>(elapsed_time);
+    velocity += GRAVITY_ACC * static_cast<float>(elapsed_time);
+    gravity_velocity = velocity * static_cast<float>(elapsed_time);
+    
+    position += gravity_velocity;
+    XMStoreFloat3(&g_PlayerPosition, position);
 
-    if (XMVectorGetY(position) < 0.0f)
     {
-        position -= velocity * static_cast<float>(elapsed_time);
-        velocity *= { 1.0f, 0.0f, 1.0f };
-        g_IsJump = false;
+        AABB player = Player_GetAABB();
+        AABB cube = Cube_GetAABB({ 3.0f, 0.5f, 2.0f });
+
+        // object collision due to gravity
+        if (Collision_IsOverlapAABB(player, cube) && XMVectorGetY(velocity) < 0.0f)
+        {
+            position -= gravity_velocity;
+            velocity *= { 1.0f, 0.0f, 1.0f };
+            g_IsJump = false;
+        }
+        else if (XMVectorGetY(position) < 0.0f)
+        {
+            // terrain collision due to gravity
+            position -= gravity_velocity;
+            velocity *= { 1.0f, 0.0f, 1.0f };
+            g_IsJump = false;
+        }
     }
 
     XMVECTOR movement_direction = { 0.0f, 0.0f, 0.0f };
@@ -146,6 +165,20 @@ void Player_Update(double elapsed_time)
 
     XMStoreFloat3(&g_PlayerVelocity, velocity);
     XMStoreFloat3(&g_PlayerPosition, position);
+
+    {
+        AABB player = Player_GetAABB();
+        AABB cube = Cube_GetAABB({ 3.0f, 0.5f, 2.0f });
+
+        if (Collision_IsOverlapAABB(player, cube))
+        {
+            position -= velocity * static_cast<float>(elapsed_time);
+            velocity *= static_cast<float>(elapsed_time);
+
+            XMStoreFloat3(&g_PlayerVelocity, velocity);
+            XMStoreFloat3(&g_PlayerPosition, position);
+        }
+    }
 }
 
 void Player_Draw()
@@ -169,4 +202,12 @@ const XMFLOAT3& Player_GetPosition()
 const XMFLOAT3& Player_GetFront()
 {
     return g_PlayerFront;
+}
+
+AABB Player_GetAABB()
+{
+    return {
+        { g_PlayerPosition.x - 0.5f, g_PlayerPosition.y, g_PlayerPosition.z - 0.5f },
+        { g_PlayerPosition.x + 0.5f, g_PlayerPosition.y + 1.0f, g_PlayerPosition.z + 0.5f }
+    };
 }

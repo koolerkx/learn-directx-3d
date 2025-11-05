@@ -23,8 +23,15 @@ struct Box
     float half_height;
 };
 
+struct AABB
+{
+    DirectX::XMFLOAT3 min;
+    DirectX::XMFLOAT3 max;
+};
+
 bool Collision_IsOverlapCircle(const Circle& a, const Circle& b);
 bool Collision_IsOverlapBox(const Box& a, const Box& b);
 
+bool Collision_IsOverlapAABB(const AABB& a, const AABB& b);
 
 #endif

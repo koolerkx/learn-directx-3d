@@ -18,6 +18,7 @@
 #include "scene.h"
 #include "shader3d.h"
 #include "cube.h"
+#include "debug_frame.h"
 #include "debug_imgui.h"
 #include "grid.h"
 #include "light.h"
@@ -60,6 +61,8 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     Cube_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
     MeshField_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
 
+    DebugFrame_Initialize(Direct3D_GetDevice(), Direct3D_GetContext());
+    
     // デバッグテキスト
     hal::DebugText debugText(Direct3D_GetDevice(), Direct3D_GetContext(),
                              L"assets/consolab_ascii_512.png",
@@ -151,6 +154,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR,
     }
     while (msg.message != WM_QUIT);
 
+    DebugFrame_Finalize();
     MeshField_Finalize();
     Cube_Finalize();
     Grid_Finalize();
