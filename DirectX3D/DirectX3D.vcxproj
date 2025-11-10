@@ -181,6 +181,7 @@
         <ClCompile Include="direct3d\direct3d.cpp"/>
         <ClCompile Include="direct3d\grid.cpp"/>
         <ClCompile Include="direct3d\light.cpp" />
+        <ClCompile Include="direct3d\map.cpp" />
         <ClCompile Include="direct3d\mesh_field.cpp"/>
         <ClCompile Include="direct3d\model.cpp" />
         <ClCompile Include="direct3d\sampler.cpp"/>
@@ -229,6 +230,7 @@
         <ClInclude Include="direct3d\direct3d.h"/>
         <ClInclude Include="direct3d\grid.h"/>
         <ClInclude Include="direct3d\light.h" />
+        <ClInclude Include="direct3d\map.h" />
         <ClInclude Include="direct3d\mesh_field.h"/>
         <ClInclude Include="direct3d\model.h" />
         <ClInclude Include="direct3d\sampler.h"/>

@@ -14,6 +14,7 @@
 #include "cube.h"
 #include "key_logger.h"
 #include "light.h"
+#include "map.h"
 #include "player_camera.h"
 using namespace DirectX;
 
@@ -34,7 +35,8 @@ static constexpr float JUMP_FORCE = 5.0f;
 static constexpr XMVECTOR GRAVITY_DIRECTION = { 0.0f, -1.0f, 0.0f };
 static constexpr float GRAVITY_FORCE = 9.8f;
 static constexpr float GRAVITY_SCALE = 1.0f;
-static const XMVECTOR GRAVITY_ACC = GRAVITY_DIRECTION * GRAVITY_FORCE * GRAVITY_SCALE;
+static const XMVECTOR GRAVITY_ACC =
+    GRAVITY_DIRECTION * GRAVITY_FORCE * GRAVITY_SCALE;
 
 static constexpr float speed = 0.5;
 
@@ -71,20 +73,23 @@ void Player_Update(double elapsed_time)
 
     {
         AABB player = Player_GetAABB();
-        AABB cube = Cube_GetAABB({ 3.0f, 0.5f, 2.0f });
 
-        Hit hit = Collision_IsHitAABB(cube, player);
-
-        // object collision due to gravity
-        if (hit.isHit)
+        for (int i = 0; i < Map_GetObjectsCount(); i++)
         {
-            if (hit.normal.y > 0.0f)
-            {
-                // position -= gravity_velocity;
-                position = XMVectorSetY(position, cube.max.y + 0.01);
+            AABB cube = Cube_GetAABB(Map_GetObject(i)->Position);
 
-                velocity *= { 1.0f, 0.0f, 1.0f };
-                g_IsJump = false;
+            Hit hit = Collision_IsHitAABB(cube, player);
+            // object collision due to gravity
+            if (hit.isHit)
+            {
+                if (hit.normal.y > 0.0f)
+                {
+                    // position -= gravity_velocity;
+                    position = XMVectorSetY(position, cube.max.y + 0.01);
+
+                    velocity *= { 1.0f, 0.0f, 1.0f };
+                    g_IsJump = false;
+                }
             }
         }
 
@@ -98,8 +103,12 @@ void Player_Update(double elapsed_time)
     }
 
     XMVECTOR movement_direction = { 0.0f, 0.0f, 0.0f };
-    XMVECTOR camera_front = XMVectorSetY(XMLoadFloat3(&Player_Camera_GetFront()), 0);
-    XMVECTOR camera_right = XMVector3Cross(XMLoadFloat3(&Player_Camera_GetUp()), XMLoadFloat3(&Player_Camera_GetFront()));
+    XMVECTOR camera_front =
+        XMVectorSetY(XMLoadFloat3(&Player_Camera_GetFront()), 0);
+    XMVECTOR camera_right = XMVector3Cross(
+        XMLoadFloat3(&Player_Camera_GetUp()),
+        XMLoadFloat3(&Player_Camera_GetFront())
+    );
 
     if (KeyLogger_IsPressed(KK_W))
     {
@@ -123,7 +132,8 @@ void Player_Update(double elapsed_time)
     {
         movement_direction = XMVector3Normalize(movement_direction);
 
-        XMVECTOR dot = XMVector3Dot(XMLoadFloat3(&g_PlayerFront), movement_direction);
+        XMVECTOR dot =
+            XMVector3Dot(XMLoadFloat3(&g_PlayerFront), movement_direction);
         float angle = acosf(XMVectorGetX(dot));
 
         const float rotation_speed = XMConvertToRadians(720.0f * elapsed_time);
@@ -137,7 +147,9 @@ void Player_Update(double elapsed_time)
         else
         {
             XMMATRIX r = XMMatrixIdentity();
-            if (XMVectorGetY(XMVector3Cross(movement_direction, XMLoadFloat3(&g_PlayerFront))) < 0.0f)
+            if (XMVectorGetY(XMVector3Cross(
+                    movement_direction, XMLoadFloat3(&g_PlayerFront)
+                )) < 0.0f)
             {
                 r = XMMatrixRotationY(rotation_speed);
             }
@@ -162,41 +174,44 @@ void Player_Update(double elapsed_time)
 
     {
         AABB player = Player_GetAABB();
-        AABB cube = Cube_GetAABB({ 3.0f, 0.5f, 2.0f });
-
-        Hit hit = Collision_IsHitAABB(cube, player);
-        if (hit.isHit)
+        for (int i = 0; i < Map_GetObjectsCount(); i++)
         {
-            if (hit.normal.x > 0.0f)
+            AABB cube = Cube_GetAABB(Map_GetObject(i)->Position);
+
+            Hit hit = Collision_IsHitAABB(cube, player);
+            if (hit.isHit)
             {
-                position = XMVectorSetX(position, cube.max.x + 0.5f);
-                velocity *= { 0.0f, 1.0f, 1.0f };
-            }
-            else if (hit.normal.x < 0.0f)
-            {
-                position = XMVectorSetX(position, cube.min.x - 0.5f);
-                velocity *= { 0.0f, 1.0f, 1.0f };
-            }
-            else if (hit.normal.y < 0.0f)
-            {
-                position = XMVectorSetY(position, cube.min.y - 1.0f);
-                velocity *= { 1.0f, 0.0f, 1.0f };
-            }
-            else if (hit.normal.z > 0.0f)
-            {
-                position = XMVectorSetZ(position, cube.max.z + 0.5f);
-                velocity *= { 1.0f, 1.0f, 0.0f };
-            }
-            else if (hit.normal.z < 0.0f)
-            {
-                position = XMVectorSetZ(position, cube.min.z - 0.5f);
-                velocity *= { 1.0f, 1.0f, 0.0f };
+                if (hit.normal.x > 0.0f)
+                {
+                    position = XMVectorSetX(position, cube.max.x + 0.5f);
+                    velocity *= { 0.0f, 1.0f, 1.0f };
+                }
+                else if (hit.normal.x < 0.0f)
+                {
+                    position = XMVectorSetX(position, cube.min.x - 0.5f);
+                    velocity *= { 0.0f, 1.0f, 1.0f };
+                }
+                else if (hit.normal.y < 0.0f)
+                {
+                    position = XMVectorSetY(position, cube.min.y - 1.0f);
+                    velocity *= { 1.0f, 0.0f, 1.0f };
+                }
+                else if (hit.normal.z > 0.0f)
+                {
+                    position = XMVectorSetZ(position, cube.max.z + 0.5f);
+                    velocity *= { 1.0f, 1.0f, 0.0f };
+                }
+                else if (hit.normal.z < 0.0f)
+                {
+                    position = XMVectorSetZ(position, cube.min.z - 0.5f);
+                    velocity *= { 1.0f, 1.0f, 0.0f };
+                }
             }
         }
-
-        XMStoreFloat3(&g_PlayerPosition, position);
-        XMStoreFloat3(&g_PlayerVelocity, velocity);
     }
+
+    XMStoreFloat3(&g_PlayerPosition, position);
+    XMStoreFloat3(&g_PlayerVelocity, velocity);
 }
 
 void Player_Draw()
@@ -205,10 +220,13 @@ void Player_Draw()
 
     XMMATRIX mtxWorld = XMMatrixIdentity();
 
-    float angle = atan2f(g_PlayerFront.x, g_PlayerFront.z) + XMConvertToRadians(180.0f);
+    float angle =
+        atan2f(g_PlayerFront.x, g_PlayerFront.z) + XMConvertToRadians(180.0f);
 
     mtxWorld *= XMMatrixRotationY(angle);
-    mtxWorld *= XMMatrixTranslation(g_PlayerPosition.x, g_PlayerPosition.y, g_PlayerPosition.z);
+    mtxWorld *= XMMatrixTranslation(
+        g_PlayerPosition.x, g_PlayerPosition.y, g_PlayerPosition.z
+    );
     ModelDraw(g_PlayerModel.get(), mtxWorld);
 }
 
@@ -216,4 +234,10 @@ const XMFLOAT3& Player_GetPosition() { return g_PlayerPosition; }
 
 const XMFLOAT3& Player_GetFront() { return g_PlayerFront; }
 
-AABB Player_GetAABB() { return { { g_PlayerPosition.x - 0.5f, g_PlayerPosition.y, g_PlayerPosition.z - 0.5f }, { g_PlayerPosition.x + 0.5f, g_PlayerPosition.y + 1.0f, g_PlayerPosition.z + 0.5f } }; }
+AABB Player_GetAABB()
+{
+    return { { g_PlayerPosition.x - 0.5f, g_PlayerPosition.y,
+               g_PlayerPosition.z - 0.5f },
+             { g_PlayerPosition.x + 0.5f, g_PlayerPosition.y + 1.0f,
+               g_PlayerPosition.z + 0.5f } };
+}

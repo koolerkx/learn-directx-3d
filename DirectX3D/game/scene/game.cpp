@@ -10,6 +10,7 @@
 #include "color.h"
 #include "debug_frame.h"
 #include "light.h"
+#include "map.h"
 #include "mesh_field.h"
 #include "model.h"
 #include "player.h"
@@ -23,6 +24,7 @@ static float g_angle = 0;
 
 void Game_Initialize()
 {
+    Map_Initialize();
     // constexpr XMFLOAT3 DEFAULT_CAMERA_POSITION = { -10.0f, 10.0f, -10.0f };
     // constexpr XMFLOAT3 DEFAULT_CAMERA_FRONT = { 0.5f, -0.5f, 0.5f };
     // constexpr XMFLOAT3 DEFAULT_CAMERA_UP = { 0.5, 0.5, 0.5 };
@@ -43,6 +45,7 @@ void Game_Finalize()
     Player_Camera_Finalize();
 
     Player_Finalize();
+    Map_Finalize();
 }
 
 void Game_Update(double elapsed_time)
@@ -114,13 +117,15 @@ void Game_Draw()
     // mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
     // mtxWorld *= XMMatrixTranslation(0.0f, 2.0f, 0.0f);
 
+    Map_Draw();
+
     Player_Draw();
 
-    XMMATRIX cube_pos = XMMatrixTranslation(3.0f, 0.5f, 2.0f);
+    // XMMATRIX cube_pos = XMMatrixTranslation(3.0f, 0.5f, 2.0f);
 
-    Cube_Draw(cube_pos);
-
-    DebugFrame_AABB_Draw(Cube_GetAABB({ 3.0f, 0.5f, 2.0f }));
-    DebugFrame_AABB_Draw(Player_GetAABB());
+    // Cube_Draw(cube_pos);
+    //
+    // DebugFrame_AABB_Draw(Cube_GetAABB({ 3.0f, 0.5f, 2.0f }));
+    // DebugFrame_AABB_Draw(Player_GetAABB());
     // Camera_DebugDraw();
 }

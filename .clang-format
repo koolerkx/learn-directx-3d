@@ -29,7 +29,8 @@ BraceWrapping:
 BreakBeforeBraces: Custom
 BreakConstructorInitializers: AfterColon
 BreakConstructorInitializersBeforeComma: false
-ColumnLimit: 298
+ColumnLimit: 80
+AlignAfterOpenBracket: BlockIndent
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 Cpp11BracedListStyle: false
 IncludeCategories: 
