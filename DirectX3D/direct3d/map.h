@@ -9,6 +9,8 @@
 #define MAP_H
 #include <DirectXMath.h>
 
+#include "collision.h"
+
 void Map_Initialize();
 void Map_Finalize();
 
@@ -18,8 +20,9 @@ int Map_GetObjectsCount();
 
 struct MapObject
 {
-    int KindId;
-    DirectX::XMFLOAT3 Position;
+    int kind_id;
+    DirectX::XMFLOAT3 position;
+    AABB aabb;
 };
 
 const MapObject* Map_GetObject(int index);

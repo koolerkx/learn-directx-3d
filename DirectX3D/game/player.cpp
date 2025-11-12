@@ -72,29 +72,21 @@ void Player_Update(double elapsed_time)
     for (int i = 0; i < Map_GetObjectsCount(); i++)
     {
         AABB player = Player_ConvertPositionToAABB(position);
-        AABB cube = Cube_GetAABB(Map_GetObject(i)->Position);
+        AABB object = Map_GetObject(i)->aabb;
 
-        Hit hit = Collision_IsHitAABB(cube, player);
+        Hit hit = Collision_IsHitAABB(object, player);
         // object collision due to gravity
         if (hit.isHit)
         {
             if (hit.normal.y > 0.0f)
             {
                 // position -= gravity_velocity;
-                position = XMVectorSetY(position, cube.max.y);
+                position = XMVectorSetY(position, object.max.y);
 
                 velocity *= { 1.0f, 0.0f, 1.0f };
                 g_IsJump = false;
             }
         }
-    }
-
-    if (XMVectorGetY(position) < 0.0f)
-    {
-        // terrain collision due to gravity
-        position = XMVectorSetY(position, 0.0f);
-        velocity *= { 1.0f, 0.0f, 1.0f };
-        g_IsJump = false;
     }
 
     XMVECTOR movement_direction = { 0.0f, 0.0f, 0.0f };
@@ -171,34 +163,34 @@ void Player_Update(double elapsed_time)
         AABB player = Player_GetAABB();
         for (int i = 0; i < Map_GetObjectsCount(); i++)
         {
-            AABB cube = Cube_GetAABB(Map_GetObject(i)->Position);
+            AABB object = Map_GetObject(i)->aabb;
 
-            Hit hit = Collision_IsHitAABB(cube, player);
+            Hit hit = Collision_IsHitAABB(object, player);
             if (hit.isHit)
             {
                 if (hit.normal.x > 0.0f)
                 {
-                    position = XMVectorSetX(position, cube.max.x + 0.5f);
+                    position = XMVectorSetX(position, object.max.x + 0.5f);
                     velocity *= { 0.0f, 1.0f, 1.0f };
                 }
                 else if (hit.normal.x < 0.0f)
                 {
-                    position = XMVectorSetX(position, cube.min.x - 0.5f);
+                    position = XMVectorSetX(position, object.min.x - 0.5f);
                     velocity *= { 0.0f, 1.0f, 1.0f };
                 }
                 else if (hit.normal.y < 0.0f)
                 {
-                    position = XMVectorSetY(position, cube.min.y - 1.0f);
+                    position = XMVectorSetY(position, object.min.y - 1.0f);
                     velocity *= { 1.0f, 0.0f, 1.0f };
                 }
                 else if (hit.normal.z > 0.0f)
                 {
-                    position = XMVectorSetZ(position, cube.max.z + 0.5f);
+                    position = XMVectorSetZ(position, object.max.z + 0.5f);
                     velocity *= { 1.0f, 1.0f, 0.0f };
                 }
                 else if (hit.normal.z < 0.0f)
                 {
-                    position = XMVectorSetZ(position, cube.min.z - 0.5f);
+                    position = XMVectorSetZ(position, object.min.z - 0.5f);
                     velocity *= { 1.0f, 1.0f, 0.0f };
                 }
             }

@@ -60,11 +60,13 @@ void Game_Update(double elapsed_time)
     // if (KeyLogger_IsTrigger(KK_Z))
     // {
     //     g_CubePosition = Camera_GetPosition();
-    //     XMStoreFloat3(&g_CubeVelocity, XMLoadFloat3(&Camera_GetFront()) * 10.0f);
+    //     XMStoreFloat3(&g_CubeVelocity, XMLoadFloat3(&Camera_GetFront())
+    //     * 10.0f);
     // }
     // XMVECTOR cube_position = XMLoadFloat3(&g_CubePosition);
-    // cube_position += XMLoadFloat3(&g_CubeVelocity) * static_cast<float>(elapsed_time);
-    // XMStoreFloat3(&g_CubePosition, cube_position);
+    // cube_position += XMLoadFloat3(&g_CubeVelocity) *
+    // static_cast<float>(elapsed_time); XMStoreFloat3(&g_CubePosition,
+    // cube_position);
 
     acc_time += elapsed_time;
 
@@ -85,23 +87,23 @@ void Game_Draw()
         XMVector3Transform(
             { 10.0f, 5.0f, 0.0f },
             XMMatrixRotationY(XMConvertToRadians(g_angle))
-            )
-        );
+        )
+    );
     XMStoreFloat3(
         &pp1,
         XMVector3Transform(
             { 10.0f, 5.0f, 0.0f },
             XMMatrixRotationY(XMConvertToRadians(g_angle + 120))
-            )
-        );
+        )
+    );
 
     XMStoreFloat3(
         &pp2,
         XMVector3Transform(
             { 10.0f, 5.0f, 0.0f },
             XMMatrixRotationY(XMConvertToRadians(g_angle + 240))
-            )
-        );
+        )
+    );
 
     Light_SetPointLight(0, pp0, 30, { 1.0f, 0.0f, 0.0f });
     Light_SetPointLight(1, pp1, 30, { 0.0f, 1.0f, 0.0f });
@@ -110,8 +112,8 @@ void Game_Draw()
     Sampler_SetFilter(FILTER::ANISOTROPIC);
 
     // Light_SetSpecular(Camera_GetPosition(), 16.0f, { 0.7f, 0.7f, 0.7f });
-    Light_SetSpecular(Player_Camera_GetPosition(), 16.0f, { 0.7f, 0.7f, 0.7f });
-    MeshField_Draw();
+    // Light_SetSpecular(Player_Camera_GetPosition(), 16.0f, { 0.7f, 0.7f, 0.7f
+    // }); MeshField_Draw();
 
     // XMMATRIX mtxWorld = XMMatrixIdentity();
     // mtxWorld *= XMMatrixRotationY(static_cast<float>(acc_time));
