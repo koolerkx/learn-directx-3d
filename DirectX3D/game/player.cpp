@@ -57,7 +57,6 @@ void Player_Update(double elapsed_time)
 {
     XMVECTOR position = XMLoadFloat3(&g_PlayerPosition);
     XMVECTOR velocity = XMLoadFloat3(&g_PlayerVelocity);
-    XMVECTOR gravity_velocity{};
 
     if (KeyLogger_IsTrigger(KK_SPACE) && !g_IsJump)
     {
@@ -66,40 +65,36 @@ void Player_Update(double elapsed_time)
     }
 
     velocity += GRAVITY_ACC * static_cast<float>(elapsed_time);
-    gravity_velocity = velocity * static_cast<float>(elapsed_time);
 
-    position += gravity_velocity;
+    position += velocity * static_cast<float>(elapsed_time);
     XMStoreFloat3(&g_PlayerPosition, position);
 
+    for (int i = 0; i < Map_GetObjectsCount(); i++)
     {
-        AABB player = Player_GetAABB();
+        AABB player = Player_ConvertPositionToAABB(position);
+        AABB cube = Cube_GetAABB(Map_GetObject(i)->Position);
 
-        for (int i = 0; i < Map_GetObjectsCount(); i++)
+        Hit hit = Collision_IsHitAABB(cube, player);
+        // object collision due to gravity
+        if (hit.isHit)
         {
-            AABB cube = Cube_GetAABB(Map_GetObject(i)->Position);
-
-            Hit hit = Collision_IsHitAABB(cube, player);
-            // object collision due to gravity
-            if (hit.isHit)
+            if (hit.normal.y > 0.0f)
             {
-                if (hit.normal.y > 0.0f)
-                {
-                    // position -= gravity_velocity;
-                    position = XMVectorSetY(position, cube.max.y + 0.01);
+                // position -= gravity_velocity;
+                position = XMVectorSetY(position, cube.max.y);
 
-                    velocity *= { 1.0f, 0.0f, 1.0f };
-                    g_IsJump = false;
-                }
+                velocity *= { 1.0f, 0.0f, 1.0f };
+                g_IsJump = false;
             }
         }
+    }
 
-        if (XMVectorGetY(position) < 0.0f)
-        {
-            // terrain collision due to gravity
-            position = XMVectorSetY(position, 0.0f);
-            velocity *= { 1.0f, 0.0f, 1.0f };
-            g_IsJump = false;
-        }
+    if (XMVectorGetY(position) < 0.0f)
+    {
+        // terrain collision due to gravity
+        position = XMVectorSetY(position, 0.0f);
+        velocity *= { 1.0f, 0.0f, 1.0f };
+        g_IsJump = false;
     }
 
     XMVECTOR movement_direction = { 0.0f, 0.0f, 0.0f };
@@ -240,4 +235,18 @@ AABB Player_GetAABB()
                g_PlayerPosition.z - 0.5f },
              { g_PlayerPosition.x + 0.5f, g_PlayerPosition.y + 1.0f,
                g_PlayerPosition.z + 0.5f } };
+}
+
+AABB Player_ConvertPositionToAABB(const DirectX::XMVECTOR& position)
+{
+    constexpr float size = 1.0f;
+
+    AABB aabb;
+    XMStoreFloat3(
+        &aabb.min, position - XMVECTOR{ size / 2.0f, 0.0f, size / 2.0f }
+    );
+    XMStoreFloat3(
+        &aabb.max, position + XMVECTOR{ size / 2.0f, size, size / 2.0f }
+    );
+    return aabb;
 }
