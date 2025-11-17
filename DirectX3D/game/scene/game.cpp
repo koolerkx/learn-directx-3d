@@ -7,6 +7,7 @@
 
 #include <DirectXMath.h>
 
+#include "bullet.h"
 #include "color.h"
 #include "debug_frame.h"
 #include "light.h"
@@ -25,6 +26,7 @@ static float g_angle = 0;
 void Game_Initialize()
 {
     Map_Initialize();
+    Bullet_Initialize();
     // constexpr XMFLOAT3 DEFAULT_CAMERA_POSITION = { -10.0f, 10.0f, -10.0f };
     // constexpr XMFLOAT3 DEFAULT_CAMERA_FRONT = { 0.5f, -0.5f, 0.5f };
     // constexpr XMFLOAT3 DEFAULT_CAMERA_UP = { 0.5, 0.5, 0.5 };
@@ -45,6 +47,7 @@ void Game_Finalize()
     Player_Camera_Finalize();
 
     Player_Finalize();
+    Bullet_Finalize();
     Map_Finalize();
 }
 
@@ -56,6 +59,7 @@ void Game_Update(double elapsed_time)
 
     MeshField_Update(elapsed_time);
     Player_Update(elapsed_time);
+    Bullet_Update(elapsed_time);
 
     // if (KeyLogger_IsTrigger(KK_Z))
     // {
@@ -67,8 +71,20 @@ void Game_Update(double elapsed_time)
     // cube_position += XMLoadFloat3(&g_CubeVelocity) *
     // static_cast<float>(elapsed_time); XMStoreFloat3(&g_CubePosition,
     // cube_position);
-
     acc_time += elapsed_time;
+
+    for (int j = 0; j < Map_GetObjectsCount(); j++)
+    {
+        for (int i = 0; i < Bullet_GetObjectsCount(); i++)
+        {
+            AABB bullet = Bullet_GetAABB(i);
+            AABB object = Map_GetObject(j)->aabb;
+            if (Collision_IsOverlapAABB(bullet, object))
+            {
+                Bullet_Destroy(i);
+            }
+        }
+    }
 
     g_angle += static_cast<float>(elapsed_time) * 120.0f;
 }
@@ -120,9 +136,9 @@ void Game_Draw()
     // mtxWorld *= XMMatrixTranslation(0.0f, 2.0f, 0.0f);
 
     Map_Draw();
+    Bullet_Draw();
 
     Player_Draw();
-
     // XMMATRIX cube_pos = XMMatrixTranslation(3.0f, 0.5f, 2.0f);
 
     // Cube_Draw(cube_pos);

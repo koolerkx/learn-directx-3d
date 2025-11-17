@@ -1,5 +1,8 @@
 #include "bullet.h"
 
+#include "debug_frame.h"
+#include "model.h"
+
 using namespace DirectX;
 
 class Bullet
@@ -39,8 +42,10 @@ public:
 static constexpr int MAX_BULLETS = 1024;
 static Bullet* g_Bullets[MAX_BULLETS] = {};
 static int g_BulletCount = 0;
+static MODEL* g_Model = nullptr;
+const static std::string MODEL_PATH = "assets/ball.fbx";
 
-void Bullet_Initialize() {}
+void Bullet_Initialize() { g_Model = ModelLoad(MODEL_PATH.c_str(), 0.5f); }
 
 void Bullet_Finalize()
 {
@@ -50,6 +55,8 @@ void Bullet_Finalize()
         g_Bullets[i] = nullptr;
     }
     g_BulletCount = 0;
+
+    ModelRelease(g_Model);
 }
 
 void Bullet_Update(double elapsed_time)
@@ -68,7 +75,16 @@ void Bullet_Update(double elapsed_time)
     }
 }
 
-void Bullet_Draw() {}
+void Bullet_Draw()
+{
+    for (int i = 0; i < g_BulletCount; i++)
+    {
+        XMVECTOR position = XMLoadFloat3(&g_Bullets[i]->GetPosition());
+        XMMATRIX mtxWorld = XMMatrixTranslationFromVector(position);
+        ModelDraw(g_Model, mtxWorld);
+        DebugFrame_AABB_Draw(Bullet_GetAABB(i));
+    }
+}
 
 void Bullet_Create(
     const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT3& velocity
@@ -91,4 +107,7 @@ void Bullet_Destroy(int index)
 
 int Bullet_GetObjectsCount() { return g_BulletCount; }
 
-AABB Bullet_GetAABB(int index) { return {}; }
+AABB Bullet_GetAABB(int index)
+{
+    return Model_GetAABB(g_Model, g_Bullets[index]->GetPosition());
+}

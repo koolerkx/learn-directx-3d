@@ -17,27 +17,24 @@
 #include "player_camera.h"
 
 static MapObject g_MapObjects[]{
-    { 0,
+    { ObjectKind::FIELD,
       { 0.0f, 0.0f, 0.0f },
       { { -5.0f, -1.0f, -5.0f }, { 5.0f, 0.0f, 5.0f } } },
-    { 1, { -1.0f, 0.5f, 2.0f } },
-    { 1, { 0.0f, 0.5f, 2.0f } },
-    { 1, { 1.0f, 0.5f, 2.0f } },
-    { 1, { 2.0f, 0.5f, 2.0f } },
-    { 1, { -1.0f, 0.5f, 3.0f } },
-    { 1, { 0.0f, 0.5f, 3.0f } },
-    { 1, { 1.0f, 0.5f, 3.0f } },
-    { 1, { 2.0f, 0.5f, 3.0f } },
-    { 1, { -1.0f, 0.5f, 4.0f } },
-    { 1, { 0.0f, 0.5f, 4.0f } },
-    { 1, { 1.0f, 0.5f, 4.0f } },
-    { 1, { 2.0f, 0.5f, 4.0f } },
-
-    { 1, { 0.0f, 1.5f, 3.0f } },
-    { 1, { 1.0f, 1.5f, 3.0f } },
-    { 3,
-      { -3.0f, 0.0f, -3.0f },
-      { { -3.5f, 0.0f, -3.5f }, { -2.5f, 1.0f, -2.5f } } },
+    { ObjectKind::BLOCK, { -1.0f, 0.5f, 2.0f } },
+    { ObjectKind::BLOCK, { 0.0f, 0.5f, 2.0f } },
+    { ObjectKind::BLOCK, { 1.0f, 0.5f, 2.0f } },
+    { ObjectKind::BLOCK, { 2.0f, 0.5f, 2.0f } },
+    { ObjectKind::BLOCK, { -1.0f, 0.5f, 3.0f } },
+    { ObjectKind::BLOCK, { 0.0f, 0.5f, 3.0f } },
+    { ObjectKind::BLOCK, { 1.0f, 0.5f, 3.0f } },
+    { ObjectKind::BLOCK, { 2.0f, 0.5f, 3.0f } },
+    { ObjectKind::BLOCK, { -1.0f, 0.5f, 4.0f } },
+    { ObjectKind::BLOCK, { 0.0f, 0.5f, 4.0f } },
+    { ObjectKind::BLOCK, { 1.0f, 0.5f, 4.0f } },
+    { ObjectKind::BLOCK, { 2.0f, 0.5f, 4.0f } },
+    { ObjectKind::BLOCK, { 0.0f, 1.5f, 3.0f } },
+    { ObjectKind::BLOCK, { 1.0f, 1.5f, 3.0f } },
+    { ObjectKind::ROCK, { -3.0f, 0.0f, -3.0f } },
 };
 
 static MODEL* g_Rock01{};
@@ -48,11 +45,23 @@ void Map_Initialize()
 
     for (MapObject& o : g_MapObjects)
     {
-        if (o.kind_id == 0 || o.kind_id == 3)
+        switch (o.kind_id)
+        {
+        case ObjectKind::BLOCK:
+            o.aabb = Cube_GetAABB(o.position);
+            break;
+        case ObjectKind::ROCK:
+            o.aabb = Model_GetAABB(g_Rock01, o.position);
+            break;
+        case ObjectKind::FIELD:
+        default:
+            break;
+        }
+
+        if (o.kind_id == ObjectKind::FIELD)
         {
             continue;
         }
-        o.aabb = Cube_GetAABB(o.position);
     }
 }
 
@@ -70,18 +79,18 @@ void Map_Draw()
 
         switch (o.kind_id)
         {
-        case 0:
+        case ObjectKind::FIELD:
             Light_SetSpecular(
                 Player_Camera_GetPosition(), 50.0f, { 0.5f, 0.5f, 0.5f }
             );
             MeshField_Draw();
             DebugFrame_AABB_Draw(o.aabb);
             break;
-        case 1:
+        case ObjectKind::BLOCK:
             Cube_Draw(mtxWorld);
             DebugFrame_AABB_Draw(o.aabb);
             break;
-        case 3:
+        case ObjectKind::ROCK:
             ModelDraw(g_Rock01, mtxWorld);
             DebugFrame_AABB_Draw(o.aabb);
         default:

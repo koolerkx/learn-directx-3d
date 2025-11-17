@@ -80,18 +80,26 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
                 );
                 vertex[v].color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
-                model->local_aabb.min.x =
-                    min(vertex[v].position.x, model->local_aabb.min.x);
-                model->local_aabb.min.y =
-                    min(vertex[v].position.y, model->local_aabb.min.y);
-                model->local_aabb.min.z =
-                    min(vertex[v].position.z, model->local_aabb.min.z);
-                model->local_aabb.max.x =
-                    max(vertex[v].position.x, model->local_aabb.max.x);
-                model->local_aabb.max.y =
-                    max(vertex[v].position.y, model->local_aabb.max.y);
-                model->local_aabb.max.z =
-                    max(vertex[v].position.z, model->local_aabb.max.z);
+                if (v == 0)
+                {
+                    model->local_aabb.min = vertex[v].position;
+                    model->local_aabb.max = vertex[v].position;
+                }
+                else
+                {
+                    model->local_aabb.min.x =
+                        min(model->local_aabb.min.x, vertex[v].position.x);
+                    model->local_aabb.min.y =
+                        min(model->local_aabb.min.y, vertex[v].position.y);
+                    model->local_aabb.min.z =
+                        min(model->local_aabb.min.z, vertex[v].position.z);
+                    model->local_aabb.max.x =
+                        max(model->local_aabb.max.x, vertex[v].position.x);
+                    model->local_aabb.max.y =
+                        max(model->local_aabb.max.y, vertex[v].position.y);
+                    model->local_aabb.max.z =
+                        max(model->local_aabb.max.z, vertex[v].position.z);
+                }
             }
 
             D3D11_BUFFER_DESC bd;

@@ -11,7 +11,9 @@
 
 #include <DirectXMath.h>
 
+#include "bullet.h"
 #include "cube.h"
+#include "debug_frame.h"
 #include "key_logger.h"
 #include "light.h"
 #include "map.h"
@@ -199,6 +201,15 @@ void Player_Update(double elapsed_time)
 
     XMStoreFloat3(&g_PlayerPosition, position);
     XMStoreFloat3(&g_PlayerVelocity, velocity);
+
+    if (KeyLogger_IsTrigger(KK_J))
+    {
+        XMFLOAT3 shot_velocity;
+        XMFLOAT3 shot_position = g_PlayerPosition;
+        shot_position.y = g_PlayerPosition.y + 1.0f;
+        XMStoreFloat3(&shot_velocity, XMLoadFloat3(&g_PlayerFront) * 0.5f);
+        Bullet_Create(shot_position, shot_velocity);
+    }
 }
 
 void Player_Draw()
@@ -215,6 +226,7 @@ void Player_Draw()
         g_PlayerPosition.x, g_PlayerPosition.y, g_PlayerPosition.z
     );
     ModelDraw(g_PlayerModel.get(), mtxWorld);
+    DebugFrame_AABB_Draw(Player_GetAABB());
 }
 
 const XMFLOAT3& Player_GetPosition() { return g_PlayerPosition; }

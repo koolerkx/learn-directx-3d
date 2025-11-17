@@ -7,8 +7,9 @@
 
 #ifndef MAP_H
 #define MAP_H
-#include <DirectXMath.h>
 
+#include <DirectXMath.h>
+#include <cstdint>
 #include "collision.h"
 
 void Map_Initialize();
@@ -18,9 +19,16 @@ void Map_Draw();
 
 int Map_GetObjectsCount();
 
+enum class ObjectKind : uint8_t
+{
+    FIELD,
+    BLOCK,
+    ROCK
+};
+
 struct MapObject
 {
-    int kind_id;
+    ObjectKind kind_id;
     DirectX::XMFLOAT3 position;
     AABB aabb;
 };
