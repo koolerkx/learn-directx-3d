@@ -13,6 +13,7 @@
 #include "debug_frame.h"
 #include "light.h"
 #include "mesh_field.h"
+#include "model.h"
 #include "player_camera.h"
 
 static MapObject g_MapObjects[]{
@@ -34,13 +35,20 @@ static MapObject g_MapObjects[]{
 
     { 1, { 0.0f, 1.5f, 3.0f } },
     { 1, { 1.0f, 1.5f, 3.0f } },
+    { 3,
+      { -3.0f, 0.0f, -3.0f },
+      { { -3.5f, 0.0f, -3.5f }, { -2.5f, 1.0f, -2.5f } } },
 };
+
+static MODEL* g_Rock01{};
 
 void Map_Initialize()
 {
+    g_Rock01 = ModelLoad("assets/slime_re.fbx", 0.25f);
+
     for (MapObject& o : g_MapObjects)
     {
-        if (o.kind_id == 0)
+        if (o.kind_id == 0 || o.kind_id == 3)
         {
             continue;
         }
@@ -48,7 +56,7 @@ void Map_Initialize()
     }
 }
 
-void Map_Finalize() {}
+void Map_Finalize() { ModelRelease(g_Rock01); }
 
 void Map_Draw()
 {
@@ -67,11 +75,15 @@ void Map_Draw()
                 Player_Camera_GetPosition(), 50.0f, { 0.5f, 0.5f, 0.5f }
             );
             MeshField_Draw();
+            DebugFrame_AABB_Draw(o.aabb);
             break;
         case 1:
             Cube_Draw(mtxWorld);
-            DebugFrame_AABB_Draw(Cube_GetAABB(o.position));
+            DebugFrame_AABB_Draw(o.aabb);
             break;
+        case 3:
+            ModelDraw(g_Rock01, mtxWorld);
+            DebugFrame_AABB_Draw(o.aabb);
         default:
             break;
         }

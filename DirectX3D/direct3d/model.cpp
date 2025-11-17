@@ -1,7 +1,7 @@
-#include "direct3d.h"
-#include "WICTextureLoader11.h"
-#include "texture.h"
 #include "model.h"
+#include "WICTextureLoader11.h"
+#include "direct3d.h"
+#include "texture.h"
 
 #include <DirectXMath.h>
 #include <cassert>
@@ -28,7 +28,11 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
 
     const std::string modelPath(FileName);
 
-    model->AiScene = aiImportFile(FileName, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded | aiProcess_OptimizeMeshes);
+    model->AiScene = aiImportFile(
+        FileName,
+        aiProcessPreset_TargetRealtime_MaxQuality |
+            aiProcess_ConvertToLeftHanded | aiProcess_OptimizeMeshes
+    );
     assert(model->AiScene);
 
     model->VertexBuffer = new ID3D11Buffer*[model->AiScene->mNumMeshes];
@@ -41,22 +45,53 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
         // 頂点バッファ生成
         {
             Vertex* vertex = new Vertex[mesh->mNumVertices];
+            model->local_aabb.min = vertex[0].position;
+            model->local_aabb.max = vertex[0].position;
 
             for (unsigned int v = 0; v < mesh->mNumVertices; v++)
             {
                 if (bBlender)
                 {
-                    vertex[v].position = XMFLOAT3(mesh->mVertices[v].x * scale, -mesh->mVertices[v].z * scale, mesh->mVertices[v].y * scale);
-                    vertex[v].normal = XMFLOAT3(mesh->mNormals[v].x, -mesh->mNormals[v].z, mesh->mNormals[v].y);
+                    vertex[v].position = XMFLOAT3(
+                        mesh->mVertices[v].x * scale,
+                        -mesh->mVertices[v].z * scale,
+                        mesh->mVertices[v].y * scale
+                    );
+                    vertex[v].normal = XMFLOAT3(
+                        mesh->mNormals[v].x, -mesh->mNormals[v].z,
+                        mesh->mNormals[v].y
+                    );
                 }
                 else
                 {
-                    vertex[v].position = XMFLOAT3(mesh->mVertices[v].x * scale, mesh->mVertices[v].y * scale, mesh->mVertices[v].z * scale);
-                    vertex[v].normal = XMFLOAT3(mesh->mNormals[v].x, mesh->mNormals[v].y, mesh->mNormals[v].z);
+                    vertex[v].position = XMFLOAT3(
+                        mesh->mVertices[v].x * scale,
+                        mesh->mVertices[v].y * scale,
+                        mesh->mVertices[v].z * scale
+                    );
+                    vertex[v].normal = XMFLOAT3(
+                        mesh->mNormals[v].x, mesh->mNormals[v].y,
+                        mesh->mNormals[v].z
+                    );
                 }
 
-                vertex[v].uv = XMFLOAT2(mesh->mTextureCoords[0][v].x, mesh->mTextureCoords[0][v].y);
+                vertex[v].uv = XMFLOAT2(
+                    mesh->mTextureCoords[0][v].x, mesh->mTextureCoords[0][v].y
+                );
                 vertex[v].color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+
+                model->local_aabb.min.x =
+                    min(vertex[v].position.x, model->local_aabb.min.x);
+                model->local_aabb.min.y =
+                    min(vertex[v].position.y, model->local_aabb.min.y);
+                model->local_aabb.min.z =
+                    min(vertex[v].position.z, model->local_aabb.min.z);
+                model->local_aabb.max.x =
+                    max(vertex[v].position.x, model->local_aabb.max.x);
+                model->local_aabb.max.y =
+                    max(vertex[v].position.y, model->local_aabb.max.y);
+                model->local_aabb.max.z =
+                    max(vertex[v].position.z, model->local_aabb.max.z);
             }
 
             D3D11_BUFFER_DESC bd;
@@ -70,7 +105,9 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
             ZeroMemory(&sd, sizeof(sd));
             sd.pSysMem = vertex;
 
-            Direct3D_GetDevice()->CreateBuffer(&bd, &sd, &model->VertexBuffer[m]);
+            Direct3D_GetDevice()->CreateBuffer(
+                &bd, &sd, &model->VertexBuffer[m]
+            );
 
             delete[] vertex;
         }
@@ -101,7 +138,9 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
             ZeroMemory(&sd, sizeof(sd));
             sd.pSysMem = index;
 
-            Direct3D_GetDevice()->CreateBuffer(&bd, &sd, &model->IndexBuffer[m]);
+            Direct3D_GetDevice()->CreateBuffer(
+                &bd, &sd, &model->IndexBuffer[m]
+            );
 
             delete[] index;
         }
@@ -120,16 +159,17 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
         HRESULT texture_hr = CreateWICTextureFromMemory(
             Direct3D_GetDevice(),
             reinterpret_cast<const uint8_t*>(aitexture->pcData),
-            aitexture->mWidth,
-            &pTexture,
-            &pTextureSrv
-            );
+            aitexture->mWidth, &pTexture, &pTextureSrv
+        );
 
         pTexture->Release();
 
         if (FAILED(texture_hr))
         {
-            MessageBoxW(nullptr, L"モデルのテクスチャの読込に失敗しました", L"モデルテクスチャ読み込み失敗！", MB_OK | MB_ICONERROR);
+            MessageBoxW(
+                nullptr, L"モデルのテクスチャの読込に失敗しました",
+                L"モデルテクスチャ読み込み失敗！", MB_OK | MB_ICONERROR
+            );
             assert(false);
         }
 
@@ -149,7 +189,9 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
     for (unsigned int m = 0; m < model->AiScene->mNumMeshes; m++)
     {
         aiString filename;
-        aiMaterial* aimaterial = model->AiScene->mMaterials[model->AiScene->mMeshes[m]->mMaterialIndex];
+        aiMaterial* aimaterial =
+            model->AiScene
+                ->mMaterials[model->AiScene->mMeshes[m]->mMaterialIndex];
         aimaterial->GetTexture(aiTextureType_DIFFUSE, 0, &filename);
 
         if (filename.length == 0)
@@ -166,23 +208,27 @@ MODEL* ModelLoad(const char* FileName, float scale, bool bBlender)
 
         std::string texfilename = directory + "/" + filename.C_Str();
 
-        int len = MultiByteToWideChar(CP_UTF8, 0, texfilename.c_str(), -1, nullptr, 0);
+        int len = MultiByteToWideChar(
+            CP_UTF8, 0, texfilename.c_str(), -1, nullptr, 0
+        );
         wchar_t* pWideFilename = new wchar_t[len];
-        MultiByteToWideChar(CP_UTF8, 0, texfilename.c_str(), -1, pWideFilename, len);
+        MultiByteToWideChar(
+            CP_UTF8, 0, texfilename.c_str(), -1, pWideFilename, len
+        );
 
         HRESULT texture_hr = CreateWICTextureFromFile(
-            Direct3D_GetDevice(),
-            pWideFilename,
-            &pTexture,
-            &pTextureSrv
-            );
+            Direct3D_GetDevice(), pWideFilename, &pTexture, &pTextureSrv
+        );
 
         delete[] pWideFilename;
         pTexture->Release();
 
         if (FAILED(texture_hr))
         {
-            MessageBoxW(nullptr, L"モデルのテクスチャの読込に失敗しました", L"モデルテクスチャ読み込み失敗！", MB_OK | MB_ICONERROR);
+            MessageBoxW(
+                nullptr, L"モデルのテクスチャの読込に失敗しました",
+                L"モデルテクスチャ読み込み失敗！", MB_OK | MB_ICONERROR
+            );
             assert(false);
         }
 
@@ -203,7 +249,8 @@ void ModelRelease(MODEL* model)
     delete[] model->VertexBuffer;
     delete[] model->IndexBuffer;
 
-    for (std::pair<const std::string, ID3D11ShaderResourceView*> pair : model->Texture)
+    for (std::pair<const std::string, ID3D11ShaderResourceView*> pair :
+         model->Texture)
     {
         pair.second->Release();
     }
@@ -227,12 +274,16 @@ void ModelDraw(MODEL* pModel, const DirectX::XMMATRIX& mtxWorld)
     for (unsigned int m = 0; m < pModel->AiScene->mNumMeshes; m++)
     {
         aiString texture;
-        aiMaterial* pMaterial = pModel->AiScene->mMaterials[pModel->AiScene->mMeshes[m]->mMaterialIndex];
+        aiMaterial* pMaterial =
+            pModel->AiScene
+                ->mMaterials[pModel->AiScene->mMeshes[m]->mMaterialIndex];
         pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &texture);
 
         if (texture.length != 0)
         {
-            pContext->PSSetShaderResources(0, 1, &pModel->Texture[texture.data]);
+            pContext->PSSetShaderResources(
+                0, 1, &pModel->Texture[texture.data]
+            );
             Shader3D_SetMaterialColor({ 1.0f, 1.0f, 1.0f, 1.0f });
         }
         else
@@ -241,16 +292,34 @@ void ModelDraw(MODEL* pModel, const DirectX::XMMATRIX& mtxWorld)
 
             aiColor3D diffuse;
             pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
-            Shader3D_SetMaterialColor({ diffuse.r, diffuse.g, diffuse.b, 1.0f });
+            Shader3D_SetMaterialColor(
+                { diffuse.r, diffuse.g, diffuse.b, 1.0f }
+            );
         }
 
         UINT stride = sizeof(Vertex);
         UINT offset = 0;
-        pContext->IASetVertexBuffers(0, 1, &pModel->VertexBuffer[m], &stride, &offset);
-        pContext->IASetIndexBuffer(pModel->IndexBuffer[m], DXGI_FORMAT_R32_UINT, 0);
+        pContext->IASetVertexBuffers(
+            0, 1, &pModel->VertexBuffer[m], &stride, &offset
+        );
+        pContext->IASetIndexBuffer(
+            pModel->IndexBuffer[m], DXGI_FORMAT_R32_UINT, 0
+        );
 
         pContext->DrawIndexed(pModel->AiScene->mMeshes[m]->mNumFaces * 3, 0, 0);
     }
 
     Direct3D_DepthStencilStateDepthIsEnable(false);
+}
+
+AABB Model_GetAABB(MODEL* model, const DirectX::XMFLOAT3& position)
+{
+    return {
+        { position.x + model->local_aabb.min.x,
+          position.y + model->local_aabb.min.y,
+          position.z + model->local_aabb.min.z },
+        { position.x + model->local_aabb.max.x,
+          position.y + model->local_aabb.max.y,
+          position.z + model->local_aabb.max.z },
+    };
 }
