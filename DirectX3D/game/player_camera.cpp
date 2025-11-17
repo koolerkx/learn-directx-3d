@@ -13,6 +13,7 @@
 #include "direct3d.h"
 #include "player.h"
 #include "shader3d.h"
+#include "shader_billboard.h"
 #include "shader_field.h"
 using namespace DirectX;
 
@@ -63,7 +64,10 @@ void Player_Camera_Update(double elapsed_time)
     // XMStoreFloat4x4(&g_CameraMatrix, mtxView);
     Shader3D_SetViewMatrix(mtxView); // TODO: deprecate
     Shader_Field_SetViewMatrix(mtxView);
+    ShaderBillBoard_SetViewMatrix(mtxView);
 
+    XMStoreFloat4x4(&g_CameraMatrix, mtxView);
+    
     // パースペクティブ行列
     // float fovAngleY = XMConvertToRadians(g_CameraFov);
     float fovAngleY = 1.0f;
@@ -76,6 +80,7 @@ void Player_Camera_Update(double elapsed_time)
     // XMStoreFloat4x4(&g_PerspectiveMatrix, mtxPerspective);
     Shader3D_SetProjectionMatrix(mtxPerspective); // TODO: deprecate
     Shader_Field_SetProjectionMatrix(mtxPerspective);
+    ShaderBillBoard_SetProjectionMatrix(mtxPerspective);
 }
 
 const XMFLOAT4X4& Player_Camera_GetMatrix()
@@ -116,4 +121,9 @@ void Player_Camera_SetFov(float fov)
 const XMFLOAT3& Player_Camera_GetPosition()
 {
     return g_CameraPosition;
+}
+
+const XMFLOAT4X4& PlayerCamera_GetViewMatrix()
+{
+    return g_CameraMatrix;
 }

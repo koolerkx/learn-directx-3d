@@ -7,21 +7,22 @@
 
 #include <DirectXMath.h>
 
+#include "billboard.h"
 #include "bullet.h"
-#include "color.h"
-#include "debug_frame.h"
 #include "light.h"
 #include "map.h"
 #include "mesh_field.h"
-#include "model.h"
 #include "player.h"
 #include "player_camera.h"
 #include "sampler.h"
+#include "texture.h"
 
 using namespace DirectX;
 
 static double acc_time = 0;
 static float g_angle = 0;
+
+static int g_billboard_TexId = -1;
 
 void Game_Initialize()
 {
@@ -39,11 +40,15 @@ void Game_Initialize()
     Player_Camera_Initialize();
 
     Player_Initialize({ 0.0f, 5.0f, 0.0f }, { 0.0f, 0.0f, 1.0f });
+
+    Billboard_Initialize();
+    g_billboard_TexId = Texture_Load(L"assets/block_test.png");
 }
 
 void Game_Finalize()
 {
     // Camera_Finalize();
+    Billboard_Finalize();
     Player_Camera_Finalize();
 
     Player_Finalize();
@@ -136,6 +141,9 @@ void Game_Draw()
     // mtxWorld *= XMMatrixTranslation(0.0f, 2.0f, 0.0f);
 
     Map_Draw();
+    
+    Sampler_SetFilter(FILTER::POINT);
+    Billboard_Draw(g_billboard_TexId, { 0, 1.0f, 0 }, 1.0f, 1.0f);
     Bullet_Draw();
 
     Player_Draw();

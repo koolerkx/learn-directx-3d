@@ -1,7 +1,7 @@
 /**
  * @file player_camera.h
  * @brief プレイヤーカメラ制御
- * 
+ *
  * @author KOOLER FAN
  * @date 2025/10/31
  */
@@ -27,5 +27,7 @@ float Player_Camera_GetFov();
 void Player_Camera_SetFov(float fov);
 
 const DirectX::XMFLOAT3& Player_Camera_GetPosition();
+
+const DirectX::XMFLOAT4X4& PlayerCamera_GetViewMatrix();
 
 #endif
